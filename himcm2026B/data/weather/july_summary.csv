@@ -1,0 +1,5 @@
+station,climate,profile,days,Tmax,Tmin,hour_of_max,Td_mean,Td_at_max,v10_mean_06_22,v_ped_mean_06_22,hot_threshold
+PHX,Hot-dry (Phoenix-like),July mean,155,42.1,31.8,15,12.8,11.2,3.71,2.52,46.1
+PHX,Hot-dry (Phoenix-like),July hot days (top 10%),25,46.4,34.2,15,10.4,8.4,3.94,2.68,46.1
+IAH,Hot-humid (Houston-like),July mean,155,33.3,25.7,14,23.3,22.3,3.3,2.24,37.2
+IAH,Hot-humid (Houston-like),July hot days (top 10%),25,37.4,27.0,16,23.2,21.0,3.56,2.42,37.2

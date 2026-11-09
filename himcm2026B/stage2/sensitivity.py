@@ -7,9 +7,8 @@ import numpy as np
 import pandas as pd
 
 from plotstyle import plt, DEVICE_COLORS, INK2
-from psychro import p_ws
 from model import Params, devices_for, evaluate, mean_waiting
-from run_stage2 import CLIMATES, OUT
+from run_stage2 import CLIMATES, OUT, peak
 
 BASE = Params()
 N_BASE = mean_waiting(40, 10)
@@ -17,12 +16,7 @@ V_BASE = 1.5
 WEIGHT_SCHEMES = {"linear 1-1-1-1": (1, 1, 1, 1), "base 1-2-3-4": (1, 2, 3, 4), "steep 1-3-9-27": (1, 3, 9, 27)}
 
 
-def peak_condition(c):
-    T = c["Tmax"]
-    return T, float(100 * p_ws(c["Td"]) / p_ws(T))
-
-
-CONDS = {name: peak_condition(c) for name, c in CLIMATES.items()}
+CONDS = {name: peak(name) for name in CLIMATES}
 WEIGHT_ROW = "Heat-stress weights (1-1-1-1 to 1-3-9-27)"
 
 # name: (low, high, how to apply). Ranges are the plausible spans argued in the plan.
@@ -36,7 +30,7 @@ RANGES = {
     "Outside wind speed (m/s)": (0.5, 3.0, "wind", None),
     "People waiting": (2.0, 12.0, "people", None),
     "Evap jet speed (× base)": (0.7, 1.3, "jet", None),
-    "Water energy intensity (kWh/m³)": (0.07, 3.0, "param", "e_water"),
+    "Water energy intensity (kWh/m³)": (0.0, 2.64, "param", "e_water"),
 }
 
 

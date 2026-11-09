@@ -1,27 +1,27 @@
 parameter,value,climate,best,T_zone_15h_no_cooling,A Fans ×10,B Evap ×8,C Large evap ×5,D Air conditioner 60 kW
-base,,Hot-dry (Phoenix-like),B Evap ×8,44.9,-8.7,31.0,26.1,8.5
-base,,Hot-humid (Houston-like),A Fans ×10,37.9,20.3,11.9,11.2,5.3
-Peak irradiance on glazing (W/m²),200.0,Hot-dry (Phoenix-like),B Evap ×8,44.1,-6.4,29.8,25.1,8.4
-Peak irradiance on glazing (W/m²),200.0,Hot-humid (Houston-like),A Fans ×10,37.1,20.8,11.1,10.5,5.0
-Peak irradiance on glazing (W/m²),600.0,Hot-dry (Phoenix-like),B Evap ×8,45.7,-11.5,32.1,27.1,8.5
-Peak irradiance on glazing (W/m²),600.0,Hot-humid (Houston-like),A Fans ×10,38.7,19.3,12.8,11.9,5.6
-Glazing SHGC,0.25,Hot-dry (Phoenix-like),B Evap ×8,44.3,-6.9,30.1,25.3,8.4
-Glazing SHGC,0.25,Hot-humid (Houston-like),A Fans ×10,37.3,20.8,11.3,10.7,5.1
-Glazing SHGC,0.6,Hot-dry (Phoenix-like),B Evap ×8,45.7,-11.5,32.1,27.1,8.5
-Glazing SHGC,0.6,Hot-humid (Houston-like),A Fans ×10,38.7,19.3,12.8,11.9,5.6
-Door opening while a train dwells,0.3,Hot-dry (Phoenix-like),B Evap ×8,44.9,-9.2,31.4,26.4,8.9
-Door opening while a train dwells,0.3,Hot-humid (Houston-like),A Fans ×10,37.9,20.1,12.2,11.4,5.6
-Door opening while a train dwells,0.8,Hot-dry (Phoenix-like),B Evap ×8,44.8,-8.0,30.5,25.8,8.0
-Door opening while a train dwells,0.8,Hot-humid (Houston-like),A Fans ×10,37.8,20.6,11.6,10.9,5.0
-Wind exchange coefficient C_w,0.15,Hot-dry (Phoenix-like),B Evap ×8,46.2,-16.6,34.1,28.2,13.1
-Wind exchange coefficient C_w,0.15,Hot-humid (Houston-like),A Fans ×10,39.1,16.6,13.7,12.3,8.8
-Wind exchange coefficient C_w,0.5,Hot-dry (Phoenix-like),B Evap ×8,44.2,-4.9,28.7,24.8,5.5
-Wind exchange coefficient C_w,0.5,Hot-humid (Houston-like),A Fans ×10,37.2,21.8,10.8,10.5,3.4
-Thermal mass factor,1.0,Hot-dry (Phoenix-like),B Evap ×8,45.0,-9.3,31.6,26.5,8.9
-Thermal mass factor,1.0,Hot-humid (Houston-like),A Fans ×10,38.0,20.1,12.3,11.5,5.6
-Thermal mass factor,6.0,Hot-dry (Phoenix-like),B Evap ×8,44.8,-8.4,30.7,25.9,8.4
-Thermal mass factor,6.0,Hot-humid (Houston-like),A Fans ×10,37.8,20.4,11.8,11.1,5.2
-Entrance openness (street side),0.1,Hot-dry (Phoenix-like),B Evap ×8,46.1,-15.9,33.5,27.7,12.8
-Entrance openness (street side),0.1,Hot-humid (Houston-like),A Fans ×10,39.1,16.8,13.0,11.8,8.5
-Entrance openness (street side),0.4,Hot-dry (Phoenix-like),B Evap ×8,43.9,-3.9,27.9,24.4,4.8
-Entrance openness (street side),0.4,Hot-humid (Houston-like),A Fans ×10,36.9,22.0,10.5,10.4,3.0
+base,,Hot-dry (Phoenix-like),B Evap ×8,46.9,-18.9,34.7,30.7,5.1
+base,,Hot-humid (Houston-like),A Fans ×10,38.4,20.7,12.1,11.6,3.9
+Peak irradiance on glazing (W/m²),200.0,Hot-dry (Phoenix-like),B Evap ×8,46.4,-17.0,34.0,30.0,5.1
+Peak irradiance on glazing (W/m²),200.0,Hot-humid (Houston-like),A Fans ×10,37.8,21.3,11.6,11.1,3.7
+Peak irradiance on glazing (W/m²),600.0,Hot-dry (Phoenix-like),B Evap ×8,47.3,-20.8,35.5,31.3,5.1
+Peak irradiance on glazing (W/m²),600.0,Hot-humid (Houston-like),A Fans ×10,39.0,20.0,12.7,12.1,4.1
+Glazing SHGC,0.25,Hot-dry (Phoenix-like),B Evap ×8,46.6,-17.4,34.2,30.2,5.1
+Glazing SHGC,0.25,Hot-humid (Houston-like),A Fans ×10,37.9,21.2,11.7,11.2,3.8
+Glazing SHGC,0.6,Hot-dry (Phoenix-like),B Evap ×8,47.3,-20.8,35.5,31.3,5.1
+Glazing SHGC,0.6,Hot-humid (Houston-like),A Fans ×10,39.0,20.0,12.7,12.1,4.1
+Door opening while a train dwells,0.3,Hot-dry (Phoenix-like),B Evap ×8,46.9,-19.2,35.1,30.9,5.3
+Door opening while a train dwells,0.3,Hot-humid (Houston-like),A Fans ×10,38.4,20.6,12.3,11.8,4.1
+Door opening while a train dwells,0.8,Hot-dry (Phoenix-like),B Evap ×8,46.9,-18.5,34.3,30.4,4.9
+Door opening while a train dwells,0.8,Hot-humid (Houston-like),A Fans ×10,38.4,20.9,11.9,11.5,3.7
+Wind exchange coefficient C_w,0.15,Hot-dry (Phoenix-like),B Evap ×8,47.7,-24.9,38.5,32.6,9.0
+Wind exchange coefficient C_w,0.15,Hot-humid (Houston-like),A Fans ×10,39.5,17.6,13.8,12.7,6.8
+Wind exchange coefficient C_w,0.5,Hot-dry (Phoenix-like),B Evap ×8,46.5,-16.0,31.7,29.2,3.2
+Wind exchange coefficient C_w,0.5,Hot-humid (Houston-like),A Fans ×10,37.9,22.0,11.0,11.0,2.5
+Thermal mass factor,1.0,Hot-dry (Phoenix-like),B Evap ×8,46.9,-19.3,35.3,31.0,5.3
+Thermal mass factor,1.0,Hot-humid (Houston-like),A Fans ×10,38.5,20.6,12.4,11.9,4.1
+Thermal mass factor,6.0,Hot-dry (Phoenix-like),B Evap ×8,46.8,-18.5,34.3,30.4,5.0
+Thermal mass factor,6.0,Hot-humid (Houston-like),A Fans ×10,38.3,20.8,12.0,11.5,3.8
+Entrance openness (street side),0.1,Hot-dry (Phoenix-like),B Evap ×8,47.6,-23.9,37.7,32.1,8.3
+Entrance openness (street side),0.1,Hot-humid (Houston-like),A Fans ×10,39.4,18.2,13.3,12.2,6.2
+Entrance openness (street side),0.4,Hot-dry (Phoenix-like),B Evap ×8,46.4,-14.8,30.6,28.7,2.7
+Entrance openness (street side),0.4,Hot-humid (Houston-like),A Fans ×10,37.7,22.3,10.6,10.8,2.2

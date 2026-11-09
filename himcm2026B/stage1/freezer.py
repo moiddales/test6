@@ -9,8 +9,8 @@ Refrigeration load = infiltration (sensible + latent) + radiation through the
 opening + wall conduction + internal heat (fans, lights, heaters).
 Electricity = load / COP + fans + lights + heaters + defrost.
 
-Infiltration is calibrated once to the literature share (75 % of the load,
-reported range 67-81 %); the door retrofit, the DOE energy limit and the
+Infiltration is calibrated once to the literature share (75 % of the load;
+SCE tests put it at 70-80 % for open vertical cases, ACEEE 2004); the door retrofit, the DOE energy limit and the
 energy closure are then independent checks.
 """
 import os
@@ -47,7 +47,7 @@ class Case:
     lights_kw: float = 0.15
     rail_heaters_kw: float = 0.10
     heater_share_in: float = 0.5    # share of heater power that ends up as case load
-    infil_share: float = 0.75       # calibration target at class 3 (lit. 0.67-0.81)
+    infil_share: float = 0.75       # calibration target (SCE tests: 0.70-0.80)
     cop: float = 1.6                # low-temperature remote system
     defrost_eff: float = 0.30       # share of defrost heat that melts frost
     # night covers
@@ -139,9 +139,10 @@ def daily(c, variant, T_store=25.0, RH_store=60.0, m_inf=None):
 
 
 def doe_limit(c, horizontal=False):
-    """DOE 2009 maximum daily energy, remote-condensing low-temperature classes
-    (10 CFR 431.66): VOP.RC.L = 2.27 TDA + 6.85, HZO.RC.L = 0.57 TDA + 6.88."""
-    return (0.57 * c.tda_ft2 + 6.88) if horizontal else (2.27 * c.tda_ft2 + 6.85)
+    """DOE maximum daily energy for equipment made on or after 27 March 2017,
+    remote-condensing low-temperature classes (10 CFR 431.66(e), 2025 edition):
+    VOP.RC.L = 2.2 TDA + 6.85, HZO.RC.L = 0.55 TDA + 6.88 (TDA in ft2)."""
+    return (0.55 * c.tda_ft2 + 6.88) if horizontal else (2.2 * c.tda_ft2 + 6.85)
 
 
 def store_hvac_credit(r, cool_fraction, cop_ac=3.0, cop_heat=2.5):
@@ -175,8 +176,8 @@ def main():
     elec_cut = 1 - lab["electricity_kwh"] / base.electricity_kwh
     limit = doe_limit(c)
     rows = [
-        ("door retrofit, test protocol: refrigeration-load reduction (%)", round(load_cut * 100, 1), "68-80 % (lab tests)", 0.68 <= load_cut <= 0.80),
-        ("door retrofit, test protocol: electricity reduction (%)", round(elec_cut * 100, 1), "60.6 % (ISO 23953 test) to 71 % (Hillphoenix test)", 0.55 <= elec_cut <= 0.75),
+        ("door retrofit, test protocol: refrigeration-load reduction (%)", round(load_cut * 100, 1), "68 % (SCE lab test) to 80 % (Hillphoenix, ASHRAE 72)", 0.68 <= load_cut <= 0.80),
+        ("door retrofit, test protocol: electricity reduction (%)", round(elec_cut * 100, 1), "71 % (Hillphoenix, ASHRAE 72)", 0.55 <= elec_cut <= 0.75),
         ("open case electricity vs DOE VOP.RC.L limit (kWh/day)", round(base.electricity_kwh, 1), f"limit {limit:.1f}", base.electricity_kwh <= limit),
     ]
     # energy closure on frost: latent infiltration load equals vapour removed x (condensation + fusion)
@@ -224,7 +225,7 @@ def main():
 
     # --- sensitivity of the calibrated infiltration share ---
     rows = []
-    for share in (0.67, 0.75, 0.81):
+    for share in (0.70, 0.75, 0.80):
         cc = replace(c, infil_share=share)
         o, d = daily(cc, "open"), daily(cc, "glass doors")
         rows.append(dict(infil_share=share, open_kwh=round(o["electricity_kwh"], 1),
@@ -241,8 +242,8 @@ def main():
     print("\nTable S4: sensitivity")
     print(t4.to_string(index=False))
 
-    print(f"\nDOE allowance per ft2 display: vertical open {2.27:.2f} vs horizontal open {0.57:.2f} kWh/day "
-          f"(x{2.27 / 0.57:.1f}); for this case's TDA: {doe_limit(c):.0f} vs {doe_limit(c, True):.0f} kWh/day")
+    print(f"\nDOE allowance per ft2 display: vertical open {2.2:.2f} vs horizontal open {0.55:.2f} kWh/day "
+          f"(x{2.2 / 0.55:.1f}); for this case's TDA: {doe_limit(c):.0f} vs {doe_limit(c, True):.0f} kWh/day")
 
     figS1(t1)
     figS2(t2, limit)

@@ -25,10 +25,10 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "stage2"))
-from psychro import humidity_ratio, rel_humidity, evaporative_outlet, p_ws  # noqa: E402
+from psychro import humidity_ratio, rel_humidity, evaporative_outlet  # noqa: E402
 from model import (Params, devices_for, utci, stress_dose, eps_of, RHO, CP, G,  # noqa: E402
                    sun_factor)
-from run_stage2 import CLIMATES  # noqa: E402
+from run_stage2 import weather  # noqa: E402
 
 OUT = os.path.join(HERE, "outputs")
 os.makedirs(OUT, exist_ok=True)
@@ -143,10 +143,7 @@ def ac_cop(T_out):
 # Boundary conditions
 # ---------------------------------------------------------------------------
 def outdoor(climate, t_h):
-    c = CLIMATES[climate]
-    T = (c["Tmax"] + c["Tmin"]) / 2 + (c["Tmax"] - c["Tmin"]) / 2 * np.cos(2 * np.pi * (t_h - 15) / 24)
-    RH = np.minimum(100 * p_ws(c["Td"]) / p_ws(T), 100)
-    return T, RH, c["v"]
+    return weather(climate, t_h)
 
 
 def timetable(t_h):
@@ -201,7 +198,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
     out = {k: np.zeros_like(t) for k in ("T", "W", "Q_x", "P", "water", "Q_ac")}
     for i in range(len(t)):
         open_w, total_w = st.wall_bands(dwelling[i])
-        Q_wind = st.C_w * (open_w * st.H_open).max() * v_o
+        Q_wind = st.C_w * (open_w * st.H_open).max() * v_o[i]
         Q_buoy = st.Cd / 3 * open_w.sum() * np.sqrt(G * st.Hz ** 3 * abs(T - T_o[i]) / (T_o[i] + 273.15))
         Q_x = np.hypot(Q_wind, Q_buoy)
         if st.dynamic and dwelling[i]:

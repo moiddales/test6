@@ -61,7 +61,7 @@ class Params:
     # --- M6 heat-stress weights for UTCI bands >=26, >=32, >=38, >=46 ---
     weights: tuple = (1.0, 2.0, 3.0, 4.0)
     # --- resources (Requirement 1: count every input) ---
-    e_water: float = 0.48      # kWh per m3 of supplied water (US average, range 0.07-3.0)
+    e_water: float = 0.53      # kWh/m3: US water supply ~2,000 kWh per million gallons (ACEEE 2009)
     # --- zero-energy design levers ---
     dR_sun: float = 30.0       # degC, mean radiant temp. above air temp. in full sun
 

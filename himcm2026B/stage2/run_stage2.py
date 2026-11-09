@@ -19,12 +19,32 @@ DEVS = devices_for(P)
 N_REF = mean_waiting(40, 10)          # 40 passengers/h, bus every 10 min -> ~4.2 waiting
 V_REF = 1.5                           # m/s wind at 1.1 m outside the shelter
 
-# Representative hot days. PLACEHOLDERS: replace with measured hourly data
-# (e.g. NOAA ISD / Meteostat) for the cities finally chosen.
-CLIMATES = {
-    "Hot-dry (Phoenix-like)": dict(Tmax=43.0, Tmin=31.0, Td=12.0, v=1.5),
-    "Hot-humid (Houston-like)": dict(Tmax=36.0, Tmin=26.0, Td=23.0, v=1.5),
-}
+# Measured design days: hour-by-hour means of the hottest 10 % of July days,
+# 2020-2024, ASOS airport observations (data/weather/hot_days.py).
+WEATHER_CSV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "weather", "july_profiles.csv")
+_prof = pd.read_csv(WEATHER_CSV)
+_prof = _prof[_prof.profile == "July hot days (top 10%)"]
+CLIMATES = {name: g.sort_values("hour") for name, g in _prof.groupby("climate", sort=False)}
+OBS_MINUTE = 52 / 60      # routine METARs are taken at about hh:51-hh:53
+
+
+def weather(climate, hour):
+    """Outdoor air temperature, RH and pedestrian-height wind at local clock
+    time `hour` (periodic linear interpolation of the measured profile)."""
+    g = CLIMATES[climate]
+    x = np.r_[g.hour.values + OBS_MINUTE, g.hour.values[0] + OBS_MINUTE + 24]
+    h = np.mod(np.asarray(hour, float) - x[0], 24) + x[0]
+    T = np.interp(h, x, np.r_[g["T"].values, g["T"].values[0]])
+    Td = np.interp(h, x, np.r_[g.Td.values, g.Td.values[0]])
+    v = np.interp(h, x, np.r_[g.v_ped.values, g.v_ped.values[0]])
+    return T, np.minimum(100 * p_ws(Td) / p_ws(T), 100), v
+
+
+def peak(climate):
+    """Air temperature and RH at the hottest measured hour of the design day."""
+    g = CLIMATES[climate]
+    k = g["T"].idxmax()
+    return float(g["T"][k]), float(100 * p_ws(g.Td[k]) / p_ws(g["T"][k]))
 
 
 def lines(label, ok):
@@ -63,13 +83,14 @@ def validation():
     r = evaluate(d, 46, 10, 1.0, 4, P)
     rows.append(("fan dU at 46C/10% (expect <= 0)", "46C/10%", round(float(r["dU"]), 2), 0.0,
                  float(r["dU"]) <= 0))
-    # (e) fan break-even temperature in dry air vs physiological evidence:
-    # at RH 20% fans stay beneficial up to ~45 C for young adults, ~42 C for the elderly
-    Tg = np.linspace(36, 48, 241)
-    r = evaluate(d, Tg, 20, 1.0, 4, P)
-    T_cross = float(Tg[np.argmax(r["dU"] <= 0)])
-    rows.append(("fan break-even T at RH 20% (evidence: elderly ~42, young ~45 C)", "RH 20%", round(T_cross, 1), "42-45",
-                 41 <= T_cross <= 45))
+    # (e) fan effect vs resting-subject trials: Morris et al. 2019 (fans helped at
+    # 40 C / 50 % RH, harmed at 47 C / 10 % RH); Ravanelli et al. 2015 (fans helped
+    # up to 50 % RH at 42 C)
+    for T, RH, helps, src in ((40, 50, True, "Morris 2019"), (47, 10, False, "Morris 2019"),
+                              (42, 50, True, "Ravanelli 2015")):
+        dU = float(evaluate(d, T, RH, 1.0, 4, P)["dU"])
+        rows.append((f"fan {'helps' if helps else 'harms'} at {T} C / {RH} % ({src})", f"{T}C/{RH}%",
+                     round(dU, 2), "> 0" if helps else "< 0", (dU > 0) == helps))
     # (f) water use: catalog 15-20 L/h for an 18,000 m3/h unit implies only ~2 C of cooling
     dT_cat = 17.5 / 3600 * H_FG / (RHO * 5.0 * CP)
     rows.append(("air-temp drop implied by catalog 17.5 L/h at 5 m3/s", "catalog", round(dT_cat, 2), "~2",
@@ -142,19 +163,18 @@ def ridership(h):
     return lam, headway
 
 
-def day_profile(c):
-    T = (c["Tmax"] + c["Tmin"]) / 2 + (c["Tmax"] - c["Tmin"]) / 2 * np.cos(2 * np.pi * (HOURS - 15) / 24)
-    RH = np.minimum(100 * p_ws(c["Td"]) / p_ws(T), 100)
+def day_profile(climate):
+    T, RH, v = weather(climate, HOURS)
     lam, hw = ridership(HOURS)
     n = mean_waiting(lam, hw)
-    return T, RH, np.full_like(T, c["v"]), n
+    return T, RH, v, n
 
 
 def design_days(p=P, tag="table2_design_days"):
     devs = devices_for(p)
     rows, hourly = [], {}
-    for cname, c in CLIMATES.items():
-        T, RH, v, n = day_profile(c)
+    for cname in CLIMATES:
+        T, RH, v, n = day_profile(cname)
         hourly[cname] = dict(T=T, RH=RH, n=n, U={})
         for d in devs:
             r = evaluate(d, T, RH, v, n, p, "spot")
@@ -199,8 +219,8 @@ def design_days(p=P, tag="table2_design_days"):
 # ---------------------------------------------------------------------------
 def design_levers(t2):
     rows = []
-    for cname, c in CLIMATES.items():
-        T, RH, v, n = day_profile(c)
+    for cname in CLIMATES:
+        T, RH, v, n = day_profile(cname)
         _, _, rel = shade_relief(T, RH, v, HOURS, P)
         rows.append(dict(climate=cname, lever="Shelter roof (shade vs full sun)", device="none",
                          energy_kWh=0.0, relief_person_degC_h=round(float((n * rel).sum()), 1)))
@@ -229,8 +249,7 @@ def decision_rules():
         rows.append(dict(rule="fan vs evaporative boundary", T=T, value=round(rh_max, 1),
                          unit="max RH (%) where evaporative beats the fan",
                          wet_bulb_depression=round(float(T - wet_bulb(T, rh_max)), 1)))
-    T = CLIMATES["Hot-dry (Phoenix-like)"]["Tmax"]
-    RH = float(100 * p_ws(CLIMATES["Hot-dry (Phoenix-like)"]["Td"]) / p_ws(T))
+    T, RH = peak("Hot-dry (Phoenix-like)")
     for n in [1, 2, 4, 6, 8, 10, 12]:
         rB = evaluate(DEVS[1], T, RH, V_REF, n, P)
         rC = evaluate(DEVS[2], T, RH, V_REF, n, P)

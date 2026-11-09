@@ -1,9 +1,9 @@
 scenario,climate,supply,electricity_kWh,eta,T_zone_15h,ph_UTCI38_after
-Platform screen doors,Hot-dry (Phoenix-like),low-level supply to occupied zone,258.0,8.5,39.8,106.2
-Platform screen doors,Hot-dry (Phoenix-like),mixing (cools whole hall),257.8,5.8,41.5,129.5
-Platform screen doors,Hot-humid (Houston-like),low-level supply to occupied zone,274.9,5.3,32.8,0.0
-Platform screen doors,Hot-humid (Houston-like),mixing (cools whole hall),282.9,3.9,34.5,0.0
-Enclosed waiting room,Hot-dry (Phoenix-like),low-level supply to occupied zone,233.1,25.0,32.6,0.0
-Enclosed waiting room,Hot-dry (Phoenix-like),mixing (cools whole hall),252.5,18.0,38.3,70.0
-Enclosed waiting room,Hot-humid (Houston-like),low-level supply to occupied zone,197.1,20.4,26.2,0.0
-Enclosed waiting room,Hot-humid (Houston-like),mixing (cools whole hall),243.8,14.9,31.3,0.0
+Platform screen doors,Hot-dry (Phoenix-like),low-level supply to occupied zone,280.9,5.1,44.3,151.3
+Platform screen doors,Hot-dry (Phoenix-like),mixing (cools whole hall),280.7,3.4,45.1,159.4
+Platform screen doors,Hot-humid (Houston-like),low-level supply to occupied zone,270.3,3.9,34.5,0.0
+Platform screen doors,Hot-humid (Houston-like),mixing (cools whole hall),276.8,2.8,35.8,22.6
+Enclosed waiting room,Hot-dry (Phoenix-like),low-level supply to occupied zone,266.1,16.9,40.0,102.3
+Enclosed waiting room,Hot-dry (Phoenix-like),mixing (cools whole hall),271.4,11.8,43.3,134.9
+Enclosed waiting room,Hot-humid (Houston-like),low-level supply to occupied zone,237.5,13.9,28.5,0.0
+Enclosed waiting room,Hot-humid (Houston-like),mixing (cools whole hall),263.0,10.2,33.2,0.0

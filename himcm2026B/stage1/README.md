@@ -43,12 +43,12 @@
 
 ## 3. 模型
 
-参考对象：12 ft（3.66 m）低温立式敞口多层冷柜，带风幕，远置式冷凝。开口 3.66 × 1.6 m（TDA 63 ft²），柜内空气 −25°C，商品表面 −20°C。商场取 ISO 23953 气候等级 3（25°C / 60%）。
+参考对象：12 ft（3.66 m）低温立式敞口多层冷柜，带风幕，远置式冷凝。开口 3.66 × 1.6 m（TDA 63 ft²），柜内空气 −25°C，商品表面 −20°C。商场取 25°C / 60%（常被引用为 ISO 23953 气候等级 3，但标准里的等级表未能核实；第 4 节对商场温湿度做了敏感性分析）。
 
 **制冷负荷** = 渗入（显热 + 潜热）+ 开口辐射 + 柜体传导 + 内部发热
 
 - **渗入：**
-  - 质量流量 ṁ 按文献比例标定：渗入占制冷负荷 67–81%，本模型取 75%。标定结果 ṁ = 0.053 kg/s，相当于商场空气以 0.8 cm/s 的速度穿过整个开口。
+  - 质量流量 ṁ 按文献比例标定：SCE 实测中温敞口立式柜的渗入占总冷负荷 70–80%（ACEEE 2004，其测试值 73%），本模型取 75%。标定结果 ṁ = 0.053 kg/s，相当于商场空气以 0.8 cm/s 的速度穿过整个开口。
   - 显热：ṁ × 1.006 × (T_store − T_case)。
   - 潜热：ṁ × (W_store − W_case) × (2501 + 1.86T + 334)。水汽在柜内先凝结再结霜，所以凝结热和凝固热都要计入。
 - **辐射：** ε·F·σ·A·(T_store⁴ − T_product⁴)，有效发射率乘角系数 ε·F = 0.56。
@@ -107,16 +107,16 @@
 
 ### 敏感性（表 S4）
 
-- 渗入比例在文献范围 67–81% 内变化：敞口冷柜用电 91–155 kWh/天，加门后制冷负荷降 54–73%（门店客流）。
+- 渗入比例在文献范围 70–80% 内变化：敞口冷柜用电 100–148 kWh/天（80% 时略超 DOE 限值 145.5），加门后制冷负荷降 58–72%（门店客流）。
 - 每扇门每小时开门 6 / 20 / 40 次：加门后制冷负荷分别降 74% / 65% / 52%。门店开门越频繁，加门的节能效果越小。
 
 ### 检验（表 S0，4 项全部通过）
 
 | 检验 | 模型 | 参照 |
 |---|---|---|
-| 加门后的制冷负荷降幅（ASHRAE 72 开门程序） | 75.9% | 实验室测试 68–80% |
-| 加门后的用电降幅（同一程序） | 68.5% | ISO 23953 测试 60.6%；Hillphoenix 测试 71% |
-| 敞口冷柜用电 vs DOE 限值（VOP.RC.L = 2.27·TDA + 6.85） | 119.0 kWh/天 | 限值 149.9 kWh/天 |
+| 加门后的制冷负荷降幅（ASHRAE 72 开门程序） | 75.9% | SCE 实验室 68%；Hillphoenix 80%（ASHRAE 72） |
+| 加门后的用电降幅（同一程序） | 68.5% | Hillphoenix 71%（ASHRAE 72） |
+| 敞口冷柜用电 vs DOE 现行限值（VOP.RC.L = 2.2·TDA + 6.85，2017 年起） | 119.0 kWh/天 | 限值 145.5 kWh/天 |
 | 潜热负荷 = 结霜量 ×（凝结热 + 凝固热） | 41.84 | 41.84 |
 
 ## 5. 文件与运行
@@ -133,12 +133,11 @@ cd himcm2026B/stage1 && python3 freezer.py
 
 ## 6. 资料来源
 
-- 渗入占敞口立式冷柜负荷 67–81%，新近资料约 80%：[core.ac.uk 304001082](https://core.ac.uk/download/304001082.pdf)；[NREL 2025](https://nrel.gov/docs/fy25osti/89884.pdf)；[Amin, Dabiri & Navaz 示踪气体法 (2008)](https://www.aa.washington.edu/files/faculty/dabiri/pubs/Tracer%20gas%20technique%20-%20A%20new%20approach%20for%20steady%20state%20infiltration%20rate%20measurement%20of%20open%20refrigerated%20display%20cases%202008.pdf)
+- 渗入占中温敞口立式柜总冷负荷 70–80%（测试值 73%）：Sarhadian 等（SCE），[ACEEE Summer Study 2004](https://www.aceee.org/files/proceedings/2004/data/papers/SS04_Panel3_Paper23.pdf)（原文核实）
 - 加门效果：
-  - 五层乳品/熟食柜实验室测试负荷降 68%：[DOE Better Buildings](https://betterbuildingssolutioncenter.energy.gov/solutions-at-a-glance/retrofitting-open-refrigerated-display-cases-cuts-energy-costs-retailers)；[ACHR News](https://www.achrnews.com/articles/124806-closing-an-open-case)
-  - 负荷降 80%、总能耗降 71%：[Hillphoenix 案例](https://www.hillphoenix.com/wp-content/uploads/2018/02/Case-Study-display-case-Adding-Glass-Doors-to-Multi-Deck-Meat-Case-.pdf)
-  - ISO 23953 测试中加门后能耗为敞口的 39.4%：[LSBU, ICR 2019](https://openresearch.lsbu.ac.uk/download/63ff2e9cd8edfefcb817f37a84fd2ce46e566ed93b8f8dc26f372f0075d56322/464308/ICR_2019_paper_280_impact_of_doors_on_display_cabinets.pdf)
-  - 新西兰试点能耗降 42%、无持续销售影响：[HVACR News](https://hvacrnews.com.au/news/improving-cooling-efficiency-in-the-dairy-aisle/)
-- DOE 2009 限值 VOP.RC.L = 2.27·TDA + 6.85、HZO.RC.L = 0.57·TDA + 6.88：[74 FR 1134](https://www.govinfo.gov/link/fr/74/1134)；[10 CFR 431.66](https://codes.findlaw.com/cfr/title-10-energy/cfr-sect-10-431-66/)
+  - 五层乳品/熟食柜实验室测试负荷降 68%：SCE Irwindale 测试中心，[ProQuest 摘要](https://www.proquest.com/docview/192523679)（只看到摘要）
+  - 负荷降 80%（每英尺 1576 → 315 Btu/h）、总能耗降 71%（33.3 → 9.6 kWh/天），ASHRAE 72 测试：[Hillphoenix 案例](https://www.hillphoenix.com/wp-content/uploads/2018/02/Case-Study-display-case-Adding-Glass-Doors-to-Multi-Deck-Meat-Case-.pdf)（原文核实）
+  - 新西兰 Countdown Pukekohe South 门店试点能耗降 42%、无持续销售影响：[HVAC&R News](https://hvacrnews.com.au/news/improving-cooling-efficiency-in-the-dairy-aisle/)（原文核实）
+- DOE 现行限值（2017-03-27 以后生产）VOP.RC.L = 2.2·TDA + 6.85、HZO.RC.L = 0.55·TDA + 6.88：[10 CFR 431.66(e)，2025 年版](https://www.govinfo.gov/content/pkg/CFR-2025-title10-vol4/xml/CFR-2025-title10-vol4-sec431-66.xml)（原文核实；2012–2017 年旧值为 2.27 和 0.57）
 - 测试开门程序（8 小时，每扇门约每 10 分钟开一次）：[NREL 2023](https://nrel.gov/docs/fy23osti/84783.pdf)；[DOE 测试程序 2023](https://www.govinfo.gov/content/pkg/FR-2023-09-26/html/2023-19999.htm)
 - 门洞浮力换气公式（Gosney–Olama）：[EnergyPlus Engineering Reference](https://bigladdersoftware.com/epx/docs/8-5/engineering-reference/air-exchange.html)

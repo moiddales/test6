@@ -16,7 +16,7 @@ To see which quantities an efficiency measure needs, we follow the heat that a t
 - opening 3.66 × 1.6 m, total display area (TDA) 63 ft²;
 - case air at −25 °C, product surface at −20 °C;
 - remote condensing;
-- store at 25 °C / 60 % RH, which is climate class 3 of the display-case test standard ISO 23953.
+- store at 25 °C / 60 % RH, a standard display-case test-room condition (varied from 21 to 27 °C and 30 to 70 % RH in Section 3.4).
 
 ## 3.2 A heat balance of the case
 
@@ -39,12 +39,12 @@ $$
 
 with COP = 1.6 for a low-temperature system.
 
-**Calibration.** Published measurements put infiltration at 67–81 % of the total load of open vertical cases. We set the infiltration mass flow so that infiltration is 75 % at class 3. The result is $\dot m = 0.053$ kg/s, equivalent to store air crossing the whole opening at only 0.8 cm/s.
+**Calibration.** Southern California Edison tests put infiltration at 70–80 % of the total cooling load of open vertical cases (73 % in their own test; Sarhadian et al., 2004). We set the infiltration mass flow so that infiltration is 75 % at 25 °C / 60 %. The result is $\dot m = 0.053$ kg/s, equivalent to store air crossing the whole opening at only 0.8 cm/s.
 
 **Independent checks** (Table S0):
 
-1. **Door retrofit.** Under the ASHRAE 72 door-opening protocol (each door opened about 6 times per hour for 8 of 24 hours), adding glass doors cuts the modelled refrigeration load by 75.9 % and electricity by 68.5 %. Laboratory tests report load reductions of 68–80 % and electricity reductions of 61 % (ISO 23953 test) to 71 % (manufacturer test).
-2. **DOE limit.** The modelled open case uses 119.0 kWh/day, below the DOE limit for its class (VOP.RC.L: 2.27·TDA + 6.85 = 149.9 kWh/day).
+1. **Door retrofit.** Under the ASHRAE 72 door-opening protocol (each door opened about 6 times per hour for 8 of 24 hours), adding glass doors cuts the modelled refrigeration load by 75.9 % and electricity by 68.5 %. Laboratory tests report load reductions of 68 % (SCE, five-deck dairy case) and 80 % (Hillphoenix, ASHRAE 72, multi-deck meat case: 1,576 → 315 Btu/h per ft), and a 71 % electricity reduction in the Hillphoenix test (33.3 → 9.6 kWh/day).
+2. **DOE limit.** The modelled open case uses 119.0 kWh/day, below the current DOE limit for its class (VOP.RC.L, equipment made since 27 March 2017: 2.2·TDA + 6.85 = 145.5 kWh/day; 10 CFR 431.66(e)).
 3. **Energy closure.** The latent load equals the frost mass times the heat of condensation plus fusion.
 
 ## 3.3 Where the cooling goes
@@ -70,13 +70,13 @@ Energy use alone fails for four reasons, each of which the model quantifies.
 **2. The same case uses different energy in different air.**
 
 - With products, temperatures and service unchanged, moving the store from 21 °C / 40 % to 27 °C / 70 % raises consumption from 91.1 to 136.8 kWh/day (×1.50, Fig. S2). Each additional 10 points of relative humidity costs 6–9 kWh/day, mostly through frost.
-- An efficiency comparison must therefore state the ambient conditions. Test standards fix them for this reason: ISO 23953 tests at defined climate classes.
+- An efficiency comparison must therefore state the ambient conditions. Test standards fix them for this reason: display cases are rated in test rooms at defined temperature and humidity.
 
 **3. Design matters more than the refrigeration machinery.**
 
 - Night covers on the 8 closed hours save 22 % at no cost to service.
 - Glass doors save 58 % with store traffic (20 openings per door per hour) and 74 % with test-protocol traffic.
-- Geometry matters even more. DOE allows a horizontal open low-temperature case 0.57 kWh/day per ft² of display area against 2.27 for a vertical one, a factor of 4.0. Cold air pools in a horizontal well, but it drains out of a vertical opening, the same buoyant spill that limits any opening on its vertical side.
+- Geometry matters even more. DOE allows a horizontal open low-temperature case 0.55 kWh/day per ft² of display area against 2.2 for a vertical one, a factor of 4.0. Cold air pools in a horizontal well, but it drains out of a vertical opening, the same buoyant spill that limits any opening on its vertical side.
 
 **4. The system boundary changes the answer.**
 
@@ -137,11 +137,9 @@ Three principles carry into Section 4:
 **References used here:**
 
 - ASHRAE Handbook—Refrigeration (display cases; Gosney–Olama door infiltration)
-- ISO 23953-2 (refrigerated display cabinets, climate classes)
 - ANSI/ASHRAE Standard 72-2022 and DOE test procedure final rule (Federal Register, Sept. 26, 2023)
-- DOE energy conservation standards (74 FR, Jan. 2009), 10 CFR 431.66
-- NREL (2025) report on display-case infiltration
-- Amin, Dabiri & Navaz (2008, 2011) tracer-gas infiltration studies
-- DOE Better Buildings door-retrofit case study
-- Hillphoenix door-retrofit case study
-- LSBU ICR 2019 paper 280
+- 10 CFR 431.66(e), energy conservation standards for commercial refrigeration equipment (2025 edition)
+- Sarhadian, R., Faramarzi, R., Coburn, B. A., Lutton, J., Navaz, H., Walker, D. (2004). Paving the path for a new generation of high-efficiency supermarket refrigerated display cases. ACEEE Summer Study on Energy Efficiency in Buildings
+- Southern California Edison, Refrigeration and Thermal Test Center: glass doors on a five-deck dairy/deli case (ProQuest abstract 192523679)
+- Hillphoenix, Adding Glass Doors to Multi-Deck Meat Case (case study, ASHRAE 72 test)
+- Aliento, W. Improving cooling efficiency in the dairy aisle. HVAC&R News (New Zealand door-retrofit pilot)
