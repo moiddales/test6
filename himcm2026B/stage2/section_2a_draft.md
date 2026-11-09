@@ -6,7 +6,7 @@
 
 The problem table compares the three systems with numbers that measure different things. The fan "makes the space feel up to 3 °C cooler" by moving air; the evaporative coolers "lower air temperature up to 5 °C and 8 °C" and add moisture while doing so. Dividing those numbers by power gives 12, 4.2 and 3.2 °C/kW. That ratio ignores three facts that Section 3 (the open freezer case) already showed matter:
 
-1. **Only cooling that reaches people counts.** In the freezer case it is the cooling that reaches the product; at a bus stop it is the cooling that reaches the people waiting. Air cooled in an empty corner, or blown out of the open sides, is wasted.
+1. **Only cooling that reaches people counts.** In the freezer case 87 % of the cooling is spent on the opening and only 13 % protects the product; at a bus stop the target is the people waiting. Air cooled in an empty corner, or blown out of the open sides, is wasted.
 2. **The device's effect depends on the weather.** An evaporative cooler can never cool air below its wet-bulb temperature. A fan delivers heat to the body once the air is hotter than skin.
 3. **Relief is worth more when heat is dangerous.** Lowering felt temperature from 44 °C to 38 °C prevents harm; lowering it from 27 °C to 24 °C adds comfort only.
 
