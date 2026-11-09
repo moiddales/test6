@@ -1,0 +1,13 @@
+check,case,model,reference,pass
+wet bulb vs Stull,42C/15%,21.54,22.04,True
+wet bulb vs Stull,35C/55%,27.19,27.56,True
+wet bulb vs Stull,32C/75%,28.17,28.26,True
+wet bulb vs Stull,30C/50%,22.01,22.3,True
+energy closure (kJ/kg air),42C/15%,16.46,16.05,True
+energy closure (kJ/kg air),35C/55%,6.29,6.25,True
+fan rated effect at reference,30C/50%,3.0,3.0,True
+fan dU at 46C/10% (expect <= 0),46C/10%,-1.21,0.0,True
+"fan break-even T at RH 20% (evidence: elderly ~42, young ~45 C)",RH 20%,41.6,42-45,True
+air-temp drop implied by catalog 17.5 L/h at 5 m3/s,catalog,2.04,~2,True
+huge supply -> zone = supply temp,Qs->inf,30.0,30.0,True
+no supply -> zone = ambient,Qs->0,40.0,40.0,True

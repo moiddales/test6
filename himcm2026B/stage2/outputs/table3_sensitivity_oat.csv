@@ -1,0 +1,61 @@
+climate,device,parameter,low,high,eta_base,eta_at_low,eta_at_high
+Hot-dry (Phoenix-like),A Fan,Rating depression D_ref (°C),8.5,13.0,-11.02,-11.02,-11.02
+Hot-dry (Phoenix-like),B Evap cooler,Rating depression D_ref (°C),8.5,13.0,40.6,48.37,30.34
+Hot-dry (Phoenix-like),C Large evap cooler,Rating depression D_ref (°C),8.5,13.0,34.6,38.68,28.68
+Hot-humid (Houston-like),A Fan,Rating depression D_ref (°C),8.5,13.0,65.46,65.46,65.46
+Hot-humid (Houston-like),B Evap cooler,Rating depression D_ref (°C),8.5,13.0,17.21,18.99,14.82
+Hot-humid (Houston-like),C Large evap cooler,Rating depression D_ref (°C),8.5,13.0,13.89,15.38,11.87
+Hot-dry (Phoenix-like),A Fan,Fan rating reference T (°C),28.0,33.0,-11.02,-9.16,-122.25
+Hot-dry (Phoenix-like),B Evap cooler,Fan rating reference T (°C),28.0,33.0,40.6,40.6,40.6
+Hot-dry (Phoenix-like),C Large evap cooler,Fan rating reference T (°C),28.0,33.0,34.6,34.6,34.6
+Hot-humid (Houston-like),A Fan,Fan rating reference T (°C),28.0,33.0,65.46,59.0,49.03
+Hot-humid (Houston-like),B Evap cooler,Fan rating reference T (°C),28.0,33.0,17.21,17.21,17.21
+Hot-humid (Houston-like),C Large evap cooler,Fan rating reference T (°C),28.0,33.0,13.89,13.89,13.89
+Hot-dry (Phoenix-like),A Fan,Airflow per covered person (m³/s),0.5,1.2,-11.02,-11.48,-7.35
+Hot-dry (Phoenix-like),B Evap cooler,Airflow per covered person (m³/s),0.5,1.2,40.6,40.6,40.6
+Hot-dry (Phoenix-like),C Large evap cooler,Airflow per covered person (m³/s),0.5,1.2,34.6,34.6,34.6
+Hot-humid (Houston-like),A Fan,Airflow per covered person (m³/s),0.5,1.2,65.46,68.19,43.64
+Hot-humid (Houston-like),B Evap cooler,Airflow per covered person (m³/s),0.5,1.2,17.21,17.21,17.21
+Hot-humid (Houston-like),C Large evap cooler,Airflow per covered person (m³/s),0.5,1.2,13.89,13.89,13.89
+Hot-dry (Phoenix-like),A Fan,Jet share at person θ0,0.5,0.85,-11.02,-11.02,-11.02
+Hot-dry (Phoenix-like),B Evap cooler,Jet share at person θ0,0.5,0.85,40.6,27.9,50.03
+Hot-dry (Phoenix-like),C Large evap cooler,Jet share at person θ0,0.5,0.85,34.6,26.56,39.53
+Hot-humid (Houston-like),A Fan,Jet share at person θ0,0.5,0.85,65.46,65.46,65.46
+Hot-humid (Houston-like),B Evap cooler,Jet share at person θ0,0.5,0.85,17.21,14.25,19.37
+Hot-humid (Houston-like),C Large evap cooler,Jet share at person θ0,0.5,0.85,13.89,11.38,15.7
+Hot-dry (Phoenix-like),A Fan,Radiant excess in shade (°C),0.0,10.0,-11.02,-18.92,-1.46
+Hot-dry (Phoenix-like),B Evap cooler,Radiant excess in shade (°C),0.0,10.0,40.6,40.49,40.83
+Hot-dry (Phoenix-like),C Large evap cooler,Radiant excess in shade (°C),0.0,10.0,34.6,33.08,36.99
+Hot-humid (Houston-like),A Fan,Radiant excess in shade (°C),0.0,10.0,65.46,56.55,91.57
+Hot-humid (Houston-like),B Evap cooler,Radiant excess in shade (°C),0.0,10.0,17.21,15.47,22.72
+Hot-humid (Houston-like),C Large evap cooler,Radiant excess in shade (°C),0.0,10.0,13.89,12.98,16.65
+Hot-dry (Phoenix-like),A Fan,Wind sheltering factor,0.3,0.8,-11.02,-25.32,-2.52
+Hot-dry (Phoenix-like),B Evap cooler,Wind sheltering factor,0.3,0.8,40.6,43.33,36.81
+Hot-dry (Phoenix-like),C Large evap cooler,Wind sheltering factor,0.3,0.8,34.6,35.58,32.81
+Hot-humid (Houston-like),A Fan,Wind sheltering factor,0.3,0.8,65.46,66.88,53.88
+Hot-humid (Houston-like),B Evap cooler,Wind sheltering factor,0.3,0.8,17.21,18.34,14.49
+Hot-humid (Houston-like),C Large evap cooler,Wind sheltering factor,0.3,0.8,13.89,14.79,12.05
+Hot-dry (Phoenix-like),A Fan,Outside wind speed (m/s),0.5,3.0,-11.02,-32.82,-2.59
+Hot-dry (Phoenix-like),B Evap cooler,Outside wind speed (m/s),0.5,3.0,40.6,45.52,34.44
+Hot-dry (Phoenix-like),C Large evap cooler,Outside wind speed (m/s),0.5,3.0,34.6,36.3,31.52
+Hot-humid (Houston-like),A Fan,Outside wind speed (m/s),0.5,3.0,65.46,65.51,45.18
+Hot-humid (Houston-like),B Evap cooler,Outside wind speed (m/s),0.5,3.0,17.21,18.75,12.92
+Hot-humid (Houston-like),C Large evap cooler,Outside wind speed (m/s),0.5,3.0,13.89,15.15,10.94
+Hot-dry (Phoenix-like),A Fan,People waiting,2.0,12.0,-11.02,-5.51,-11.02
+Hot-dry (Phoenix-like),B Evap cooler,People waiting,2.0,12.0,40.6,19.49,60.89
+Hot-dry (Phoenix-like),C Large evap cooler,People waiting,2.0,12.0,34.6,16.61,77.85
+Hot-humid (Houston-like),A Fan,People waiting,2.0,12.0,65.46,32.73,65.46
+Hot-humid (Houston-like),B Evap cooler,People waiting,2.0,12.0,17.21,8.26,25.81
+Hot-humid (Houston-like),C Large evap cooler,People waiting,2.0,12.0,13.89,6.67,31.25
+Hot-dry (Phoenix-like),A Fan,Evap jet speed (× base),0.7,1.3,-11.02,-11.02,-11.02
+Hot-dry (Phoenix-like),B Evap cooler,Evap jet speed (× base),0.7,1.3,40.6,33.0,47.39
+Hot-dry (Phoenix-like),C Large evap cooler,Evap jet speed (× base),0.7,1.3,34.6,30.25,38.19
+Hot-humid (Houston-like),A Fan,Evap jet speed (× base),0.7,1.3,65.46,65.46,65.46
+Hot-humid (Houston-like),B Evap cooler,Evap jet speed (× base),0.7,1.3,17.21,12.83,21.57
+Hot-humid (Houston-like),C Large evap cooler,Evap jet speed (× base),0.7,1.3,13.89,10.54,16.84
+Hot-dry (Phoenix-like),A Fan,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,-11.02,-3.67,-33.07
+Hot-dry (Phoenix-like),B Evap cooler,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,40.6,13.53,121.79
+Hot-dry (Phoenix-like),C Large evap cooler,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,34.6,12.42,95.85
+Hot-humid (Houston-like),A Fan,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,65.46,29.58,126.57
+Hot-humid (Houston-like),B Evap cooler,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,17.21,7.92,31.97
+Hot-humid (Houston-like),C Large evap cooler,Heat-stress weights (1-1-1-1 to 1-3-9-27),1-1-1-1,1-3-9-27,13.89,6.62,23.79

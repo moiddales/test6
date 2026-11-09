@@ -1,0 +1,21 @@
+condition,T,RH,wet_bulb,device,mode,power_kW,T_at_person,RH_at_person,UTCI_before,UTCI_after,UTCI_drop,relief_weighted,people_benefiting,eta,gross_cooling_kW,delivered_share,water_L_per_h,naive_degC_per_kW
+Hot-dry afternoon,42,15,21.5,A Fan,jet at people,0.25,42.0,15.0,42.6,42.7,-0.1,-0.3,4.0,-4.8,0.0,1.0,0.0,12.0
+Hot-dry afternoon,42,15,21.5,B Evap cooler,spot (aim at people),1.2,37.2,24.0,42.6,38.6,3.96,11.87,4.17,41.2,59.7,0.47,85.1,4.2
+Hot-dry afternoon,42,15,21.5,B Evap cooler,volume (cool the shelter),1.2,37.8,23.0,42.6,39.4,3.15,9.46,4.17,32.8,59.7,0.42,85.1,4.2
+Hot-dry afternoon,42,15,21.5,C Large evap cooler,spot (aim at people),2.5,33.7,34.0,42.6,35.1,7.51,19.61,4.17,32.7,143.2,0.51,205.2,3.2
+Hot-dry afternoon,42,15,21.5,C Large evap cooler,volume (cool the shelter),2.5,33.7,34.0,42.6,36.4,6.13,16.84,4.17,28.1,143.2,0.51,205.2,3.2
+Hot-humid afternoon,35,55,27.2,A Fan,jet at people,0.25,35.0,55.0,38.0,36.0,2.09,4.23,4.0,67.7,0.0,1.0,0.0,12.0
+Hot-humid afternoon,35,55,27.2,B Evap cooler,spot (aim at people),1.2,33.2,63.0,38.0,36.0,2.0,4.05,4.17,14.1,22.8,0.47,33.2,4.2
+Hot-humid afternoon,35,55,27.2,B Evap cooler,volume (cool the shelter),1.2,33.4,62.0,38.0,37.2,0.88,1.8,4.17,6.3,22.8,0.42,33.2,4.2
+Hot-humid afternoon,35,55,27.2,C Large evap cooler,spot (aim at people),2.5,31.8,70.0,38.0,34.6,3.45,6.95,4.17,11.6,54.7,0.51,79.9,3.2
+Hot-humid afternoon,35,55,27.2,C Large evap cooler,volume (cool the shelter),2.5,31.8,70.0,38.0,36.4,1.67,3.4,4.17,5.7,54.7,0.52,79.9,3.2
+"Warm, moderate humidity",30,50,22.0,A Fan,jet at people,0.25,30.0,50.0,31.3,28.4,2.92,2.92,4.0,46.7,0.0,1.0,0.0,12.0
+"Warm, moderate humidity",30,50,22.0,B Evap cooler,spot (aim at people),1.2,28.1,59.0,31.3,29.0,2.31,2.31,4.17,8.0,23.3,0.47,33.7,4.2
+"Warm, moderate humidity",30,50,22.0,B Evap cooler,volume (cool the shelter),1.2,28.3,58.0,31.3,30.4,0.88,0.88,4.17,3.1,23.3,0.42,33.7,4.2
+"Warm, moderate humidity",30,50,22.0,C Large evap cooler,spot (aim at people),2.5,26.7,66.0,31.3,27.3,3.98,3.98,4.17,6.6,55.9,0.51,81.1,3.2
+"Warm, moderate humidity",30,50,22.0,C Large evap cooler,volume (cool the shelter),2.5,26.7,67.0,31.3,29.6,1.66,1.66,4.17,2.8,55.9,0.52,81.1,3.2
+Very humid,32,75,28.2,A Fan,jet at people,0.25,32.0,75.0,36.7,34.0,2.75,5.49,4.0,87.9,0.0,1.0,0.0,12.0
+Very humid,32,75,28.2,B Evap cooler,spot (aim at people),1.2,31.1,80.0,36.7,35.1,1.57,3.14,4.17,10.9,11.2,0.47,16.4,4.2
+Very humid,32,75,28.2,B Evap cooler,volume (cool the shelter),1.2,31.2,80.0,36.7,36.4,0.32,0.64,4.17,2.2,11.2,0.42,16.4,4.2
+Very humid,32,75,28.2,C Large evap cooler,spot (aim at people),2.5,30.4,84.0,36.7,34.1,2.59,5.18,4.17,8.6,26.8,0.51,39.4,3.2
+Very humid,32,75,28.2,C Large evap cooler,volume (cool the shelter),2.5,30.4,84.0,36.7,36.1,0.62,1.24,4.17,2.1,26.8,0.52,39.4,3.2
