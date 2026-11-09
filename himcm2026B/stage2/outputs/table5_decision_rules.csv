@@ -1,14 +1,14 @@
 rule,T,value,unit,wet_bulb_depression,eta_B,eta_C,UTCI_after_B,UTCI_after_C
-fan vs evaporative boundary,36.0,8.8,max RH (%) where evaporative beats the fan,19.9,,,,
-fan vs evaporative boundary,38.0,17.8,max RH (%) where evaporative beats the fan,17.9,,,,
-fan vs evaporative boundary,40.0,26.8,max RH (%) where evaporative beats the fan,15.8,,,,
-fan vs evaporative boundary,42.0,33.0,max RH (%) where evaporative beats the fan,14.6,,,,
-fan vs evaporative boundary,44.0,37.5,max RH (%) where evaporative beats the fan,13.7,,,,
+fan vs evaporative boundary,36.0,8.0,max RH (%) where evaporative beats the fan,20.2,,,,
+fan vs evaporative boundary,38.0,17.5,max RH (%) where evaporative beats the fan,18.0,,,,
+fan vs evaporative boundary,40.0,26.2,max RH (%) where evaporative beats the fan,16.0,,,,
+fan vs evaporative boundary,42.0,32.8,max RH (%) where evaporative beats the fan,14.6,,,,
+fan vs evaporative boundary,44.0,37.2,max RH (%) where evaporative beats the fan,13.8,,,,
 fan vs evaporative boundary,46.0,37.2,max RH (%) where evaporative beats the fan,14.2,,,,
-B vs C by crowd size at hot-dry peak,43.0,1.0,people waiting,,9.7,8.3,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,2.0,people waiting,,19.5,16.6,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,4.0,people waiting,,39.0,33.2,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,6.0,people waiting,,58.5,49.8,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,8.0,people waiting,,60.9,66.4,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,10.0,people waiting,,60.9,77.9,40.0,36.4
-B vs C by crowd size at hot-dry peak,43.0,12.0,people waiting,,60.9,77.9,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,1.0,people waiting,,9.4,8.0,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,2.0,people waiting,,18.8,16.0,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,4.0,people waiting,,37.7,32.0,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,6.0,people waiting,,56.5,47.9,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,8.0,people waiting,,58.9,63.9,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,10.0,people waiting,,58.9,74.9,40.0,36.4
+B vs C by crowd size at hot-dry peak,43.0,12.0,people waiting,,58.9,74.9,40.0,36.4

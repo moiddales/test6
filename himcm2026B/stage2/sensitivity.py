@@ -36,6 +36,7 @@ RANGES = {
     "Outside wind speed (m/s)": (0.5, 3.0, "wind", None),
     "People waiting": (2.0, 12.0, "people", None),
     "Evap jet speed (× base)": (0.7, 1.3, "jet", None),
+    "Water energy intensity (kWh/m³)": (0.07, 3.0, "param", "e_water"),
 }
 
 

@@ -1,190 +1,178 @@
 # 4. Requirement 2a: Cooling Efficiency of an Open-Sided Bus Shelter
 
-*Draft for the paper. Every number comes from `outputs/` (run `run_stage2.py` and `sensitivity.py`). Figure and table numbers are local to this section.*
+*Draft for the paper. Every number comes from `outputs/` (run `run_stage2.py` and `sensitivity.py`).*
 
-## 4.1 What "efficiency" must measure
+## 4.1 From the freezer case to the bus stop
 
-The problem table compares the three systems with numbers that measure different things. The fan "makes the space feel up to 3 °C cooler" by moving air; the evaporative coolers "lower air temperature up to 5 °C and 8 °C" and add moisture while doing so. Dividing those numbers by power gives 12, 4.2 and 3.2 °C/kW. That ratio ignores three facts that Section 3 (the open freezer case) already showed matter:
+The problem table compares the three systems with numbers that measure different things. The fan "makes the space feel up to 3 °C cooler" by moving air. The evaporative coolers "lower air temperature up to 5 °C and 8 °C" and add moisture while doing so. Dividing those numbers by power gives 12, 4.2 and 3.2 °C/kW.
 
-1. **Only cooling that reaches people counts.** In the freezer case 87 % of the cooling is spent on the opening and only 13 % protects the product; at a bus stop the target is the people waiting. Air cooled in an empty corner, or blown out of the open sides, is wasted.
-2. **The device's effect depends on the weather.** An evaporative cooler can never cool air below its wet-bulb temperature. A fan delivers heat to the body once the air is hotter than skin.
-3. **Relief is worth more when heat is dangerous.** Lowering felt temperature from 44 °C to 38 °C prevents harm; lowering it from 27 °C to 24 °C adds comfort only.
+Section 3 showed why a ratio like that misleads, and gave three principles. We apply each one here:
 
-We therefore define
+| Principle from the freezer case | Applied to the bus stop |
+|---|---|
+| Count only cooling that reaches its target (87 % of a freezer's cooling never touches the product) | The numerator counts heat-stress relief **received by people** |
+| A device's effect depends on the surrounding air (the same case uses 1.5× more energy in humid store air) | Efficiency is reported at two **rating conditions** and mapped over all temperatures and humidities (Fig. 3) |
+| Efficiency = service ÷ all resources, within a stated boundary | The denominator is **electricity plus the energy embedded in the water used**. Cooling that escapes goes to the street: unlike a store, nothing recovers it |
 
 $$
-\eta \;=\; \frac{N_{\text{ben}} \cdot R}{P}
-\qquad \left[\frac{\text{person}\cdot{}^\circ\text{C}\cdot\text{h}}{\text{kWh}}\right],
+\eta \;=\; \frac{N_{\text{ben}} \cdot R}{P + e_w \dot V_w}
+\qquad \left[\frac{\text{person}\cdot{}^\circ\text{C}\cdot\text{h}}{\text{kWh}}\right]
 $$
 
-where $N_{\text{ben}}$ is the number of people the device actually reaches, $R$ is the heat-stress relief each one receives (Section 4.6) and $P$ is electric power. Over a day, $\eta_{\text{day}} = \sum_t N_{\text{ben}} R \,/\, \sum_t E$. Water use is reported beside $\eta$.
+- $N_{\text{ben}}$: people the device reaches.
+- $R$: heat-stress relief each person receives (Section 4.6).
+- $P$: electric power.
+- $\dot V_w$: water use; $e_w = 0.48$ kWh/m³ is the US average energy intensity of public water supply.
+
+**Rating conditions.** Like the climate classes of display-case test standards:
+
+- **R-dry:** 42 °C, 15 % RH, wind 1.5 m/s, 4.17 people waiting.
+- **R-humid:** 35 °C, 55 % RH, same wind and occupancy.
 
 ## 4.2 Assumptions
 
 | # | Assumption | Justification |
 |---|---|---|
-| A1 | The shelter is 6 × 1.8 × 2.5 m, with a roof, a back panel and three open sides; people stand in the shade. | Standard city shelter; the problem says "open-sided". |
-| A2 | The "up to" values in the problem table are outlet ratings at a reference condition. | Manufacturers rate coolers at the outlet. A2 is varied through $D_{\text{ref}}$ (A4). |
-| A3 | The fan's "3 °C" is a felt-temperature reduction at 30 °C / 50 % RH. | Fan ratings are quoted for warm conditions where fans work; the reference is varied from 28 to 33 °C. |
-| A4 | The coolers' rated drops hold at a wet-bulb depression $D_{\text{ref}} = 10$ °C. | This gives saturation effectiveness $\varepsilon = 0.50$ (B) and $0.80$ (C), inside the 0.5–0.9 range of direct evaporative coolers. |
-| A5 | Airflow scales with power as in commercial data sheets: B 5.0 m³/s at 1.2 kW, C 7.5 m³/s at 2.5 kW. | 18,000 m³/h at 1.1 kW; 25,000 m³/h at 2.2 kW; 30,000 m³/h at 3.0 kW. |
-| A6 | Passengers arrive at random; buses run with a headway coefficient of variation of 0.5. | Standard transit assumption; it sets the mean wait. |
-| A7 | Devices do not change the radiant environment. | Coolers and fans act on air, not on the shade roof or the pavement. |
+| A1 | The shelter is 6 × 1.8 × 2.5 m, with a roof, a back panel and three open sides. | Standard city shelter; the problem says "open-sided". |
+| A2 | The "up to" values are outlet ratings at a reference wet-bulb depression $D_{\text{ref}} = 10$ °C. | Gives effectiveness $\varepsilon$ = 0.50 (B) and 0.80 (C), inside the 0.5–0.9 range of direct evaporative coolers. |
+| A3 | The fan's "3 °C" is a felt-temperature reduction at 30 °C / 50 % RH. | Fan ratings are quoted for warm conditions; the reference is varied from 28 to 33 °C. |
+| A4 | Airflow follows commercial data sheets: B 5.0 m³/s at 1.2 kW; C 7.5 m³/s at 2.5 kW. | 18,000 m³/h at 1.1 kW; 25,000 m³/h at 2.2 kW; 30,000 m³/h at 3.0 kW. |
+| A5 | Passengers arrive at random; bus headways have a coefficient of variation of 0.5. | Sets the mean wait. |
+| A6 | Devices do not change the radiant environment; the roof does. | Fans and coolers act on air. |
 
-## 4.3 Sub-model M1: moist air
+## 4.3 Sub-models
 
-Saturation vapour pressure, humidity ratio and enthalpy follow ASHRAE Fundamentals:
+**M1 Moist air.**
 
 $$
-p_{ws}(T) = 611.2\, e^{17.62T/(243.12+T)},\qquad
-W = 0.622\,\frac{p_w}{p-p_w},\qquad
+p_{ws} = 611.2\,e^{17.62T/(243.12+T)},\qquad
+W = 0.622\,\frac{p_w}{p - p_w},\qquad
 h = 1.006\,T + W(2501 + 1.86\,T).
 $$
 
-The wet-bulb temperature $T_{wb}$ solves the adiabatic-saturation equation by bisection. It agrees with the empirical formula of Stull (2011) within 0.5 °C at all four test conditions (Table 0).
+The wet-bulb temperature solves the ASHRAE adiabatic-saturation equation.
 
-## 4.4 Sub-model M2: what each device does to the air
+**M2 Devices.**
 
-**Evaporative coolers (B, C).** The outlet temperature is
+- Evaporative coolers: $T_s = T - \varepsilon(T - T_{wb})$, with $W_s$ from constant enthalpy.
+- Sensible cooling made: $\rho c_p Q_s (T - T_s)$. Water used: $\rho Q_s (W_s - W)$.
+- The fan raises air speed at the person. Calibrated to its 3 °C rating, that speed is 2.93 m/s.
+- Above skin temperature, UTCI's heat-balance model makes the fan add heat. At 20 % RH the break-even is 41.6 °C. Physiological studies place it near 42 °C for older adults and 45 °C for young adults.
 
-$$
-T_s = T - \varepsilon\,(T - T_{wb}),\qquad \varepsilon = \Delta T_{\text{rated}}/D_{\text{ref}}.
-$$
+**M3 Delivery: the open-freezer problem.**
 
-Evaporation is adiabatic, so enthalpy is conserved and $W_s = (h - 1.006\,T_s)/(2501 + 1.86\,T_s)$. The device produces sensible cooling $\rho c_p Q_s (T - T_s)$ and evaporates water at $\rho Q_s (W_s - W)$.
-
-The rated drop is therefore a function of climate:
-
-- At 42 °C / 15 % ($T - T_{wb} = 20.5$ °C), B's outlet is 10.2 °C below ambient.
-- At 35 °C / 55 % ($T - T_{wb} = 7.8$ °C), B's outlet is 3.9 °C below ambient.
-
-**Fan (A).** The fan raises air speed at the person and leaves temperature and humidity unchanged. We calibrate its air speed so that UTCI falls by exactly 3 °C at the reference condition (A3); the result is 2.93 m/s.
-
-The fan's effect is not fixed: UTCI's human heat-balance model includes convective heat gain once air is hotter than skin. At 20 % RH the fan stops helping at 41.6 °C. Laboratory and modelling studies place this break-even near 42 °C for older adults and 45 °C for young adults (Ravanelli et al., 2015; review in PMC8850241). Bus riders include older adults, so the model's threshold is the one that matters.
-
-## 4.5 Sub-model M3: how much cooling reaches people
-
-This is the open-freezer problem. We compare two ways of delivering cooled air.
-
-**Volume mode (cool the whole shelter).** The occupied zone is treated as well mixed:
+*Volume mode (cool the whole shelter):*
 
 $$
-T_z = \varphi\,T_s + (1-\varphi)\,T + \frac{N q_p}{\rho c_p (Q_s + Q_{\text{inf}})},\qquad
-\varphi = \frac{Q_s}{Q_s + Q_{\text{inf}}}.
+T_z = \varphi T_s + (1-\varphi)T + \frac{N q_p}{\rho c_p(Q_s+Q_{\text{inf}})},\qquad
+\varphi=\frac{Q_s}{Q_s+Q_{\text{inf}}}.
 $$
 
-Ambient air enters by wind and by buoyancy, combined in quadrature as in ASHRAE infiltration models:
-
 $$
-Q_{\text{inf}} = \sqrt{Q_{\text{wind}}^2 + Q_{\text{buoy}}^2},\qquad
-Q_{\text{wind}} = C_w A v,\qquad
-Q_{\text{buoy}} = \frac{C_d}{3}\, W_{\text{open}} \sqrt{g H_z^3\, \frac{T - T_z}{T}}.
+Q_{\text{inf}}=\sqrt{Q_{\text{wind}}^2+Q_{\text{buoy}}^2},\qquad
+Q_{\text{buoy}}=\tfrac{C_d}{3}W_{\text{open}}\sqrt{gH_z^3\,\Delta T/T}.
 $$
 
-$Q_{\text{buoy}}$ is the cold air that spills out of the bottom of the open sides, the same mechanism the Gosney–Olama family of equations describes for open cold-store doors. Because $Q_{\text{buoy}}$ depends on the temperature difference it creates, $T_z$ is found by fixed-point iteration.
+$Q_{\text{buoy}}$ is cool air spilling out of the bottom of the open sides, the mechanism that dominates an open vertical freezer.
 
-**Spot mode (aim the jet at people).** A covered person receives a mix of jet air (share $\theta$) and entrained ambient air:
-
-$$
-T_p = T - \theta\,(T - T_s),\qquad
-\theta = \frac{\theta_0}{1 + v_{\text{in}}/u_{\text{jet}}}.
-$$
-
-Cross-wind $v_{\text{in}}$ bends and dilutes the jet. The jet also raises air speed at the person to $\sqrt{v_{\text{in}}^2 + u_{\text{jet}}^2}$.
-
-Figure 2 shows the waste. Device C at 42 °C / 15 % makes air 16.4 °C cooler at the outlet; where people stand, the drop is 11 °C in calm air and 5–6 °C at 4 m/s wind. At the base wind of 1.5 m/s, 47–51 % of the air reaching a person in spot mode is cooled air.
-
-## 4.6 Sub-models M4–M6: people, felt temperature, relief
-
-**People (M4).** By Little's law, the mean number waiting is $N = \lambda W$. With random arrivals the mean wait is $W = \tfrac{h}{2}(1 + CV^2)$. For 40 passengers/h and a 10-minute headway, $N = 4.17$.
-
-A device covers at most $Q/q$ people, with $q = 0.8$ m³/s per person: 4 people for A, 6.25 for B and 9.4 for C. So $N_{\text{ben}} = \min(N, Q/q)$.
-
-**Felt temperature (M5).** We use the Universal Thermal Climate Index (UTCI), computed with *pythermalcomfort*. UTCI is the standard outdoor index: it combines air temperature, humidity, wind and mean radiant temperature through a human heat-balance model. The fan's wind and the coolers' cooling and added moisture are therefore measured on one scale.
-
-In shade, mean radiant temperature is set to air temperature + 4 °C. Wind at 1.1 m is converted to the 10 m reference speed UTCI expects by the log-wind profile (×1.47).
-
-**Relief (M6).** UTCI's heat-stress bands begin at 26 (moderate), 32 (strong), 38 (very strong) and 46 °C (extreme) (Bröde et al., 2012). With band weights $w = 1, 2, 3, 4$,
+*Spot mode (aim the jet at people):*
 
 $$
-D(U) = \int_{26}^{U} w(u)\,du,\qquad R = D(U_{\text{before}}) - D(U_{\text{after}}).
+T_p = T - \theta(T - T_s),\qquad \theta = \frac{\theta_0}{1 + v_{\text{in}}/u_{\text{jet}}}.
 $$
 
-Cooling below UTCI 26 earns nothing. Cooling inside the very-strong band earns three times as much as cooling inside the moderate band. $R < 0$ means the device makes people hotter.
+**M4 People.** Little's law gives $N = \lambda W$, with mean wait $W = \tfrac{h}{2}(1 + CV^2)$; that is 4.17 people for 40 passengers/h and a 10-min headway. A device covers $Q/0.8$ people.
 
-## 4.7 Results
+**M5 Felt temperature.** UTCI combines air temperature, humidity, wind and mean radiant temperature (MRT). In shade MRT = air temperature + 4 °C; in sun MRT = air temperature + 30 °C at solar noon. Measurements in Tempe recorded MRT up to 76 °C over sunlit concrete.
 
-**Table 1. Efficiency at four conditions** (wind 1.5 m/s, 4.17 people waiting; B and C in spot mode).
+**M6 Relief.**
 
-| Condition | Device | UTCI before → after | Relief $R$ | $\eta$ | Water (L/h) |
+$$
+D(U)=\int_{26}^{U}w(u)\,du,\qquad w = 1, 2, 3, 4 \text{ on the UTCI bands from 26, 32, 38 and 46 °C},\qquad R = D(U_{\text{before}})-D(U_{\text{after}}).
+$$
+
+**Where the cooling goes** (spot mode), as shares of the sensible cooling made:
+
+| Fate | Share |
+|---|---|
+| Reaches people | $(N_{\text{ben}}/\text{cap})\,\theta$ |
+| Diluted by entrained hot air on the way | $(N_{\text{ben}}/\text{cap})(1-\theta)$ |
+| Aimed where nobody stands | $1 - N_{\text{ben}}/\text{cap}$ |
+
+## 4.4 Results
+
+**Table 1. Efficiency at the rating conditions** (spot mode).
+
+| Condition | Device | UTCI before → after | $R$ | $\eta$ | Water (L/h) |
 |---|---|---|---|---|---|
-| Hot-dry 42 °C / 15 % | A | 42.6 → 42.7 | −0.30 | **−4.8** | 0 |
-| | B | 42.6 → 38.6 | 11.87 | **41.2** | 85 |
-| | C | 42.6 → 35.1 | 19.61 | 32.7 | 205 |
-| Hot-humid 35 °C / 55 % | A | 38.0 → 36.0 | 4.23 | **67.7** | 0 |
-| | B | 38.0 → 36.0 | 4.05 | 14.1 | 33 |
-| | C | 38.0 → 34.6 | 6.95 | 11.6 | 80 |
-| Warm 30 °C / 50 % | A | 31.3 → 28.4 | 2.92 | **46.7** | 0 |
-| | B | 31.3 → 29.0 | 2.31 | 8.0 | 34 |
-| | C | 31.3 → 27.3 | 3.98 | 6.6 | 81 |
-| Very humid 32 °C / 75 % | A | 36.7 → 34.0 | 5.49 | **87.9** | 0 |
-| | B | 36.7 → 35.1 | 3.14 | 10.9 | 16 |
-| | C | 36.7 → 34.1 | 5.18 | 8.6 | 39 |
+| R-dry | A | 42.6 → 42.7 | −0.30 | **−4.8** | 0 |
+| | B | 42.6 → 38.6 | 11.87 | **39.9** | 85 |
+| | C | 42.6 → 35.1 | 19.61 | 31.4 | 205 |
+| R-humid | A | 38.0 → 36.0 | 4.23 | **67.7** | 0 |
+| | B | 38.0 → 36.0 | 4.05 | 13.9 | 33 |
+| | C | 38.0 → 34.6 | 6.95 | 11.4 | 80 |
 
-**Key findings.**
+At 30 °C / 50 % the fan scores 46.7 against 7.9 (B) and 6.5 (C); at 32 °C / 75 %, 87.9 against 10.8 and 8.6.
 
-1. **Climate decides the winner.** Figure 3 maps the most efficient device over temperature and humidity. The fan wins everywhere except hot, dry air. Evaporative cooling wins when the air is at least 36 °C and the wet-bulb depression exceeds a threshold that falls as temperature rises: about 18 °C at 38 °C, about 15 °C at 42 °C and about 14 °C at 44 °C (Table 5).
-2. **The fan can make things worse.** At 42 °C / 15 % the fan raises UTCI by 0.1 °C ($\eta < 0$). On the hot-dry design day it is harmful from 13:00 to 17:00 (Fig. 4).
-3. **Crowd size decides between B and C.** At the hot-dry peak, B is more efficient for up to 6 waiting passengers ($\eta$ 58.5 vs 49.8 at 6 people). C is more efficient from 8 passengers on (66.4 vs 60.9), because C covers 9.4 people and B only 6.25.
-4. **Aim the air at people.** Spot mode beats volume mode by 16 % to about 5 times. The air temperatures delivered are similar; the difference is the jet's air movement.
-5. **Water is a real cost in dry heat.** At 42 °C / 15 % B evaporates 85 L/h and C 205 L/h. Data-sheet figures of 15–20 L/h for an 18,000 m³/h cooler correspond, by the energy balance, to only about 2 °C of cooling.
+**Findings.**
 
-**Design days.** Figure 4 and Table 2 integrate the model over 06:00–22:00 on a hot-dry day (43/31 °C, dew point 12 °C) and a hot-humid day (36/26 °C, dew point 23 °C), with realistic peak and off-peak ridership. Climate assumptions are anchored to NWS 1991–2020 July normals for Phoenix (mean high 41.4 °C) and Houston (mean high about 35 °C).
+1. **Climate decides the winner (Fig. 3).** The fan wins everywhere except hot, dry air. Evaporative cooling wins when air is at least 36 °C and the wet-bulb depression exceeds a threshold that falls as temperature rises: about 20 °C at 36 °C, 16 °C at 40 °C, 15 °C at 42 °C and 14 °C at 44 °C (Table 5).
+2. **The fan can make things worse.** On the hot-dry design day it adds heat from 13:00 to 17:00.
+3. **Crowd size decides between B and C.** At the hot-dry peak B is more efficient up to 6 people (56.5 vs 47.9). C is more efficient from 8 people (63.9 vs 58.9), because it covers 9.4 people and B covers 6.25.
+4. **Most cooling never reaches anyone (Fig. 7).** Over the design day:
+   - B delivers 34 % of its cooling to people; 38 % is diluted on the way and 28 % is aimed at empty space.
+   - C delivers 24 %; 52 % of its larger airflow is aimed at empty space.
+   - This is the bus stop's version of the freezer's 87 % lost through the opening.
+5. **Aim at people.** Spot mode beats volume mode by 16 % to about 5 times.
+6. **Water is a real cost in dry heat.** B uses 85 L/h and C 205 L/h at R-dry. Data-sheet figures of 15–20 L/h correspond, by the energy balance, to only about 2 °C of cooling.
 
-| Design day | Device | Energy (kWh) | Water (L) | $\eta_{\text{day}}$ (always on / smart) | Person-h at UTCI ≥ 38: before → after |
-|---|---|---|---|---|---|
-| Hot-dry | A | 4.0 | 0 | 17.7 / 26.9 | 52.3 → 45.3 |
-| | B | 19.2 | 1193 | **35.7 / 36.4** | 52.3 → 28.1 |
-| | C | 40.0 | 2874 | 28.2 / 28.7 | 52.3 → **0** |
-| Hot-humid | A | 4.0 | 0 | **63.5 / 66.3** | 18.0 → 2.2 |
-| | B | 19.2 | 500 | 14.3 / 15.6 | 18.0 → 0 |
-| | C | 40.0 | 1203 | 11.4 / 12.4 | 18.0 → 0 |
+**Table 2. Design days** (06:00–22:00; smart control: run only when UTCI ≥ 32, the device helps, and someone is waiting).
 
-The smart rule runs a device only when UTCI ≥ 32, the device helps, and someone is waiting; the chance that someone is waiting is $1 - e^{-N}$ under Poisson arrivals. The rule raises the fan's hot-dry efficiency from 17.7 to 26.9 by switching it off in the hours when it adds heat.
+| Day | Device | Electricity (kWh) | Water (L) | Total resource (kWh) | Relief (person·°C·h) | $\eta_{\text{day}}$ | UTCI ≥ 38 person-h: before → after |
+|---|---|---|---|---|---|---|---|
+| Hot-dry | A | 2.9 | 0 | 2.9 | 79 | 26.9 | 52.3 → 45.3 |
+| | B | 18.8 | 1170 | 19.4 | 685 | **35.3** | 52.3 → 28.1 |
+| | C | 39.2 | 2820 | 40.6 | 1127 | 27.8 | 52.3 → **0** |
+| Hot-humid | A | 3.4 | 0 | 3.4 | 227 | **66.3** | 18.0 → 2.2 |
+| | B | 16.5 | 457 | 16.7 | 256 | 15.4 | 18.0 → 0 |
+| | C | 34.3 | 1099 | 34.8 | 424 | 12.2 | 18.0 → 0 |
 
-Efficiency and effectiveness diverge. On the hot-dry day only C removes every person-hour of very strong heat stress, at 1.5 times B's water use per unit of relief. Requirement 4 builds on this trade-off.
+Smart control raises the fan's hot-dry efficiency from 17.7 (always on) to 26.9 by switching it off when it adds heat. It is the bus stop's night cover.
 
-## 4.8 Validation and sensitivity
+**Design levers (Table 6).** The freezer case showed that doors, covers and geometry beat the refrigeration machinery. The same holds at the bus stop:
 
-**Validation (Table 0, 12 checks pass).**
+- **Shade.** Standing under the shelter roof instead of in the sun gives 801 person·°C·h of relief on the hot-dry day and 529 on the hot-humid day, with zero energy. That is more than device B delivers all day (685).
+- **Wind screens.** Side screens that halve wind inside the shelter raise every device's $\eta_{\text{day}}$ by 2–6 %.
 
-- Wet-bulb temperatures agree with Stull (2011) within 0.5 °C.
-- The cooler's sensible cooling equals the latent heat of the evaporated water within 3 % (energy closure).
-- The calibrated fan reproduces its 3 °C rating at the reference condition.
-- The fan's dry-air break-even (41.6 °C at 20 % RH) agrees with physiological evidence for older adults (about 42 °C).
-- The mixing model returns the outlet temperature as $Q_s \to \infty$ and the ambient temperature as $Q_s \to 0$.
+## 4.5 Validation and sensitivity
 
-**One-at-a-time sensitivity (Fig. 5).** Each parameter is moved across its plausible range (README §4).
+**Validation (Table 0, 12 checks pass):**
 
-- The number of people waiting moves $\eta$ most for every device, because $\eta$ scales with the people covered.
-- For the fan in dry heat, the reference temperature of its rating dominates: a fan rated at 33 °C needs more air speed, and that air speed delivers more heat at 43 °C ($\eta$ down to −122).
-- For the coolers, the jet share $\theta_0$ and $D_{\text{ref}}$ come next.
-- Changing the heat-stress weights from 1-1-1-1 to 1-3-9-27 scales $\eta$ by about 3.6–9 times but leaves the ranking unchanged in both climates.
+- Wet bulb agrees with Stull (2011) within 0.5 °C.
+- Energy closure within 3 %.
+- The fan reproduces its 3 °C rating.
+- The fan's dry-air break-even matches physiological evidence for older adults.
+- The mixing model has correct limits.
 
-**Monte Carlo (Fig. 6, 3,000 draws).** All parameters are sampled uniformly over their ranges, with a random weight scheme.
+**One-at-a-time sensitivity (Fig. 5):**
 
-- The fan is the most efficient device at the hot-humid peak in 99.6 % of draws.
-- At the hot-dry peak, B is most efficient in 52 % of draws and C in 48 %; the fan has $\eta < 0$ in 87 % of draws.
+- The heat-stress weights scale $\eta$ by 3.6–9 times and leave the ranking unchanged.
+- Next come the fan's rating reference temperature, crowd size, the jet share $\theta_0$ and $D_{\text{ref}}$.
+- Water energy intensity from 0.07 to 3.0 kWh/m³ lowers C's peak $\eta$ from 34.4 to 27.8 (−17 %), which matters where water is pumped long distances.
 
-The climate-based ranking is therefore robust. The B-versus-C choice in dry heat depends on crowd size and is settled by the rule in finding 3.
+**Monte Carlo (Fig. 6, 3,000 draws):**
 
-## 4.9 Answer to Requirement 2a
+- The fan is most efficient at the hot-humid peak in 99.7 % of draws.
+- At the hot-dry peak B leads in 51 % and C in 49 %, and the fan has $\eta < 0$ in 86 %.
 
-The most efficient system depends on climate and use.
+## 4.6 Answer to Requirement 2a
 
-- **Humid or moderately hot weather (most US summer climates):** the fan (A). It delivers 4–10 times more relief per kWh than either cooler and uses no water.
-- **Hot, dry weather** (≥ 36 °C with a wet-bulb depression of about 14–20 °C or more): evaporative cooling. Use B at quiet stops (up to about 6 people waiting) and C at busy stops. Only C keeps waiting passengers out of very strong heat stress at a 43 °C peak.
-- **In every climate:** aim the air at the waiting area, and switch devices off when nobody is waiting or when the fan would add heat.
+- **Humid or moderately hot weather:** the fan (A). It delivers 4–10 times more relief per kWh than either cooler and uses no water.
+- **Hot, dry weather** (≥ 36 °C and a wet-bulb depression of about 14–20 °C or more): evaporative cooling. Use B at quiet stops (≤ 6 waiting) and C at busy stops. Only C keeps waiting passengers out of very strong heat stress at a 43 °C peak.
+- **Always:**
+  - shade the stop first;
+  - aim the air at the waiting area;
+  - switch devices off when nobody is waiting or when the fan would add heat.
 
 ---
 
@@ -196,14 +184,17 @@ The most efficient system depends on climate and use.
 - `outputs/fig4_design_days.png`
 - `outputs/fig5_tornado.png`
 - `outputs/fig6_monte_carlo.png`
+- `outputs/fig7_cooling_fate.png`
 
-**References used here:**
+**References:**
 
 - Bröde et al. (2012) *Int J Biometeorol* 56:481–494
 - Ravanelli et al. (2015) *JAMA* 313:724–725
 - Tartarini & Schiavon (2020) *SoftwareX* 12:100578
 - Stull (2011) *J Appl Meteor Climatol* 50:2267–2269
-- ASHRAE Handbook—Fundamentals (2021), Ch. 1
-- EnergyPlus Engineering Reference, "Air Exchange" (Gosney–Olama doorway model)
-- NWS Phoenix and Houston 1991–2020 climate normals
+- ASHRAE Handbook—Fundamentals, Ch. 1
+- EnergyPlus Engineering Reference, "Air Exchange"
+- ACEEE (2009), energy intensity of US water supply
+- Middel & Krayenhoff (2019), Tempe MRT measurements, via ASU News
+- NWS 1991–2020 climate normals
 - Manufacturer data sheets (Jinghui JH18AP; Puravent EC30-VS)

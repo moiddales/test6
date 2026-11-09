@@ -60,6 +60,10 @@ class Params:
     capacity: int = 16         # people who fit under the roof
     # --- M6 heat-stress weights for UTCI bands >=26, >=32, >=38, >=46 ---
     weights: tuple = (1.0, 2.0, 3.0, 4.0)
+    # --- resources (Requirement 1: count every input) ---
+    e_water: float = 0.48      # kWh per m3 of supplied water (US average, range 0.07-3.0)
+    # --- zero-energy design levers ---
+    dR_sun: float = 30.0       # degC, mean radiant temp. above air temp. in full sun
 
 
 # Airflow per kW from commercial evaporative-cooler data sheets:
@@ -211,8 +215,28 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
     U1 = utci(Tp, Tmrt, vp, RHp)   # radiant field is not changed by the device
     relief = stress_dose(U0, p.weights) - stress_dose(U1, p.weights)
     eff_drop = np.maximum(U0, 26) - np.maximum(U1, 26)
-    eta = n_ben * relief / dev.power_kw
+    resource_kw = dev.power_kw + p.e_water * water_lph / 1000
+    eta = n_ben * relief / resource_kw
+    # where the cooling goes (spot mode): aimed at people and received, diluted
+    # by entrained air on the way, or aimed at places where nobody stands
+    aimed = n_ben / cap
     return dict(U0=U0, U1=U1, dU=U0 - U1, eff_drop=eff_drop, relief=relief,
-                n_ben=n_ben, eta=eta, T_person=Tp, RH_person=RHp, v_person=vp,
-                share=share, gross_kw=gross_kw, gross_cop=gross_kw / dev.power_kw,
-                water_lph=water_lph)
+                n_ben=n_ben, eta=eta, resource_kw=resource_kw, T_person=Tp, RH_person=RHp,
+                v_person=vp, share=share, gross_kw=gross_kw, gross_cop=gross_kw / dev.power_kw,
+                water_lph=water_lph, fate_delivered=aimed * share,
+                fate_diluted=aimed * (1 - share), fate_unused=1 - aimed)
+
+
+def sun_factor(hour):
+    """Relative solar exposure over a summer day: 0 before 05:30 and after
+    20:00, 1 at solar noon (~12:45)."""
+    return np.clip(np.sin(np.pi * (np.asarray(hour, float) - 5.5) / 14.5), 0, None)
+
+
+def shade_relief(T, RH, v_w, hour, p):
+    """Heat-stress relief per person from standing under the shelter roof
+    instead of in the sun (zero energy)."""
+    T, RH, v_w = np.broadcast_arrays(*(np.asarray(x, float) for x in (T, RH, v_w)))
+    U_sun = utci(T, T + p.dR_shade + (p.dR_sun - p.dR_shade) * sun_factor(hour), v_w, RH)
+    U_shade = utci(T, T + p.dR_shade, np.maximum(p.shelter_factor * v_w, 0.3), RH)
+    return U_sun, U_shade, stress_dose(U_sun, p.weights) - stress_dose(U_shade, p.weights)

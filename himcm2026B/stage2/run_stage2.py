@@ -1,13 +1,14 @@
 """Stage 2 (requirement 2a) main run: validation checks, point comparison,
 design-day integration, figures 1-4 and CSV tables in ./outputs."""
 import os
+from dataclasses import replace
 import numpy as np
 import pandas as pd
 
 from plotstyle import plt, DEVICE_COLORS, BASELINE, INK2
 from psychro import (wet_bulb, evaporative_outlet, humidity_ratio, dew_point,
                      p_ws, H_FG)
-from model import (Params, devices_for, evaluate, mean_waiting, eps_of,
+from model import (Params, devices_for, evaluate, mean_waiting, eps_of, shade_relief,
                    RHO, CP)
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
@@ -110,6 +111,7 @@ def point_table():
                     device=d.name, mode="jet at people" if d.kind == "fan" else
                     ("spot (aim at people)" if mode == "spot" else "volume (cool the shelter)"),
                     power_kW=d.power_kw,
+                    resource_kW=round(float(r["resource_kw"]), 3),
                     T_at_person=round(float(r["T_person"]), 1),
                     RH_at_person=round(float(r["RH_person"]), 0),
                     UTCI_before=round(float(r["U0"]), 1), UTCI_after=round(float(r["U1"]), 1),
@@ -148,39 +150,69 @@ def day_profile(c):
     return T, RH, np.full_like(T, c["v"]), n
 
 
-def design_days():
+def design_days(p=P, tag="table2_design_days"):
+    devs = devices_for(p)
     rows, hourly = [], {}
     for cname, c in CLIMATES.items():
         T, RH, v, n = day_profile(c)
         hourly[cname] = dict(T=T, RH=RH, n=n, U={})
-        for d in DEVS:
-            r = evaluate(d, T, RH, v, n, P, "spot")
+        for d in devs:
+            r = evaluate(d, T, RH, v, n, p, "spot")
             hourly[cname]["U"][d.name] = r["U1"]
             hourly[cname]["U0"] = r["U0"]
             p_occ = 1 - np.exp(-n)                   # Poisson: chance someone is waiting
             for rule in ("always on", "smart"):
                 if rule == "always on":
                     on = np.ones_like(T)
-                    energy = d.power_kw * on
+                    run = on
                 else:   # on only when it helps, heat stress is at least strong, and someone is there
                     on = ((r["U0"] >= 32) & (r["relief"] > 0)).astype(float)
-                    energy = d.power_kw * on * p_occ
+                    run = on * p_occ
+                energy = d.power_kw * run
+                resource = r["resource_kw"] * run
                 benefit = on * r["n_ben"] * r["relief"]
+                made = (r["gross_kw"] * run).sum()
                 hot_before = (n * (r["U0"] >= 38)).sum()
                 hot_after = ((n - on * r["n_ben"]) * (r["U0"] >= 38) + on * r["n_ben"] * (r["U1"] >= 38)).sum()
                 rows.append(dict(
                     climate=cname, device=d.name, control=rule,
                     hours_on=round(float(on.sum()), 1),
                     energy_kWh=round(float(energy.sum()), 2),
-                    water_L=round(float((on * r["water_lph"] * (p_occ if rule == "smart" else 1)).sum()), 0),
+                    water_L=round(float((r["water_lph"] * run).sum()), 0),
+                    resource_kWh=round(float(resource.sum()), 2),
                     relief_person_degC_h=round(float(benefit.sum()), 1),
-                    eta_day=round(float(benefit.sum() / energy.sum()) if energy.sum() > 0 else np.nan, 1),
+                    eta_day=round(float(benefit.sum() / resource.sum()), 1),
+                    cooling_made_kWh=round(float(made), 1),
+                    share_delivered=round(float((r["gross_kw"] * run * r["fate_delivered"]).sum() / made), 3) if made > 0 else np.nan,
+                    share_diluted=round(float((r["gross_kw"] * run * r["fate_diluted"]).sum() / made), 3) if made > 0 else np.nan,
+                    share_unused=round(float((r["gross_kw"] * run * r["fate_unused"]).sum() / made), 3) if made > 0 else np.nan,
                     person_h_very_strong_before=round(float(hot_before), 1),
                     person_h_very_strong_after=round(float(hot_after), 1),
                 ))
     df = pd.DataFrame(rows)
-    df.to_csv(os.path.join(OUT, "table2_design_days.csv"), index=False)
+    df.to_csv(os.path.join(OUT, f"{tag}.csv"), index=False)
     return df, hourly
+
+
+# ---------------------------------------------------------------------------
+# 2b. Zero-energy design levers (the bus stop's "doors and night covers")
+# ---------------------------------------------------------------------------
+def design_levers(t2):
+    rows = []
+    for cname, c in CLIMATES.items():
+        T, RH, v, n = day_profile(c)
+        _, _, rel = shade_relief(T, RH, v, HOURS, P)
+        rows.append(dict(climate=cname, lever="Shelter roof (shade vs full sun)", device="none",
+                         energy_kWh=0.0, relief_person_degC_h=round(float((n * rel).sum()), 1)))
+    screens, _ = design_days(replace(P, shelter_factor=0.25), "table6b_wind_screens")
+    for _, b in t2[t2.control == "smart"].iterrows():
+        s = screens[(screens.climate == b.climate) & (screens.device == b.device) & (screens.control == "smart")].iloc[0]
+        rows.append(dict(climate=b.climate, lever="Side wind screens (inside wind halved)", device=b.device,
+                         energy_kWh=s.energy_kWh, relief_person_degC_h=s.relief_person_degC_h,
+                         eta_day_without=b.eta_day, eta_day_with=s.eta_day))
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table6_design_levers.csv"), index=False)
+    return df
 
 
 # ---------------------------------------------------------------------------
@@ -213,6 +245,33 @@ def decision_rules():
 # ---------------------------------------------------------------------------
 # Figures
 # ---------------------------------------------------------------------------
+def fig7_cooling_fate(t2):
+    sub = t2[(t2.control == "smart") & (t2.device != "A Fan")]
+    labels = [f"{r.device.split()[0]}  {r.climate.split(' (')[0]}" for r in sub.itertuples()]
+    parts = [("share_delivered", "Reaches people", "#2a78d6"),
+             ("share_diluted", "Diluted by hot air on the way", "#eb6834"),
+             ("share_unused", "Aimed where nobody stands", "#b8b7b2")]
+    fig, ax = plt.subplots(figsize=(6.8, 2.4))
+    y = np.arange(len(sub))
+    left = np.zeros(len(sub))
+    for col, lab, colr in parts:
+        vals = sub[col].values * 100
+        ax.barh(y, vals, left=left, color=colr, height=0.55, label=lab, edgecolor="white", linewidth=1.0)
+        left += vals
+    for yi, v in zip(y, sub.share_delivered.values):
+        ax.text(1.5, yi, f"{v:.0%}", va="center", fontsize=7.5, color="white", fontweight="bold")
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 100)
+    ax.set_xlabel("Share of the sensible cooling the cooler makes over the design day (%)")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=3, fontsize=7)
+    ax.grid(axis="y", visible=False)
+    ax.set_title("Fig. 7  Where an evaporative cooler's cooling goes at the bus stop", loc="left", fontsize=9)
+    fig.savefig(os.path.join(OUT, "fig7_cooling_fate.png"))
+    plt.close(fig)
+
+
 def fig1_climate_dependence():
     T = np.linspace(28, 46, 73)
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
@@ -337,4 +396,8 @@ if __name__ == "__main__":
     fig2_dilution()
     fig3_winner_map()
     fig4_design_days(hourly)
+    t6 = design_levers(t2)
+    print("\nTable 6 (design levers)")
+    print(t6.to_string(index=False))
+    fig7_cooling_fate(t2)
     print("\nFigures written to", OUT)
