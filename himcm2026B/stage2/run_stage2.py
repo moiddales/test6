@@ -329,7 +329,7 @@ def rating_ceiling(t2):
     temperature drop in every climate. Shows how far the base reading (fixed
     effectiveness) exceeds that ceiling on the design days, and reruns the
     design days with the ceiling applied."""
-    capped, _ = design_days(replace(P, rating_ceiling=True), "table9_rating_ceiling")
+    capped, _ = design_days(replace(P, rating_policy="outlet"), "table9_rating_ceiling")
     rows = []
     for cname in CLIMATES:
         T, RH, _, _ = day_profile(cname)

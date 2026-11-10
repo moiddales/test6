@@ -29,14 +29,14 @@ def validation():
     shelter = replace(Station(name="bus shelter"), L=6.0, D=1.8, Hz=2.0, H_open=2.5, open_track=1.0, open_back=0.0,
                       open_ends=1.0, kappa_train=0.0, mass_factor=1.0, gains=False, dynamic=False)
     c = SYS[3]
-    c1 = replace(c, power_kw=DEVS2A[2].power_kw, airflow=DEVS2A[2].airflow)
+    c1 = replace(c, power_kw=DEVS2A[2].power_kw, airflow=DEVS2A[2].airflow, rating_policy="uncapped")
     sim = simulate(shelter, c1, CLIM[0], n_const=0.0, dt=5.0)
     k = np.argmin(abs(sim["t"] - 15.0))
     T_o, W_o = sim["T_o"][k], sim["W_o"][k]
     from psychro import rel_humidity
     Ts, Ws, _ = evaporative_outlet(T_o, rel_humidity(T_o, W_o), c1.eps)
     Tz_2a, _, _, _ = volume_mode_zone(T_o, W_o, Ts, Ws, c1.airflow, sim["v_o"][k], 0, P2A)
-    rows.append(("nesting: bus-shelter case reproduces 2a volume mode (zone T at 15:00, C)",
+    rows.append(("balance nesting without rating control: bus shelter reproduces 2a volume mode (zone T at 15:00, C)",
                  round(float(sim["T"][k]), 2), round(float(Tz_2a), 2), abs(sim["T"][k] - Tz_2a) < 0.15))
     # (2) time-step convergence: dt = 10 s vs dt = 2 s
     st = station("Platform screen doors")

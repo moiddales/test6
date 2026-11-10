@@ -43,7 +43,7 @@ class Device:
 class Params:
     # --- M2 device rating interpretation ---
     D_ref: float = 10.0        # degC, wet-bulb depression at which "up to" values hold
-    rating_ceiling: bool = False   # literal reading: the outlet never cools the air by more than the "up to" value
+    rating_policy: str = "occupied"  # occupied (main), outlet (alternative), uncapped (diagnostic)
     fan_ref_T: float = 30.0    # degC, condition at which the fan "feels 3 degC cooler"
     fan_ref_RH: float = 50.0
     q_per_person: float = 0.8  # m3/s of device airflow needed per covered person
@@ -151,6 +151,30 @@ def devices_for(p):
     return tuple(replace(d, jet_speed=fan_u) if d.kind == "fan" else d for d in DEVICES)
 
 
+def rated_fan(T, mrt, v_in, RH, jet, baseline, rating):
+    """Ideal speed modulation to the occupied-location UTCI rating.
+
+    Full rated electric power is charged even when speed is reduced; no
+    unmeasured fan power curve is invented. Harmful fan effects are retained.
+    This is a performance-envelope assumption, not physiological calibration.
+    """
+    raw_v = np.hypot(v_in, jet)
+    raw = utci(T, mrt, raw_v, RH)
+    active = np.isfinite(raw) & (baseline - raw > rating)
+    if not np.any(active):
+        return raw, raw_v
+    lo = np.zeros_like(raw)
+    hi = np.broadcast_to(jet, raw.shape).copy()
+    for _ in range(24):
+        mid = (lo + hi) / 2
+        u = utci(T, mrt, np.hypot(v_in, mid), RH)
+        hit = baseline - u > rating
+        hi = np.where(hit, mid, hi)
+        lo = np.where(hit, lo, mid)
+    v = np.where(active, np.hypot(v_in, lo), raw_v)
+    return utci(T, mrt, v, RH), v
+
+
 # --------------------------------------------------------------------------
 # M3 delivery: volume mode (cool the whole shelter) vs spot mode (aim at people)
 # --------------------------------------------------------------------------
@@ -230,9 +254,27 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
         share = np.ones_like(T)
     else:
         eps = eps_of(dev, p)
-        if p.rating_ceiling:
-            eps = np.minimum(eps, dev.rated_drop / (T - wet_bulb(T, RH)))
+        if p.rating_policy not in ("occupied", "outlet", "uncapped"):
+            raise ValueError("Unknown rating_policy")
+        if p.rating_policy == "outlet":
+            eps = np.minimum(eps, dev.rated_drop / np.maximum(T - wet_bulb(T, RH), 1e-9))
+        elif p.rating_policy == "occupied" and mode == "spot":
+            theta = p.theta0 / (1 + v_in / dev.jet_speed)
+            eps = np.minimum(eps, dev.rated_drop / np.maximum(theta * (T - wet_bulb(T, RH)), 1e-9))
         T_s, W_s, _ = evaporative_outlet(T, RH, eps)
+        if p.rating_policy == "occupied" and mode != "spot":
+            # Bypass modulation is solved through the zone balance, so water
+            # and sensible cooling use the same supply condition as comfort.
+            test_T = volume_mode_zone(T, W, T_s, W_s, dev.airflow, v_w, n_in, p)[0]
+            if np.any(T - test_T > dev.rated_drop):
+                lo, hi = np.zeros_like(T), np.broadcast_to(eps, T.shape).copy()
+                for _ in range(24):
+                    mid = (lo + hi) / 2
+                    ts, ws, _ = evaporative_outlet(T, RH, mid)
+                    tz = volume_mode_zone(T, W, ts, ws, dev.airflow, v_w, n_in, p)[0]
+                    hit = T - tz > dev.rated_drop
+                    hi, lo = np.where(hit, mid, hi), np.where(hit, lo, mid)
+                T_s, W_s, _ = evaporative_outlet(T, RH, lo)
         gross_kw = RHO * dev.airflow * CP * (T - T_s)                     # sensible cooling made
         water_lph = RHO * dev.airflow * (W_s - W) * 3600                   # kg/h ~ L/h
         if mode == "spot":
@@ -245,6 +287,8 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
             n_ben = n_in
     RHp = rel_humidity(Tp, Wp)
     U1 = utci(Tp, Tmrt, vp, RHp)   # radiant field is not changed by the device
+    if dev.kind == "fan" and p.rating_policy != "uncapped":
+        U1, vp = rated_fan(Tp, Tmrt, v_in, RHp, dev.jet_speed, U0, dev.rated_drop)
     relief = stress_dose(U0, p.weights) - stress_dose(U1, p.weights)
     eff_drop = np.maximum(U0, 26) - np.maximum(U1, 26)
     resource_kw = dev.power_kw + p.e_water * water_lph / 1000

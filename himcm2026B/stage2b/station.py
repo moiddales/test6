@@ -26,9 +26,9 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "stage2"))
-from psychro import humidity_ratio, rel_humidity, evaporative_outlet  # noqa: E402
+from psychro import humidity_ratio, rel_humidity, evaporative_outlet, enthalpy  # noqa: E402
 from model import (Params, devices_for, utci, stress_dose, eps_of, RHO, CP, G,  # noqa: E402
-                   sun_factor, E_WATER)
+                   sun_factor, E_WATER, rated_fan)
 from run_stage2 import weather  # noqa: E402
 
 OUT = os.path.join(HERE, "outputs")
@@ -130,6 +130,8 @@ class System:
     shr: float = 0.75
     setpoint: float = 26.0
     low_supply: bool = True  # AC supplies the occupied zone directly (vs. mixing the whole hall)
+    rated_drop: float = np.inf
+    rating_policy: str = "occupied"
 
 
 def systems():
@@ -137,9 +139,9 @@ def systems():
     q = P2A.q_per_person
     return [
         System("No cooling", "none"),
-        System("A Fans ×10", "fan", 10 * fan.power_kw, jet_speed=fan.jet_speed, cover=10 * fan.airflow / q),
-        System("B Evap ×8", "evap", 8 * b.power_kw, 8 * b.airflow, eps_of(b, P2A), b.jet_speed, 8 * b.airflow / q),
-        System("C Large evap ×5", "evap", 5 * c.power_kw, 5 * c.airflow, eps_of(c, P2A), c.jet_speed, 5 * c.airflow / q),
+        System("A Fans ×10", "fan", 10 * fan.power_kw, jet_speed=fan.jet_speed, cover=10 * fan.airflow / q, rated_drop=fan.rated_drop),
+        System("B Evap ×8", "evap", 8 * b.power_kw, 8 * b.airflow, eps_of(b, P2A), b.jet_speed, 8 * b.airflow / q, rated_drop=b.rated_drop),
+        System("C Large evap ×5", "evap", 5 * c.power_kw, 5 * c.airflow, eps_of(c, P2A), c.jet_speed, 5 * c.airflow / q, rated_drop=c.rated_drop),
         System("D Air conditioner 60 kW", "ac", cap_kw=60.0),
     ]
 
@@ -170,7 +172,7 @@ def timetable(t_h):
 # ---------------------------------------------------------------------------
 # Simulation
 # ---------------------------------------------------------------------------
-def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
+def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
     """Time-dependent heat and moisture balance of the occupied zone.
 
     Each step uses the exact solution of the linear balance with the flows
@@ -184,6 +186,10 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
     th = t / 3600
     T_o, RH_o, v_o = outdoor(climate, th)
     W_o = humidity_ratio(T_o, RH_o)
+    if sysm.rating_policy not in ("occupied", "outlet", "uncapped"):
+        raise ValueError("Unknown rating_policy")
+    if sysm.kind == "evap" and sysm.rating_policy == "occupied" and base is None:
+        base = simulate(st, systems()[0], climate, n_const=n_const, dt=dt)
     lam, head = timetable(th)
 
     if st.dynamic and n_const is None:
@@ -244,6 +250,24 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
             out["P"][i] = sysm.power_kw
 
         a = RHO * CP * (Q_x + Q_s)                                   # kW/K
+        if Q_s > 0 and sysm.rating_policy != "uncapped":
+            if sysm.rating_policy == "outlet":
+                minimum_supply = T_in - sysm.rated_drop
+            else:
+                # Solve the frozen-flow balance for a bypass supply that
+                # bounds both covered and uncovered occupied temperatures.
+                v_in = max(0.3, 0.5 * v_o[i] * np.mean([st.open_track, st.open_back, st.open_ends]))
+                theta = P2A.theta0 / (1 + v_in / sysm.jet_speed)
+                e = np.exp(-dt * a / C)
+                coef = (1 - e) * Q_s / (Q_x + Q_s)
+                intercept = e * T + (1 - e) * (RHO * CP * Q_x * T_o[i] + G_kw) / a
+                target = base["T"][i] - sysm.rated_drop
+                minimum_supply = max((target - (1 - theta) * intercept) / (theta + (1 - theta) * coef),
+                                     (target - intercept) / coef)
+            T_s = min(T_in, max(T_s, minimum_supply))
+            W_s = float((enthalpy(T_in, W_in) - CP * T_s) / (2501 + 1.86 * T_s))
+            out["T_s"][i], out["W_s"][i] = T_s, W_s
+            out["water"][i] = RHO * Q_s * max(W_s - W_in, 0) * dt
         T_eq = (RHO * CP * (Q_x * T_o[i] + Q_s * T_s) + G_kw) / a
         Q_ac = m_ac = 0.0
         if sysm.kind == "ac":
@@ -290,14 +314,19 @@ def comfort(st, sysm, sim, base):
             Wp = sim["W"] + theta * (sim["W_s"] - sim["W"])
         else:
             Tp, Wp = sim["T"], sim["W"]
-        U_cov = utci(Tp, Tmrt, np.hypot(v_in, sysm.jet_speed), rel_humidity(Tp, Wp))
+        vp = np.hypot(v_in, sysm.jet_speed)
+        U_cov = utci(Tp, Tmrt, vp, rel_humidity(Tp, Wp))
+        if sysm.kind == "fan" and sysm.rating_policy != "uncapped":
+            U_cov, vp = rated_fan(Tp, Tmrt, v_in, rel_humidity(Tp, Wp), sysm.jet_speed, U0, sysm.rated_drop)
         U_cov = np.where(sim["on"], U_cov, U_unc)
         n_cov = np.minimum(N, sysm.cover)
     else:
         U_cov = U_unc
         n_cov = np.zeros_like(N)
+        Tp, Wp, vp = sim["T"], sim["W"], v_in
     D0 = stress_dose(U0, P2A.weights)
-    benefit = n_cov * (D0 - stress_dose(U_cov, P2A.weights)) + (N - n_cov) * (D0 - stress_dose(U_unc, P2A.weights))
+    benefit = (np.where(n_cov > 0, n_cov * (D0 - stress_dose(U_cov, P2A.weights)), 0)
+               + np.where(N > n_cov, (N - n_cov) * (D0 - stress_dose(U_unc, P2A.weights)), 0))
     valid0 = np.isfinite(U0)
     valid1 = ((n_cov == 0) | np.isfinite(U_cov)) & ((N == n_cov) | np.isfinite(U_unc))
     valid = valid0 & valid1
@@ -308,7 +337,7 @@ def comfort(st, sysm, sim, base):
     hot1 = np.where(N == 0, 0.0, np.where(valid1,
                     n_cov * (U_cov >= 38) + (N - n_cov) * (U_unc >= 38), np.nan))
     return dict(U0=U0, U_unc=U_unc, U_cov=U_cov, benefit=benefit, hot0=hot0, hot1=hot1,
-                valid=valid)
+                valid=valid, T_person=Tp, RH_person=rel_humidity(Tp, Wp), v_person=vp)
 
 
 def fan_schedule(st, sysm, climate, base):
@@ -329,7 +358,7 @@ def run(st, sysm, climate, base=None):
     if base is None and sysm.kind != "none":
         base = simulate(st, systems()[0], climate)
     on = fan_schedule(st, sysm, climate, base) if sysm.kind == "fan" else None
-    sim = simulate(st, sysm, climate, on=on)
+    sim = simulate(st, sysm, climate, on=on, base=base)
     if base is None:
         base = sim
     cf = comfort(st, sysm, sim, base)
@@ -341,8 +370,11 @@ def run(st, sysm, climate, base=None):
     relief = cf["benefit"][rep].sum() * h
     invalid = rep & ~cf["valid"] & (sim["N"] > 0)
     pm = rep & (sim["t"] >= 14.5) & (sim["t"] < 15.5)
+    rating_drop = cf["U0"] - cf["U_cov"] if sysm.kind == "fan" else base["T"] - cf["T_person"]
     return dict(
         scenario=st.name, system=sysm.name, climate=climate,
+        rating_policy=sysm.rating_policy,
+        rating_exceed_hours=round(float((rep & (rating_drop > sysm.rated_drop + 1e-5)).sum() * h), 3),
         electricity_kWh=round(elec, 1), water_L=round(water, 0), resource_kWh=round(resource, 1),
         relief_person_degC_h=round(relief, 1),
         eta=round(relief / resource, 1) if resource > 0 else np.nan,

@@ -2,6 +2,6 @@ climate,device,relief_base,eta_base,very_strong_after_base,relief_ceiling,eta_ce
 Hot-dry (Phoenix-like),A Fan,58.6,26.6,61.7,58.6,26.6,61.7,,,
 Hot-dry (Phoenix-like),B Evap cooler,671.7,31.4,52.7,339.0,16.9,56.5,7.1,12.1,16.0
 Hot-dry (Phoenix-like),C Large evap cooler,1310.8,28.8,40.8,683.6,16.2,51.7,11.3,19.4,16.0
-Hot-humid (Houston-like),A Fan,241.5,61.5,24.2,241.5,61.5,24.2,,,
+Hot-humid (Houston-like),A Fan,237.1,60.4,24.2,241.5,61.5,24.2,,,
 Hot-humid (Houston-like),B Evap cooler,311.5,16.3,12.6,300.7,15.8,17.9,0.9,5.9,4.0
 Hot-humid (Houston-like),C Large evap cooler,529.7,13.3,0.5,514.8,12.9,0.5,1.4,9.5,4.0

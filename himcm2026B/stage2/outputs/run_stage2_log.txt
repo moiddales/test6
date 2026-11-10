@@ -23,8 +23,8 @@ Table 1 (point comparison)
       Hot-dry afternoon               A Fan             jet at people         42.0          15.0         44.5        44.3             0.41               3.29  5.4             1.00            0.0               12.0
       Hot-dry afternoon       B Evap cooler      spot (aim at people)         37.2          24.0         44.5        40.5            11.92               3.97 38.0             0.47           85.1                4.2
       Hot-dry afternoon       B Evap cooler volume (cool the shelter)         37.8          23.0         44.5        41.4             9.28               4.17 31.1             0.42           85.1                4.2
-      Hot-dry afternoon C Large evap cooler      spot (aim at people)         33.7          34.0         44.5        36.9            21.48               4.15 34.2             0.51          205.2                3.2
-      Hot-dry afternoon C Large evap cooler volume (cool the shelter)         33.7          34.0         44.5        38.4            18.05               4.17 28.8             0.51          205.2                3.2
+      Hot-dry afternoon C Large evap cooler      spot (aim at people)         34.0          33.0         44.5        37.2            20.92               4.15 33.4             0.51          196.9                3.2
+      Hot-dry afternoon C Large evap cooler volume (cool the shelter)         34.0          33.0         44.5        38.6            17.48               4.17 28.0             0.51          197.9                3.2
     Hot-humid afternoon               A Fan             jet at people         35.0          55.0         39.9        37.7             6.33               3.29 83.3             1.00            0.0               12.0
     Hot-humid afternoon       B Evap cooler      spot (aim at people)         33.2          63.0         39.9        37.8             6.16               3.97 20.1             0.47           33.2                4.2
     Hot-humid afternoon       B Evap cooler volume (cool the shelter)         33.4          62.0         39.9        39.0             2.67               4.17  9.1             0.42           33.2                4.2
@@ -49,8 +49,8 @@ Table 2 (design days)
   Hot-dry (Phoenix-like)       B Evap cooler     smart      16.0       18.84   1337.0         21.42                 671.7     31.4             937.8            0.243          0.413         0.344                         61.7                        52.7
   Hot-dry (Phoenix-like) C Large evap cooler always on      16.0       40.00   3286.0         46.34                1310.8     28.3            2294.5            0.197          0.275         0.528                         61.7                        40.8
   Hot-dry (Phoenix-like) C Large evap cooler     smart      16.0       39.24   3223.0         45.46                1310.8     28.8            2250.6            0.198          0.276         0.526                         61.7                        40.8
-Hot-humid (Houston-like)               A Fan always on      16.0        4.00      0.0          4.00                 241.5     60.4               0.0              NaN            NaN           NaN                         34.4                        24.2
-Hot-humid (Houston-like)               A Fan     smart      16.0        3.92      0.0          3.92                 241.5     61.5               0.0              NaN            NaN           NaN                         34.4                        24.2
+Hot-humid (Houston-like)               A Fan always on      16.0        4.00      0.0          4.00                 237.1     59.3               0.0              NaN            NaN           NaN                         34.4                        24.2
+Hot-humid (Houston-like)               A Fan     smart      16.0        3.92      0.0          3.92                 237.1     60.4               0.0              NaN            NaN           NaN                         34.4                        24.2
 Hot-humid (Houston-like)       B Evap cooler always on      16.0       19.20    514.0         19.47                 311.5     16.0             353.7            0.254          0.402         0.343                         34.4                        12.6
 Hot-humid (Houston-like)       B Evap cooler     smart      16.0       18.84    504.0         19.10                 311.5     16.3             347.1            0.255          0.403         0.341                         34.4                        12.6
 Hot-humid (Houston-like) C Large evap cooler always on      16.0       40.00   1235.0         40.65                 529.7     13.0             848.8            0.206          0.268         0.525                         34.4                         0.5
@@ -77,11 +77,11 @@ Table 6 (design levers, common baseline: open shelter, no device)
   Hot-dry (Phoenix-like)             Shelter roof (shade vs full sun)                none        0.00                 637.9                  NaN                    NaN              NaN           NaN
   Hot-dry (Phoenix-like) Side wind screens alone (inside wind halved)                none        0.00                  57.3                  NaN                    NaN              NaN           NaN
   Hot-dry (Phoenix-like)                   Side wind screens + device               A Fan        1.47                 102.4                 58.6                   43.8             26.6          69.7
-  Hot-dry (Phoenix-like)                   Side wind screens + device       B Evap cooler       18.84                 816.9                671.7                  145.2             31.4          38.1
-  Hot-dry (Phoenix-like)                   Side wind screens + device C Large evap cooler       39.24                1538.8               1310.8                  228.0             28.8          33.8
+  Hot-dry (Phoenix-like)                   Side wind screens + device       B Evap cooler       18.84                 790.3                671.7                  118.6             31.4          37.1
+  Hot-dry (Phoenix-like)                   Side wind screens + device C Large evap cooler       39.24                1401.0               1310.8                   90.2             28.8          31.2
 Hot-humid (Houston-like)             Shelter roof (shade vs full sun)                none        0.00                 207.5                  NaN                    NaN              NaN           NaN
 Hot-humid (Houston-like) Side wind screens alone (inside wind halved)                none        0.00                 -86.5                  NaN                    NaN              NaN           NaN
-Hot-humid (Houston-like)                   Side wind screens + device               A Fan        3.92                 200.5                241.5                  -41.0             61.5          51.2
+Hot-humid (Houston-like)                   Side wind screens + device               A Fan        3.92                 193.0                237.1                  -44.1             60.4          49.2
 Hot-humid (Houston-like)                   Side wind screens + device       B Evap cooler       18.84                 283.8                311.5                  -27.7             16.3          14.9
 Hot-humid (Houston-like)                   Side wind screens + device C Large evap cooler       39.24                 536.0                529.7                    6.3             13.3          13.4
 
@@ -95,8 +95,8 @@ Table 7 (fans above skin temperature)
                   vapour pressure above which wind helps at 40 C 40.0           NaN              0.74         Broede & Kampmann 2023, moderate exercise: 2 kPa (heart rate, core T), 3 kPa (skin T, sweat)                      NaN       NaN                   NaN      NaN                         NaN
                                     design day, smart fan: model  NaN           NaN               NaN                                                                                                  NaN   Hot-dry (Phoenix-like)       9.0                  58.6     26.6                        61.7
 design day, smart fan: no benefit above 35 C (Meade et al. 2024)  NaN           NaN               NaN                                                                                                  NaN   Hot-dry (Phoenix-like)       1.0                  11.0     44.9                        61.7
-                                    design day, smart fan: model  NaN           NaN               NaN                                                                                                  NaN Hot-humid (Houston-like)      16.0                 241.5     61.5                        24.2
-design day, smart fan: no benefit above 35 C (Meade et al. 2024)  NaN           NaN               NaN                                                                                                  NaN Hot-humid (Houston-like)      10.0                 145.3     59.5                        31.2
+                                    design day, smart fan: model  NaN           NaN               NaN                                                                                                  NaN Hot-humid (Houston-like)      16.0                 237.1     60.4                        24.2
+design day, smart fan: no benefit above 35 C (Meade et al. 2024)  NaN           NaN               NaN                                                                                                  NaN Hot-humid (Houston-like)      10.0                 140.9     57.7                        31.2
 
 Table 8 (second reading of the device ratings)
              device  wet_bulb_depression  eps_model  eps_implied_by_shelter_reading  theta_at_peak_wind  air_drop_at_person_peak
@@ -108,8 +108,8 @@ Table 9 (literal reading: ratings cap the outlet temperature drop; smart control
   Hot-dry (Phoenix-like)               A Fan         58.6      26.6                    61.7            58.6         26.6                       61.7              NaN              NaN                        NaN
   Hot-dry (Phoenix-like)       B Evap cooler        671.7      31.4                    52.7           339.0         16.9                       56.5              7.1             12.1                       16.0
   Hot-dry (Phoenix-like) C Large evap cooler       1310.8      28.8                    40.8           683.6         16.2                       51.7             11.3             19.4                       16.0
-Hot-humid (Houston-like)               A Fan        241.5      61.5                    24.2           241.5         61.5                       24.2              NaN              NaN                        NaN
+Hot-humid (Houston-like)               A Fan        237.1      60.4                    24.2           241.5         61.5                       24.2              NaN              NaN                        NaN
 Hot-humid (Houston-like)       B Evap cooler        311.5      16.3                    12.6           300.7         15.8                       17.9              0.9              5.9                        4.0
 Hot-humid (Houston-like) C Large evap cooler        529.7      13.3                     0.5           514.8         12.9                        0.5              1.4              9.5                        4.0
 
-Figures written to /home/user/test6/himcm2026B/stage2/outputs
+Figures written to /workspace/scratch/888c828e90aa/test6/himcm2026B/stage2/outputs

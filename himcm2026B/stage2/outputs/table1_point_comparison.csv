@@ -2,8 +2,8 @@ condition,T,RH,wet_bulb,device,mode,power_kW,resource_kW,T_at_person,RH_at_perso
 Hot-dry afternoon,42,15,21.5,A Fan,jet at people,0.25,0.25,42.0,15.0,44.5,44.3,0.14,0.41,3.29,5.4,0.0,1.0,0.0,12.0
 Hot-dry afternoon,42,15,21.5,B Evap cooler,spot (aim at people),1.2,1.245,37.2,24.0,44.5,40.5,3.97,11.92,3.97,38.0,59.7,0.47,85.1,4.2
 Hot-dry afternoon,42,15,21.5,B Evap cooler,volume (cool the shelter),1.2,1.245,37.8,23.0,44.5,41.4,3.09,9.28,4.17,31.1,59.7,0.42,85.1,4.2
-Hot-dry afternoon,42,15,21.5,C Large evap cooler,spot (aim at people),2.5,2.609,33.7,34.0,44.5,36.9,7.51,21.48,4.15,34.2,143.2,0.51,205.2,3.2
-Hot-dry afternoon,42,15,21.5,C Large evap cooler,volume (cool the shelter),2.5,2.609,33.7,34.0,44.5,38.4,6.02,18.05,4.17,28.8,143.2,0.51,205.2,3.2
+Hot-dry afternoon,42,15,21.5,C Large evap cooler,spot (aim at people),2.5,2.604,34.0,33.0,44.5,37.2,7.23,20.92,4.15,33.4,137.5,0.51,196.9,3.2
+Hot-dry afternoon,42,15,21.5,C Large evap cooler,volume (cool the shelter),2.5,2.605,34.0,33.0,44.5,38.6,5.83,17.48,4.17,28.0,138.2,0.51,197.9,3.2
 Hot-humid afternoon,35,55,27.2,A Fan,jet at people,0.25,0.25,35.0,55.0,39.9,37.7,2.21,6.33,3.29,83.3,0.0,1.0,0.0,12.0
 Hot-humid afternoon,35,55,27.2,B Evap cooler,spot (aim at people),1.2,1.218,33.2,63.0,39.9,37.8,2.12,6.16,3.97,20.1,22.8,0.47,33.2,4.2
 Hot-humid afternoon,35,55,27.2,B Evap cooler,volume (cool the shelter),1.2,1.218,33.4,62.0,39.9,39.0,0.89,2.67,4.17,9.1,22.8,0.42,33.2,4.2

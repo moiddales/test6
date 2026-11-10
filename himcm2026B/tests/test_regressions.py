@@ -8,8 +8,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "stage2"))
 sys.path.insert(0, str(ROOT / "stage2b"))
-from model import utci
-from station import station, systems, run
+from model import utci, Params, devices_for, evaluate
+from station import station, systems, run, simulate, comfort
 
 
 class ApplicabilityTests(unittest.TestCase):
@@ -24,6 +24,25 @@ class ApplicabilityTests(unittest.TestCase):
         self.assertFalse(r["full_day_supported"])
         self.assertTrue(np.isnan(r["eta"]))
         self.assertTrue(np.isnan(r["person_h_UTCI38_before"]))
+
+
+class RatingTests(unittest.TestCase):
+    def test_occupied_ratings_in_2a(self):
+        p = Params()
+        for d in devices_for(p):
+            r = evaluate(d, np.array([35., 45., 49.]), 15., 0.1, 10., p)
+            drop = r["dU"] if d.kind == "fan" else np.array([35., 45., 49.]) - r["T_person"]
+            self.assertTrue(np.all(drop <= d.rated_drop + 1e-6))
+
+    def test_occupied_ratings_in_station(self):
+        st = station("Platform screen doors")
+        clim = "Hot-dry (Phoenix-like)"
+        base = simulate(st, systems()[0], clim)
+        for sysm in systems()[1:4]:
+            sim = simulate(st, sysm, clim, base=base)
+            cf = comfort(st, sysm, sim, base)
+            drop = cf["U0"] - cf["U_cov"] if sysm.kind == "fan" else base["T"] - cf["T_person"]
+            self.assertLessEqual(np.nanmax(drop), sysm.rated_drop + 1e-5)
 
 
 if __name__ == "__main__":
