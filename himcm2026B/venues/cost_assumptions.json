@@ -1,0 +1,18 @@
+{
+  "status": "Illustrative planning scenarios, not quotes, local tariffs, or a procurement estimate.",
+  "currency": "USD",
+  "electricity_per_kWh": 0.15,
+  "water_per_m3": 3.0,
+  "study_days_per_year": 120,
+  "discount_rate": 0.05,
+  "life_years": 8,
+  "maintenance_fraction_per_year": 0.03,
+  "installed_unit_cost": {"A": 400.0, "B": 1800.0, "C": 3000.0, "ac": 9000.0, "none": 0.0},
+  "shade_upgrade_cost": 5000.0,
+  "demand_control_cost": 300.0,
+  "sensitivity_electricity": [0.10, 0.15, 0.30],
+  "sensitivity_water": [1.0, 3.0, 10.0],
+  "sensitivity_capital_multiplier": [0.5, 1.0, 2.0],
+  "illustrative_residual_exposure_fraction_target": 0.25,
+  "target_status": "Decision scenario, not a safety standard or clinical threshold."
+}

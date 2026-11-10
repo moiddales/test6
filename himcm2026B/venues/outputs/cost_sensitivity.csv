@@ -1,0 +1,55 @@
+venue_id,electricity_USD_kWh,water_USD_m3,capital_multiplier,least_cost_meeting_target,annual_cost_USD
+houston_veranda,0.1,1.0,0.5,Improved shade + A / demand,819.1789824665719
+phoenix_plaza,0.1,1.0,0.5,No tested option meets target,
+houston_veranda,0.1,1.0,1.0,Improved shade + A / demand,1530.3579649331439
+phoenix_plaza,0.1,1.0,1.0,No tested option meets target,
+houston_veranda,0.1,1.0,2.0,Improved shade + A / demand,2952.7159298662878
+phoenix_plaza,0.1,1.0,2.0,No tested option meets target,
+houston_veranda,0.1,3.0,0.5,Improved shade + A / demand,819.1789824665719
+phoenix_plaza,0.1,3.0,0.5,No tested option meets target,
+houston_veranda,0.1,3.0,1.0,Improved shade + A / demand,1530.3579649331439
+phoenix_plaza,0.1,3.0,1.0,No tested option meets target,
+houston_veranda,0.1,3.0,2.0,Improved shade + A / demand,2952.7159298662878
+phoenix_plaza,0.1,3.0,2.0,No tested option meets target,
+houston_veranda,0.1,10.0,0.5,Improved shade + A / demand,819.1789824665719
+phoenix_plaza,0.1,10.0,0.5,No tested option meets target,
+houston_veranda,0.1,10.0,1.0,Improved shade + A / demand,1530.3579649331439
+phoenix_plaza,0.1,10.0,1.0,No tested option meets target,
+houston_veranda,0.1,10.0,2.0,Improved shade + A / demand,2952.7159298662878
+phoenix_plaza,0.1,10.0,2.0,No tested option meets target,
+houston_veranda,0.15,1.0,0.5,Improved shade + A / demand,873.1789824665719
+phoenix_plaza,0.15,1.0,0.5,No tested option meets target,
+houston_veranda,0.15,1.0,1.0,Improved shade + A / demand,1584.3579649331439
+phoenix_plaza,0.15,1.0,1.0,No tested option meets target,
+houston_veranda,0.15,1.0,2.0,Improved shade + A / demand,3006.7159298662878
+phoenix_plaza,0.15,1.0,2.0,No tested option meets target,
+houston_veranda,0.15,3.0,0.5,Improved shade + A / demand,873.1789824665719
+phoenix_plaza,0.15,3.0,0.5,No tested option meets target,
+houston_veranda,0.15,3.0,1.0,Improved shade + A / demand,1584.3579649331439
+phoenix_plaza,0.15,3.0,1.0,No tested option meets target,
+houston_veranda,0.15,3.0,2.0,Improved shade + A / demand,3006.7159298662878
+phoenix_plaza,0.15,3.0,2.0,No tested option meets target,
+houston_veranda,0.15,10.0,0.5,Improved shade + A / demand,873.1789824665719
+phoenix_plaza,0.15,10.0,0.5,No tested option meets target,
+houston_veranda,0.15,10.0,1.0,Improved shade + A / demand,1584.3579649331439
+phoenix_plaza,0.15,10.0,1.0,No tested option meets target,
+houston_veranda,0.15,10.0,2.0,Improved shade + A / demand,3006.7159298662878
+phoenix_plaza,0.15,10.0,2.0,No tested option meets target,
+houston_veranda,0.3,1.0,0.5,Improved shade + A / demand,1035.1789824665718
+phoenix_plaza,0.3,1.0,0.5,No tested option meets target,
+houston_veranda,0.3,1.0,1.0,Improved shade + A / demand,1746.3579649331439
+phoenix_plaza,0.3,1.0,1.0,No tested option meets target,
+houston_veranda,0.3,1.0,2.0,Improved shade + A / demand,3168.7159298662878
+phoenix_plaza,0.3,1.0,2.0,No tested option meets target,
+houston_veranda,0.3,3.0,0.5,Improved shade + A / demand,1035.1789824665718
+phoenix_plaza,0.3,3.0,0.5,No tested option meets target,
+houston_veranda,0.3,3.0,1.0,Improved shade + A / demand,1746.3579649331439
+phoenix_plaza,0.3,3.0,1.0,No tested option meets target,
+houston_veranda,0.3,3.0,2.0,Improved shade + A / demand,3168.7159298662878
+phoenix_plaza,0.3,3.0,2.0,No tested option meets target,
+houston_veranda,0.3,10.0,0.5,Improved shade + A / demand,1035.1789824665718
+phoenix_plaza,0.3,10.0,0.5,No tested option meets target,
+houston_veranda,0.3,10.0,1.0,Improved shade + A / demand,1746.3579649331439
+phoenix_plaza,0.3,10.0,1.0,No tested option meets target,
+houston_veranda,0.3,10.0,2.0,Improved shade + A / demand,3168.7159298662878
+phoenix_plaza,0.3,10.0,2.0,No tested option meets target,
