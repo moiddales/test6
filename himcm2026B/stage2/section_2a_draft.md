@@ -43,7 +43,7 @@ Wind is converted from 10 m to 1.1 m height with a log profile.
 | # | Assumption | Justification |
 |---|---|---|
 | A1 | The shelter is 6 × 1.8 × 2.5 m, with a roof, a back panel and three open sides. | Standard city shelter; the problem says "open-sided". |
-| A2 | The "up to" values are outlet ratings at a wet-bulb depression $D_{\text{ref}} = 10$ °C. | Gives effectiveness $\varepsilon$ = 0.50 (B) and 0.80 (C), inside the 0.5–0.9 range of direct evaporative coolers. |
+| A2 | The "up to" values are outlet ratings at a wet-bulb depression $D_{\text{ref}} = 10$ °C. | Gives effectiveness $\varepsilon$ = 0.50 (B) and 0.80 (C), inside the 0.5–0.9 range of direct evaporative coolers. Section 4.5 tests the literal reading, in which the outlet never cools air by more than 5 / 8 °C. |
 | A3 | The fan's "3 °C" is a felt-temperature reduction at 30 °C / 50 % RH. | Fan ratings are quoted for warm conditions; varied 28–33 °C. |
 | A4 | Airflow follows commercial data sheets: B 5.0 m³/s at 1.2 kW; C 7.5 m³/s at 2.5 kW. | 18,000 m³/h at 1.1 kW; 30,000 m³/h at 3.0 kW. |
 | A5 | Passengers arrive at random; bus headways have a coefficient of variation of 0.5. | Sets the mean wait. Arrivals are close to random for headways up to about 12 minutes (Kaparias et al., 2015). |
@@ -194,6 +194,16 @@ At 30 °C / 50 % the fan scores 55.9 against 12.1 (B) and 8.8 (C); at 32 °C / 7
 - **Order-of-magnitude checks.** Read as "air-temperature drop delivered at the hottest dry hour", the ratings imply saturation effectiveness 0.44 (B) and 0.65 (C), close to the 0.50 and 0.80 of A2. At the dry peak the model lowers air temperature at a covered person by 3.8 °C (B) and 7.1 °C (C), under a third of the 24 °C wet-bulb depression; field tests of outdoor misting report 8.2 °C in a light breeze (Ulpiani et al., 2019).
 - The mixing model has correct limits.
 
+**Reading of the ratings (Table 9).** With a fixed effectiveness (A2), drier air gives a larger outlet temperature drop than the rating. On the Phoenix design day the outlet drop exceeds the rating in all 16 hours (B 7.1–12.1 °C, C 11.3–19.4 °C); on the Houston day it does so in 4 hours (B at most 5.9 °C, C 9.5 °C). Read literally, "up to 5 / 8 °C" caps the outlet drop in every climate. Under that reading:
+
+| Hot-dry design day | Relief: base → capped | $\eta_{\text{day}}$: base → capped | UTCI ≥ 38 person-h left: base → capped |
+|---|---|---|---|
+| A (fan, 9 h) | 59 → 59 | 26.6 → 26.6 | 61.7 → 61.7 |
+| B | 672 → 339 | 31.4 → 16.9 | 52.7 → 56.5 |
+| C | 1,311 → 684 | 28.8 → 16.2 | 40.8 → 51.7 |
+
+The fan then has the highest $\eta$, but it delivers 59 person·°C·h in nine morning and evening hours and cannot run from 13:00 to 20:00. In those hours evaporative cooling is still the only device that helps, at about half the benefit. The humid day barely changes (B 312 → 301, C 530 → 515).
+
 **One-at-a-time sensitivity (Fig. 5, design-day peaks):**
 
 - Wind and water energy start from each city's measured or local value (Phoenix peak wind 3.7 m/s, Houston 2.2 m/s).
@@ -209,7 +219,7 @@ At 30 °C / 50 % the fan scores 55.9 against 12.1 (B) and 8.8 (C); at 32 °C / 7
 ## 4.6 Answer to Requirement 2a
 
 - **Humid or moderately hot weather:** the fan (A). It delivers about 4–8 times more relief per kWh than either cooler and uses no water. Above 35 °C its benefit is contested (Table 7), so the hottest humid hours also need evaporative cooling or a cooled refuge, especially for older passengers.
-- **Hot, dry weather** (≥ 36 °C and a wet-bulb depression of about 14–19 °C or more): evaporative cooling, with the fan switched off. B and C are close at quiet stops; use C at busy stops, where it is also the more effective.
+- **Hot, dry weather** (≥ 36 °C and a wet-bulb depression of about 14–19 °C or more): evaporative cooling, with the fan switched off. B and C are close at quiet stops; use C at busy stops, where it is also the more effective. This holds under both readings of the ratings; if the ratings are hard ceilings, the coolers deliver about half the relief.
 - **On the hottest dry days** no single device keeps waiting passengers out of very strong heat stress. Shade, which costs no energy, comes first, and side screens help there; in humid climates the shelter should stay open to the breeze.
 
 ---

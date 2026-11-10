@@ -18,7 +18,7 @@ from dataclasses import dataclass, replace
 import numpy as np
 from pythermalcomfort.models import utci as _utci
 
-from psychro import humidity_ratio, rel_humidity, evaporative_outlet
+from psychro import humidity_ratio, rel_humidity, evaporative_outlet, wet_bulb
 
 RHO = 1.16    # kg/m3, air density near 30-40 degC
 CP = 1.006    # kJ/(kg K)
@@ -42,6 +42,7 @@ class Device:
 class Params:
     # --- M2 device rating interpretation ---
     D_ref: float = 10.0        # degC, wet-bulb depression at which "up to" values hold
+    rating_ceiling: bool = False   # literal reading: the outlet never cools the air by more than the "up to" value
     fan_ref_T: float = 30.0    # degC, condition at which the fan "feels 3 degC cooler"
     fan_ref_RH: float = 50.0
     q_per_person: float = 0.8  # m3/s of device airflow needed per covered person
@@ -221,6 +222,8 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
         share = np.ones_like(T)
     else:
         eps = eps_of(dev, p)
+        if p.rating_ceiling:
+            eps = np.minimum(eps, dev.rated_drop / (T - wet_bulb(T, RH)))
         T_s, W_s, _ = evaporative_outlet(T, RH, eps)
         gross_kw = RHO * dev.airflow * CP * (T - T_s)                     # sensible cooling made
         water_lph = RHO * dev.airflow * (W_s - W) * 3600                   # kg/h ~ L/h

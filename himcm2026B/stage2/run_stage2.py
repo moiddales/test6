@@ -324,6 +324,34 @@ def rating_reading():
     return df
 
 
+def rating_ceiling(t2):
+    """Literal reading of the ratings: "up to 5 / 8 C" is a ceiling on the outlet
+    temperature drop in every climate. Shows how far the base reading (fixed
+    effectiveness) exceeds that ceiling on the design days, and reruns the
+    design days with the ceiling applied."""
+    capped, _ = design_days(replace(P, rating_ceiling=True), "table9_rating_ceiling")
+    rows = []
+    for cname in CLIMATES:
+        T, RH, _, _ = day_profile(cname)
+        dep = T - wet_bulb(T, RH)
+        for d in DEVS:
+            b = t2[(t2.climate == cname) & (t2.device == d.name) & (t2.control == "smart")].iloc[0]
+            c = capped[(capped.climate == cname) & (capped.device == d.name) & (capped.control == "smart")].iloc[0]
+            row = dict(climate=cname, device=d.name)
+            if d.kind == "evap":
+                drop = eps_of(d, P) * dep
+                row.update(outlet_drop_min=round(float(drop.min()), 1), outlet_drop_max=round(float(drop.max()), 1),
+                           hours_outlet_above_rating=int((drop > d.rated_drop).sum()))
+            row.update(relief_base=b.relief_person_degC_h, eta_base=b.eta_day,
+                       very_strong_after_base=b.person_h_very_strong_after,
+                       relief_ceiling=c.relief_person_degC_h, eta_ceiling=c.eta_day,
+                       very_strong_after_ceiling=c.person_h_very_strong_after)
+            rows.append(row)
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table9_rating_ceiling_summary.csv"), index=False)
+    return df
+
+
 # ---------------------------------------------------------------------------
 # 3. Decision rules distilled from the model
 # ---------------------------------------------------------------------------
@@ -513,5 +541,7 @@ if __name__ == "__main__":
     print(fan_evidence(t2).to_string(index=False))
     print("\nTable 8 (second reading of the device ratings)")
     print(rating_reading().to_string(index=False))
+    print("\nTable 9 (literal reading: ratings cap the outlet temperature drop; smart control)")
+    print(rating_ceiling(t2).to_string(index=False))
     fig7_cooling_fate(t2)
     print("\nFigures written to", OUT)

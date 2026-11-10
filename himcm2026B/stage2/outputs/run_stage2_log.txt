@@ -103,4 +103,13 @@ Table 8 (second reading of the device ratings)
       B Evap cooler                 24.1        0.5                            0.44                0.31                      3.8
 C Large evap cooler                 24.1        0.8                            0.65                0.37                      7.1
 
+Table 9 (literal reading: ratings cap the outlet temperature drop; smart control)
+                 climate              device  relief_base  eta_base  very_strong_after_base  relief_ceiling  eta_ceiling  very_strong_after_ceiling  outlet_drop_min  outlet_drop_max  hours_outlet_above_rating
+  Hot-dry (Phoenix-like)               A Fan         58.6      26.6                    61.7            58.6         26.6                       61.7              NaN              NaN                        NaN
+  Hot-dry (Phoenix-like)       B Evap cooler        671.7      31.4                    52.7           339.0         16.9                       56.5              7.1             12.1                       16.0
+  Hot-dry (Phoenix-like) C Large evap cooler       1310.8      28.8                    40.8           683.6         16.2                       51.7             11.3             19.4                       16.0
+Hot-humid (Houston-like)               A Fan        241.5      61.5                    24.2           241.5         61.5                       24.2              NaN              NaN                        NaN
+Hot-humid (Houston-like)       B Evap cooler        311.5      16.3                    12.6           300.7         15.8                       17.9              0.9              5.9                        4.0
+Hot-humid (Houston-like) C Large evap cooler        529.7      13.3                     0.5           514.8         12.9                        0.5              1.4              9.5                        4.0
+
 Figures written to /home/user/test6/himcm2026B/stage2/outputs
