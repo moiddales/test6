@@ -112,6 +112,17 @@ Evaporative coolers draw outdoor air.
 | | Hot-humid | B | 26.4 / 91 % / 10.0 | 23.6 / 96 % / 16.0 |
 | | | C | 23.8 / 95 % / 16.0 | 19.7 / 97 % / 16.0 |
 
+**Comparing stations needs one baseline.** The $\eta$ values above measure each device against the same station without cooling, which answers "which device for this station". An enclosure changes how everyone waiting feels before any device is switched on, just as the wind screens did in Section 4, so comparing stations needs a common reference. Against the uncooled open-sided platform (person·°C·h per day):
+
+| Station | Enclosure alone: dry / humid | Enclosure + device (dry: B; humid: fans, AC) |
+|---|---|---|
+| Open-sided platform | 0 / 0 | B 3,555; fans 994, AC 311 |
+| Semi-open | +674 / +165 | B 4,377; fans 1,209, AC 501 |
+| Screen doors | +1,049 / +65 | B 6,229; fans 879, AC 1,493 |
+| Enclosed room | −589 / −1,738 | B 6,720; fans −1,357, AC 2,790 |
+
+In dry heat partial enclosure helps on its own, because walls block wind hotter than skin and sun-heated outdoor surfaces; the fully enclosed room traps heat and is worse than the open platform. In humid heat the enclosed room is a heat trap: of the 4,528 the air conditioner relieves there, 1,738 only undoes what the enclosure added, leaving 2,790 for 245.5 kWh, against 994 for 40 kWh from fans on the open platform.
+
 **Findings.**
 
 1. **Enclosure decides the technology (Fig. 9).**
@@ -132,7 +143,7 @@ Evaporative coolers draw outdoor air.
 
 **Validation (Table 2b-0, 4 checks pass):**
 
-1. **Nesting.** With the bus shelter's geometry and Section 4's assumptions, at the same measured wind, the station model reproduces the 2a volume-mode zone temperature (39.33 °C both).
+1. **Nesting.** With the bus shelter's geometry and Section 4's assumptions, at the same measured wind, the station model reproduces the 2a volume-mode zone temperature (39.33 °C both). Its efficiency for that shelter is 25–48 % above Section 4's spot-mode values (Table 2b-8: dry B 49.8 vs 33.6), because it also counts the cooled zone air that everyone stands in and that the jet entrains; with the zone air left uncooled the two agree within 3–5 %. Section 4 is therefore the conservative lower bound.
 2. **Time step.** $\eta$ with a 10-s step (14.3) differs from a 2-s step (14.5) by 1.4 %.
 3. **AC efficiency.** COP 3.19 at the AHRI rating point, within the EER-implied 2.9–3.7.
 4. **Sealed limit.** A nearly sealed room with ample capacity holds 26.0 °C.
@@ -159,7 +170,7 @@ The revised model answers questions the bus-stop model could not:
 - **when** a humidity limit overrides efficiency, and how the cooler's intake decides it;
 - **how much** capacity a station needs in each climate.
 
-It contains the bus-stop model as its open-air limit, so one framework covers bus shelters, open platforms, screen-door stations and enclosed waiting rooms. Section 6 relies on that to scale up.
+One framework now covers bus shelters, open platforms, screen-door stations and enclosed waiting rooms. Section 6 runs every venue, the bus shelter included, through this station model and compares them on the common baseline above.
 
 ---
 

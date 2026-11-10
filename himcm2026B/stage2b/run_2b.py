@@ -5,10 +5,10 @@ from dataclasses import replace
 import numpy as np
 import pandas as pd
 
-from station import (Station, SCENARIOS, station, blend, systems, simulate, run, ac_cop, OUT, P2A, DEVS2A,
-                     comfort)
-from model import volume_mode_zone, evaporative_outlet, E_WATER
-from run_stage2 import CLIMATES
+from station import (Station, System, SCENARIOS, station, blend, systems, simulate, run, ac_cop, OUT, P2A, DEVS2A,
+                     comfort, T_START, T_END, DT)
+from model import volume_mode_zone, evaporative_outlet, evaluate, eps_of, mean_waiting, stress_dose, E_WATER
+from run_stage2 import CLIMATES, day_profile, ridership
 from plotstyle import plt, BASELINE, INK2
 
 SYS = systems()
@@ -95,19 +95,71 @@ def ablation():
 
 
 def scenarios():
+    """Each device's relief is measured against the same station without
+    cooling. To compare stations with each other, the table also gives the
+    effect of the enclosure itself against one common reference, the uncooled
+    open-sided platform, and the relief of enclosure plus device on that common
+    baseline. The enclosure uses no energy, so no efficiency is formed from it."""
     rows, sims = [], {}
+    w = P2A.weights
+    ref = {}
+    for clim in CLIM:
+        st0 = station("Open-sided platform")
+        b0 = simulate(st0, SYS[0], clim)
+        ref[clim] = comfort(st0, SYS[0], b0, b0)["U0"]
     for scen in SCENARIOS:
         st = station(scen)
         for clim in CLIM:
             base = simulate(st, SYS[0], clim)
+            U0 = comfort(st, SYS[0], base, base)["U0"]
+            rep = base["t"] >= 6
+            encl = float((base["N"] * (stress_dose(ref[clim], w) - stress_dose(U0, w)))[rep].sum() * base["dt"] / 3600)
             for sysm in SYS:
                 r, sim, cf = run(st, sysm, clim, base)
                 r["openness"] = round(openness_index(st), 2)
+                r["enclosure_relief_person_degC_h"] = round(encl, 1)
+                r["relief_common_baseline"] = round(r["relief_person_degC_h"] + encl, 1)
                 rows.append(r)
                 sims[(scen, clim, sysm.name)] = (sim, cf)
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table2b_2_scenarios.csv"), index=False)
     return df, sims
+
+
+def shelter_bridge():
+    """The 2a bus shelter run through the station model: one device, always on,
+    2a's hourly mean crowd. 2a's spot mode counts the jet on covered people
+    against outdoor air. The station model differs in three ways: it cools the
+    zone air that everyone stands in and that the jet entrains, its inside wind
+    follows the open share of the walls, and the closed back panel radiates at
+    zone temperature. 'jet only' keeps the last two and leaves the zone air
+    uncooled, which separates the first."""
+    shelter = replace(Station(name="bus shelter"), L=6.0, D=1.8, Hz=2.0, H_open=2.5, open_track=1.0, open_back=0.0,
+                      open_ends=1.0, kappa_train=0.0, mass_factor=1.0, gains=False, dynamic=False)
+    th = np.arange(T_START * 3600, T_END * 3600, DT) / 3600
+    crowd = mean_waiting(*ridership(th))
+    rows = []
+    for clim in CLIM:
+        T, RH, v, n = day_profile(clim)
+        pc = replace(P2A, e_water=E_WATER[clim])
+        base = simulate(shelter, SYS[0], clim, n_const=crowd)
+        rep = base["t"] >= 6
+        h = DT / 3600
+        for d in DEVS2A[1:]:
+            cap = d.airflow / P2A.q_per_person
+            r = evaluate(d, T, RH, v, n, pc, "spot")
+            eta_2a = float((np.minimum(n, cap) * r["relief"]).sum() / r["resource_kw"].sum())
+            one = System(d.name, "evap", d.power_kw, d.airflow, eps_of(d, P2A), d.jet_speed, cap)
+            sim = simulate(shelter, one, clim, n_const=crowd)
+            res = sim["P"][rep].sum() * h + E_WATER[clim] * sim["water"][rep].sum() / 1000
+            full = comfort(shelter, one, sim, base)["benefit"][rep].sum() * h / res
+            jet = comfort(shelter, one, dict(base, T_s=sim["T_s"], W_s=sim["W_s"]), base)["benefit"][rep].sum() * h / res
+            rows.append(dict(climate=clim, device=d.name, eta_2a_spot=round(eta_2a, 1),
+                             eta_station_jet_only=round(float(jet), 1), eta_station=round(float(full), 1),
+                             station_over_2a=round(float(full) / eta_2a, 2)))
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table2b_8_shelter_bridge.csv"), index=False)
+    return df
 
 
 def door_jump(sims, scen="Platform screen doors", name="C Large evap ×5"):
@@ -359,6 +411,8 @@ if __name__ == "__main__":
     acs = ac_supply()
     print("\nTable 2b-4 AC supply")
     print(acs.to_string(index=False))
+    print("\nTable 2b-8 the 2a bus shelter in the station model (always on, same crowd)")
+    print(shelter_bridge().to_string(index=False))
     print("\nTable 2b-7 evaporative-cooler intake")
     print(intake().to_string(index=False))
     fig8(sims)
