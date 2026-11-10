@@ -1,37 +1,37 @@
-climate,people_waiting,device,P_rank1,P_eta_negative
-Hot-dry (Phoenix-like),2.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),2.0,B Evap cooler,0.818,0.0
-Hot-dry (Phoenix-like),2.0,C Large evap cooler,0.182,0.0
-Hot-dry (Phoenix-like),4.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),4.0,B Evap cooler,0.615,0.0
-Hot-dry (Phoenix-like),4.0,C Large evap cooler,0.385,0.0
-Hot-dry (Phoenix-like),6.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),6.0,B Evap cooler,0.41,0.0
-Hot-dry (Phoenix-like),6.0,C Large evap cooler,0.59,0.0
-Hot-dry (Phoenix-like),8.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),8.0,B Evap cooler,0.291,0.0
-Hot-dry (Phoenix-like),8.0,C Large evap cooler,0.709,0.0
-Hot-dry (Phoenix-like),10.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),10.0,B Evap cooler,0.197,0.0
-Hot-dry (Phoenix-like),10.0,C Large evap cooler,0.803,0.0
-Hot-dry (Phoenix-like),12.0,A Fan,0.0,1.0
-Hot-dry (Phoenix-like),12.0,B Evap cooler,0.145,0.0
-Hot-dry (Phoenix-like),12.0,C Large evap cooler,0.855,0.0
-Hot-humid (Houston-like),2.0,A Fan,0.962,0.004
-Hot-humid (Houston-like),2.0,B Evap cooler,0.038,0.0
-Hot-humid (Houston-like),2.0,C Large evap cooler,0.0,0.0
-Hot-humid (Houston-like),4.0,A Fan,0.952,0.004
-Hot-humid (Houston-like),4.0,B Evap cooler,0.042,0.0
-Hot-humid (Houston-like),4.0,C Large evap cooler,0.006,0.0
-Hot-humid (Houston-like),6.0,A Fan,0.944,0.004
-Hot-humid (Houston-like),6.0,B Evap cooler,0.037,0.0
-Hot-humid (Houston-like),6.0,C Large evap cooler,0.019,0.0
-Hot-humid (Houston-like),8.0,A Fan,0.929,0.004
-Hot-humid (Houston-like),8.0,B Evap cooler,0.023,0.0
-Hot-humid (Houston-like),8.0,C Large evap cooler,0.047,0.0
-Hot-humid (Houston-like),10.0,A Fan,0.919,0.004
-Hot-humid (Houston-like),10.0,B Evap cooler,0.018,0.0
-Hot-humid (Houston-like),10.0,C Large evap cooler,0.063,0.0
-Hot-humid (Houston-like),12.0,A Fan,0.91,0.004
-Hot-humid (Houston-like),12.0,B Evap cooler,0.014,0.0
-Hot-humid (Houston-like),12.0,C Large evap cooler,0.076,0.0
+climate,people_waiting,device,share_rank1_given_supported,supported_draw_fraction,share_negative_all_draws
+Hot-dry (Phoenix-like),2.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),2.0,B Evap cooler,0.846,1.0,0.0
+Hot-dry (Phoenix-like),2.0,C Large evap cooler,0.154,1.0,0.0
+Hot-dry (Phoenix-like),4.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),4.0,B Evap cooler,0.677,1.0,0.0
+Hot-dry (Phoenix-like),4.0,C Large evap cooler,0.323,1.0,0.0
+Hot-dry (Phoenix-like),6.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),6.0,B Evap cooler,0.46,1.0,0.0
+Hot-dry (Phoenix-like),6.0,C Large evap cooler,0.54,1.0,0.0
+Hot-dry (Phoenix-like),8.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),8.0,B Evap cooler,0.33,1.0,0.0
+Hot-dry (Phoenix-like),8.0,C Large evap cooler,0.67,1.0,0.0
+Hot-dry (Phoenix-like),10.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),10.0,B Evap cooler,0.231,1.0,0.0
+Hot-dry (Phoenix-like),10.0,C Large evap cooler,0.769,1.0,0.0
+Hot-dry (Phoenix-like),12.0,A Fan,0.0,1.0,1.0
+Hot-dry (Phoenix-like),12.0,B Evap cooler,0.178,1.0,0.0
+Hot-dry (Phoenix-like),12.0,C Large evap cooler,0.822,1.0,0.0
+Hot-humid (Houston-like),2.0,A Fan,0.962,1.0,0.004
+Hot-humid (Houston-like),2.0,B Evap cooler,0.038,1.0,0.0
+Hot-humid (Houston-like),2.0,C Large evap cooler,0.0,1.0,0.0
+Hot-humid (Houston-like),4.0,A Fan,0.952,1.0,0.004
+Hot-humid (Houston-like),4.0,B Evap cooler,0.042,1.0,0.0
+Hot-humid (Houston-like),4.0,C Large evap cooler,0.006,1.0,0.0
+Hot-humid (Houston-like),6.0,A Fan,0.944,1.0,0.004
+Hot-humid (Houston-like),6.0,B Evap cooler,0.037,1.0,0.0
+Hot-humid (Houston-like),6.0,C Large evap cooler,0.019,1.0,0.0
+Hot-humid (Houston-like),8.0,A Fan,0.929,1.0,0.004
+Hot-humid (Houston-like),8.0,B Evap cooler,0.023,1.0,0.0
+Hot-humid (Houston-like),8.0,C Large evap cooler,0.047,1.0,0.0
+Hot-humid (Houston-like),10.0,A Fan,0.919,1.0,0.004
+Hot-humid (Houston-like),10.0,B Evap cooler,0.018,1.0,0.0
+Hot-humid (Houston-like),10.0,C Large evap cooler,0.063,1.0,0.0
+Hot-humid (Houston-like),12.0,A Fan,0.91,1.0,0.004
+Hot-humid (Houston-like),12.0,B Evap cooler,0.014,1.0,0.0
+Hot-humid (Houston-like),12.0,C Large evap cooler,0.076,1.0,0.0

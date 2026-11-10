@@ -1,3 +1,5 @@
+> 来源目录保留原研究脉络；历史资料中的匹配假设并不自动成立。当前证据等级、已撤回推断和未测参数以 ../analysis/UNCERTAINTY.md、../stage1/README.md 和 ../paper/report.md 为准。
+
 # 数据来源与核实状态
 
 **核实等级：**

@@ -1,0 +1,41 @@
+{
+  "python": "3.12.14",
+  "packages": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "pythermalcomfort": "4.8.1",
+    "numba": "0.68.1",
+    "scipy": "1.17.0",
+    "reportlab": "4.4.9",
+    "pypdf": "6.21.4"
+  },
+  "inputs_and_sources_sha256": {
+    "data/weather/IAH_raw.csv": "63c55b3e06f2a0a3ac55c5c3c4d012df8073bda79b2c685f29d2de24a41331cd",
+    "data/weather/PHX_raw.csv": "0172114c8f7fe91328ea701dfe905e08d7c4b239a07513219cbc27fe6beee3a2",
+    "data/weather/hot_days.py": "8a9042ddd5385d57c69b09d643f50fd6bab7da014840c102928fb4017704354c",
+    "requirements.txt": "166c0357fff18082bc5279a754b8e6fe03474e9315e7f5228afb3f511b34fe66",
+    "stage1/freezer.py": "0be945ac9202ea4f5c3887748b80ea4338cf46925a0e2cd4b270ebb991d79a74",
+    "stage2/model.py": "83be8b52c17b7fefae43579c58df2483039217675ce6e5000dc518fb088ccf19",
+    "stage2/plotstyle.py": "05585709d1b42b8a8841a4be4e5511f3e779bb25d528584a6c57d867bb644a36",
+    "stage2/psychro.py": "a9c4aec5da55f81e227bff281a4762f87c34db196dd7bb1c31e2df7f58ea471a",
+    "stage2/requirements.txt": "69c65f7998ef21ec2b7edc38a7362e1d41478293410311c4617ab2b4d61d8bf4",
+    "stage2/run_stage2.py": "a77c06b74dde3b982c52b99ab1884e2bbdbbc6fcbdceab0f71553970c6d506fb",
+    "stage2/sensitivity.py": "8aeed3d0fa08e61a94296aa402153676270ffd7ba6d30e373de357d4bfaa8382",
+    "stage2b/run_2b.py": "84b787000f4f65858334155558a5857dc7944c9ad2c257920d583218f1add21c",
+    "stage2b/station.py": "39de2f11bb3b75636a5b1a27fce03abb2d034e5954a60972f34600c4386a892c",
+    "tests/test_claims.py": "7eb186756f9e397dcc9a9c422a8a43a56828f44eaa82e8cd10eabbf461e8bd15",
+    "tests/test_regressions.py": "2f3e451ef56805191da8392581c2f53c08dcaa65af21294ca6c69990eb9625aa",
+    "tests/test_tradeoffs.py": "c784b4ed6650924c6d06195544b1deca1f439114b09f866f1e499fb6d29862d1",
+    "tools/build_claims.py": "a52abcb5beb329d9c15b6742e31d678f5fabcc2a29b4cba3f088c451c3c0af33",
+    "tools/check_numbers.py": "45985e52a9977c722890e5fa8c79f2d3ac58f16701ca099de19ff32782c0e14f",
+    "tools/reproduce.py": "49c64fb5895ebbc3b68a65e254b3a45653b4d60faaf712e1dafcd5e5f50f6ffe",
+    "tools/robustness.py": "a29617455d11d7b3aa2376fc7201c4430f17254ef85343cfafa319f90970ab08",
+    "tools/validate_outputs.py": "633feaeed3f25a3bccc9375398a4dc0c66a6a3e82860552837a002f5462b3a39",
+    "venues/cases.json": "f054356d75f3c3ba408621846e08fab26974fb04e927272c947fb5c10e6b617f",
+    "venues/cost_assumptions.json": "aebc9ccbcda58861d3d3fb96d8d5996a12bc200c28f7bccdf29508087d5e3f89",
+    "venues/run_venues.py": "915cbb950412b25dc54c4bf5e586815c98ca414ce37a1567486603ba5029df72",
+    "venues/tradeoffs.py": "b379aee5ad26c0dd8b8ba704b9727cc2445c67d90876dfa341a039182fc231e4"
+  },
+  "verification_mode": "existing outputs"
+}

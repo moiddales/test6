@@ -1,0 +1,21 @@
+       venue_id                          system  electricity_kWh  water_L  relief_person_degC_h    eta  person_h_UTCI38_after
+  phoenix_plaza              No added equipment              0.0      0.0                  0.00    NaN                  144.0
+  phoenix_plaza               A Fan ×6 / always              9.0      0.0                -55.88  -6.21                  144.0
+  phoenix_plaza               A Fan ×6 / demand              4.2      0.0                 35.26   8.40                  144.0
+  phoenix_plaza       B Evap cooler ×4 / always             28.8   1421.0               1957.22  62.13                  137.4
+  phoenix_plaza       B Evap cooler ×4 / demand             28.8   1421.0               1957.22  62.13                  137.4
+  phoenix_plaza C Large evap cooler ×3 / always             45.0   2450.0               3202.70  64.44                   96.3
+  phoenix_plaza C Large evap cooler ×3 / demand             45.0   2450.0               3202.70  64.44                   96.3
+  phoenix_plaza           AC 15 kW / thermostat             34.4      0.0                186.77   5.43                  144.0
+  phoenix_plaza             Improved shade only              0.0      0.0                648.28    NaN                  144.0
+  phoenix_plaza     Improved shade + A / demand              2.6      0.0                665.38 255.92                  144.0
+houston_veranda              No added equipment              0.0      0.0                  0.00    NaN                   90.2
+houston_veranda               A Fan ×6 / always              9.0      0.0                660.99  73.44                   44.9
+houston_veranda               A Fan ×6 / demand              9.0      0.0                660.99  73.44                   44.9
+houston_veranda       B Evap cooler ×4 / always             28.8    936.0               1146.35  39.12                    0.0
+houston_veranda       B Evap cooler ×4 / demand             22.7    796.0                988.50  42.79                    0.0
+houston_veranda C Large evap cooler ×3 / always             45.0   1688.0               1791.26  39.03                    0.0
+houston_veranda C Large evap cooler ×3 / demand             19.4    868.0               1029.69  51.74                    4.2
+houston_veranda           AC 15 kW / thermostat             28.2      0.0                160.31   5.68                   81.0
+houston_veranda             Improved shade only              0.0      0.0                345.26    NaN                   65.5
+houston_veranda     Improved shade + A / demand              9.0      0.0                922.88 102.54                    2.4

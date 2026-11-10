@@ -2,6 +2,7 @@
 by crowd size (Fig. 6) of the efficiency eta for the three bus-stop devices,
 at the hottest hour of the two design days."""
 import os
+import sys
 from dataclasses import replace
 import numpy as np
 import pandas as pd
@@ -158,6 +159,8 @@ def monte_carlo(n_draws=3000, seed=1):
                 rows.append(dict(climate=c, people_waiting=n, device=d, share_rank1_given_supported=round(float(p_best[i, j, m]), 3),
                                  supported_draw_fraction=round(float(valid_sets[:,i,m].mean()),3),
                                  share_negative_all_draws=round(float(p_neg[i, j, m]), 3)))
+    pd.DataFrame([dict(climate=c, device=d, people_waiting=float(n), share_rank1_given_supported=float(p_best[i,j,k]))
+                  for i,c in enumerate(clim) for j,d in enumerate(devs) for k,n in enumerate(N_FINE)]).to_csv(os.path.join(OUT,"table4_full_grid.csv"), index=False)
     summary = pd.DataFrame(rows)
     summary.to_csv(os.path.join(OUT, "table4_monte_carlo.csv"), index=False)
 
@@ -207,12 +210,21 @@ if __name__ == "__main__":
     print("\nLargest one-at-a-time swings")
     print(swing.groupby(["climate", "device"]).head(3)[["climate", "device", "parameter", "eta_base",
                                                           "eta_at_low", "eta_at_high"]].to_string(index=False))
-    p_best, summary, cross = monte_carlo()
+    if "--render-only" in sys.argv:
+        grid = pd.read_csv(os.path.join(OUT, "table4_full_grid.csv"))
+        p_best = np.array([[grid[(grid.climate == c) & (grid.device == d)].sort_values("people_waiting").share_rank1_given_supported.to_numpy()
+                           for d in DEVICE_COLORS] for c in CONDS])
+        assert p_best.shape == (len(CONDS), len(DEVICE_COLORS), len(N_FINE))
+        summary = pd.read_csv(os.path.join(OUT, "table4_monte_carlo.csv"))
+        cross = pd.read_csv(os.path.join(OUT, "table4b_break_even_crowd.csv"))
+        print("Rendering and summarizing the completed fixed-seed sample CSVs; no new sampling.")
+    else:
+        p_best, summary, cross = monte_carlo()
     fig6(p_best)
     print(f"\nDesign-day mean crowd: {N_DAY.min():.1f}-{N_DAY.max():.1f} people waiting")
     print("\nMonte Carlo: share of draws in which each device is most efficient, by crowd size")
-    print(summary.pivot_table(index=["climate", "people_waiting"], columns="device", values="P_rank1").to_string())
+    print(summary.pivot_table(index=["climate", "people_waiting"], columns="device", values="share_rank1_given_supported").to_string())
     print("\nFan eta negative (share of draws):")
-    print(summary[summary.device == "A Fan"].pivot_table(index="climate", columns="people_waiting", values="P_eta_negative").to_string())
+    print(summary[summary.device == "A Fan"].pivot_table(index="climate", columns="people_waiting", values="share_negative_all_draws").to_string())
     print("\nCrowd size from which C is more efficient than B")
     print(cross.to_string(index=False))

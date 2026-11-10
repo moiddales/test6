@@ -1,13 +1,13 @@
-climate,device,control,hours_on,energy_kWh,water_L,resource_kWh,relief_person_degC_h,eta_day,cooling_made_kWh,share_delivered,share_diluted,share_unused,person_h_very_strong_before,person_h_very_strong_after
-Hot-dry (Phoenix-like),A Fan,always on,16.0,4.0,0.0,4.0,2.5,0.6,0.0,,,,61.7,61.7
-Hot-dry (Phoenix-like),A Fan,smart,6.0,1.47,0.0,1.47,45.1,30.6,0.0,,,,61.7,61.7
-Hot-dry (Phoenix-like),B Evap cooler,always on,16.0,19.2,1317.0,21.74,733.0,33.7,924.2,0.315,0.34,0.345,61.7,52.7
-Hot-dry (Phoenix-like),B Evap cooler,smart,16.0,18.84,1292.0,21.33,733.0,34.4,906.5,0.316,0.341,0.343,61.7,52.7
-Hot-dry (Phoenix-like),C Large evap cooler,always on,16.0,40.0,2970.0,45.73,1343.7,29.4,2076.0,0.247,0.226,0.527,61.7,37.7
-Hot-dry (Phoenix-like),C Large evap cooler,smart,16.0,39.24,2913.0,44.87,1343.7,30.0,2036.2,0.248,0.227,0.525,61.7,37.7
-Hot-humid (Houston-like),A Fan,always on,16.0,4.0,0.0,4.0,279.5,69.9,0.0,,,,37.5,24.6
-Hot-humid (Houston-like),A Fan,smart,16.0,3.92,0.0,3.92,279.5,71.2,0.0,,,,37.5,24.6
-Hot-humid (Houston-like),B Evap cooler,always on,16.0,19.2,514.0,19.47,370.3,19.0,353.7,0.327,0.33,0.343,37.5,17.9
-Hot-humid (Houston-like),B Evap cooler,smart,16.0,18.84,504.0,19.1,370.3,19.4,347.1,0.328,0.331,0.341,37.5,17.9
-Hot-humid (Houston-like),C Large evap cooler,always on,16.0,40.0,1235.0,40.65,622.5,15.3,848.8,0.254,0.22,0.525,37.5,0.5
-Hot-humid (Houston-like),C Large evap cooler,smart,16.0,39.24,1212.0,39.89,622.5,15.6,833.0,0.255,0.221,0.524,37.5,0.5
+climate,device,control,hours_on,full_day_supported,utci_invalid_hours,energy_kWh,water_L,resource_kWh,relief_person_degC_h,eta_day,cooling_made_kWh,capture_index,mixing_index,unused_index,person_h_very_strong_before,person_h_very_strong_after
+Hot-dry (Phoenix-like),A Fan,always on,16.0,True,0,4.0,0.0,4.0,-22.5,-5.6,0.0,,,,61.7,57.9
+Hot-dry (Phoenix-like),A Fan,smart,4.936,True,0,1.23,0.0,1.23,34.6,28.0,0.0,,,,61.7,57.9
+Hot-dry (Phoenix-like),B Evap cooler,always on,16.0,True,0,19.2,1317.0,21.74,688.5,31.7,924.2,0.315,0.34,0.345,61.7,49.6
+Hot-dry (Phoenix-like),B Evap cooler,smart,15.698,True,0,18.84,1292.0,21.33,688.5,32.3,906.5,0.316,0.341,0.343,61.7,49.6
+Hot-dry (Phoenix-like),C Large evap cooler,always on,16.0,True,0,40.0,2970.0,45.73,1257.6,27.5,2076.0,0.247,0.226,0.527,61.7,34.6
+Hot-dry (Phoenix-like),C Large evap cooler,smart,15.698,True,0,39.24,2913.0,44.87,1257.6,28.0,2036.2,0.248,0.227,0.525,61.7,34.6
+Hot-humid (Houston-like),A Fan,always on,16.0,True,0,4.0,0.0,4.0,239.5,59.9,0.0,,,,28.1,18.0
+Hot-humid (Houston-like),A Fan,smart,14.718,True,0,3.68,0.0,3.68,230.0,62.5,0.0,,,,28.1,18.0
+Hot-humid (Houston-like),B Evap cooler,always on,16.0,True,0,19.2,514.0,19.47,323.8,16.6,353.7,0.327,0.33,0.343,28.1,2.6
+Hot-humid (Houston-like),B Evap cooler,smart,14.718,True,0,17.66,497.0,17.92,317.0,17.7,342.0,0.327,0.332,0.341,28.1,2.6
+Hot-humid (Houston-like),C Large evap cooler,always on,16.0,True,0,40.0,1235.0,40.65,550.9,13.6,848.8,0.254,0.22,0.525,28.1,0.4
+Hot-humid (Houston-like),C Large evap cooler,smart,14.718,True,0,36.79,1194.0,37.43,539.6,14.4,820.7,0.255,0.222,0.523,28.1,0.4

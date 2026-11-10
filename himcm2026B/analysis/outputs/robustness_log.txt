@@ -1,0 +1,8 @@
+station              device  days_total  days_supported  eta_p10  eta_median  eta_p90  supported_comparable_days  rank1_days
+    IAH               A Fan          22              22    48.58       51.29    56.64                         22          22
+    IAH       B Evap cooler          22              22    13.31       15.23    18.08                         22           0
+    IAH C Large evap cooler          22              22    11.22       12.75    15.08                         22           0
+    PHX               A Fan          23              23    19.71       27.19    31.46                         23           3
+    PHX       B Evap cooler          23              23    27.45       29.08    31.31                         23          20
+    PHX C Large evap cooler          23              23    24.93       26.96    28.71                         23           0
+Weather QA: 45/50 selected days complete

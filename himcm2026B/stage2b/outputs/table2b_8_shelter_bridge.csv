@@ -1,7 +1,7 @@
 climate,device,eta_2a_spot,eta_2b_zone_and_jet,station_over_2a,shared_passenger_h,comparison
-Hot-dry (Phoenix-like),A Fan,8.636,8.638,1.0,71.873,aligned inputs; dynamic zone capture remains
-Hot-dry (Phoenix-like),B Evap cooler,30.783,41.354,1.343,71.873,aligned inputs; dynamic zone capture remains
-Hot-dry (Phoenix-like),C Large evap cooler,28.283,32.947,1.165,71.873,aligned inputs; dynamic zone capture remains
-Hot-humid (Houston-like),A Fan,59.22,59.22,1.0,71.873,aligned inputs; dynamic zone capture remains
-Hot-humid (Houston-like),B Evap cooler,15.956,20.049,1.257,71.873,aligned inputs; dynamic zone capture remains
-Hot-humid (Houston-like),C Large evap cooler,13.03,16.141,1.239,71.873,aligned inputs; dynamic zone capture remains
+Hot-dry (Phoenix-like),A Fan,3.751,3.753,1.001,71.873,aligned inputs; dynamic zone capture remains
+Hot-dry (Phoenix-like),B Evap cooler,29.057,39.064,1.344,71.873,aligned inputs; dynamic zone capture remains
+Hot-dry (Phoenix-like),C Large evap cooler,26.704,31.107,1.165,71.873,aligned inputs; dynamic zone capture remains
+Hot-humid (Houston-like),A Fan,50.525,50.526,1.0,71.873,aligned inputs; dynamic zone capture remains
+Hot-humid (Houston-like),B Evap cooler,13.933,17.665,1.268,71.873,aligned inputs; dynamic zone capture remains
+Hot-humid (Houston-like),C Large evap cooler,11.503,14.466,1.258,71.873,aligned inputs; dynamic zone capture remains

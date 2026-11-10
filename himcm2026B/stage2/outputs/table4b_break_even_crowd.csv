@@ -1,3 +1,3 @@
 climate,n_star_p05,n_star_median,n_star_p95,share_C_ahead_at_every_crowd,share_C_never_ahead_up_to_16
-Hot-dry (Phoenix-like),1.0,5.25,inf,0.12,0.085
+Hot-dry (Phoenix-like),1.0,5.75,inf,0.101,0.133
 Hot-humid (Houston-like),4.5,8.5,inf,0.0,0.173

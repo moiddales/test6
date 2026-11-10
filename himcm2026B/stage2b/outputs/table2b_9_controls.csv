@@ -1,25 +1,25 @@
-scenario,system,climate,control,rating_policy,rating_exceed_hours,electricity_kWh,water_L,resource_kWh,relief_person_degC_h,eta,person_h_UTCI38_before,person_h_UTCI38_after,T_zone_15h,T_out_15h,RH_zone_15h,UTCI_15h,RH_zone_max,hours_RH_over_65,hours_on,powered_hours_RH_over_65,passenger_h,utci_invalid_hours,utci_invalid_person_h,full_day_supported
-Platform screen doors,A Fans ×10,Hot-dry (Phoenix-like),always,occupied,0.0,40.0,0.0,40.0,-768.5,-19.2,186.8,183.7,47.3,45.9,11.0,46.9,26.0,0.0,16.0,0.0,220.1,0.0,0.0,True
-Platform screen doors,A Fans ×10,Hot-dry (Phoenix-like),demand,occupied,0.0,8.1,0.0,8.1,60.2,7.5,186.8,183.7,47.1,45.9,11.0,46.8,26.0,0.0,3.225,0.0,220.1,0.0,0.0,True
-Platform screen doors,B Evap ×8,Hot-dry (Phoenix-like),always,occupied,0.0,153.6,4858.0,163.0,2426.5,14.9,186.8,147.1,43.2,45.9,15.0,43.8,40.0,0.0,16.0,0.0,220.1,0.0,0.0,True
-Platform screen doors,B Evap ×8,Hot-dry (Phoenix-like),demand,occupied,0.0,146.8,4639.0,155.7,2416.1,15.5,186.8,147.1,43.2,45.9,15.0,43.8,40.0,0.0,15.289,0.0,220.1,0.0,0.0,True
-Platform screen doors,C Large evap ×5,Hot-dry (Phoenix-like),always,occupied,0.0,200.0,7919.0,215.3,4202.7,19.5,186.8,103.0,40.9,45.9,19.0,41.8,50.0,0.0,16.0,0.0,220.1,0.0,0.0,True
-Platform screen doors,C Large evap ×5,Hot-dry (Phoenix-like),demand,occupied,0.0,180.7,7173.0,194.6,4112.2,21.1,186.8,103.0,40.9,45.9,19.0,41.8,49.0,0.0,14.458,0.0,220.1,0.0,0.0,True
-Platform screen doors,A Fans ×10,Hot-humid (Houston-like),always,occupied,0.0,40.0,0.0,40.0,810.6,20.3,108.9,75.9,39.0,36.9,36.0,41.0,82.0,3.3,16.0,3.347,220.1,0.0,0.0,True
-Platform screen doors,A Fans ×10,Hot-humid (Houston-like),demand,occupied,0.0,38.8,0.0,38.8,806.4,20.8,108.9,75.9,39.0,36.9,36.0,41.0,84.0,3.3,15.531,3.122,220.1,0.0,0.0,True
-Platform screen doors,B Evap ×8,Hot-humid (Houston-like),always,occupied,0.0,153.6,3527.0,155.5,1941.6,12.5,108.9,0.0,34.5,36.9,49.0,37.1,91.0,8.2,16.0,8.239,220.1,0.0,0.0,True
-Platform screen doors,B Evap ×8,Hot-humid (Houston-like),demand,occupied,0.0,80.8,2311.0,82.1,1436.0,17.5,108.9,0.0,34.5,36.9,49.0,37.1,84.0,3.4,8.419,0.0,220.1,0.0,0.0,True
-Platform screen doors,C Large evap ×5,Hot-humid (Houston-like),always,occupied,0.0,200.0,5657.0,203.0,2777.1,13.7,108.9,0.0,32.1,36.9,60.0,35.3,94.0,12.0,16.0,12.014,220.1,0.0,0.0,True
-Platform screen doors,C Large evap ×5,Hot-humid (Houston-like),demand,occupied,0.0,71.6,2647.0,73.0,1788.7,24.5,108.9,0.0,32.1,36.9,60.0,35.3,84.0,3.4,5.728,0.0,220.1,0.0,0.0,True
-Enclosed waiting room,A Fans ×10,Hot-dry (Phoenix-like),always,occupied,0.0,40.0,0.0,40.0,,,,,51.3,45.9,9.0,,24.0,0.0,16.0,0.0,220.1,5.108,68.987,False
-Enclosed waiting room,A Fans ×10,Hot-dry (Phoenix-like),demand,occupied,0.0,4.9,0.0,4.9,,,,,50.8,45.9,9.0,,24.0,0.0,1.942,0.0,220.1,4.333,55.941,False
-Enclosed waiting room,B Evap ×8,Hot-dry (Phoenix-like),always,occupied,6.025,153.6,1998.0,157.5,,,,166.1,46.2,45.9,11.0,45.9,39.0,0.0,16.0,0.0,220.1,4.333,55.941,False
-Enclosed waiting room,B Evap ×8,Hot-dry (Phoenix-like),demand,occupied,6.006,148.2,1898.0,151.8,,,,166.1,46.2,45.9,11.0,45.9,38.0,0.0,15.433,0.0,220.1,4.333,55.941,False
-Enclosed waiting room,C Large evap ×5,Hot-dry (Phoenix-like),always,occupied,0.161,200.0,4346.0,208.4,,,,140.7,43.5,45.9,15.0,43.8,50.0,0.0,16.0,0.0,220.1,4.333,55.941,False
-Enclosed waiting room,C Large evap ×5,Hot-dry (Phoenix-like),demand,occupied,0.158,182.3,3839.0,189.7,,,,140.7,43.5,45.9,15.0,43.8,49.0,0.0,14.581,0.0,220.1,4.333,55.941,False
-Enclosed waiting room,A Fans ×10,Hot-humid (Houston-like),always,occupied,0.0,40.0,0.0,40.0,196.0,4.9,144.1,131.2,44.6,36.9,27.0,46.5,75.0,1.3,16.0,1.297,220.1,0.0,0.0,True
-Enclosed waiting room,A Fans ×10,Hot-humid (Houston-like),demand,occupied,0.0,32.6,0.0,32.6,332.2,10.2,144.1,131.2,43.9,36.9,28.0,45.9,77.0,1.3,13.058,1.3,220.1,0.0,0.0,True
-Enclosed waiting room,B Evap ×8,Hot-humid (Houston-like),always,occupied,6.358,153.6,1305.0,154.3,3090.7,20.0,144.1,47.3,37.6,36.9,39.0,39.5,91.0,6.6,16.0,6.597,220.1,0.0,0.0,True
-Enclosed waiting room,B Evap ×8,Hot-humid (Houston-like),demand,occupied,6.297,91.0,465.0,91.2,2481.3,27.2,144.1,47.3,37.6,36.9,39.0,39.5,80.0,2.0,9.475,0.0,220.1,0.0,0.0,True
-Enclosed waiting room,C Large evap ×5,Hot-humid (Houston-like),always,occupied,0.0,200.0,3204.0,201.7,3946.3,19.6,144.1,0.0,36.4,36.9,43.0,38.5,95.0,9.0,16.0,8.95,220.1,0.0,0.0,True
-Enclosed waiting room,C Large evap ×5,Hot-humid (Houston-like),demand,occupied,0.0,92.7,1130.0,93.3,2911.3,31.2,144.1,0.0,36.4,36.9,43.0,38.5,80.0,2.0,7.414,0.0,220.1,0.0,0.0,True
+scenario,system,climate,control,rating_policy,rating_exceed_hours,rating_supported,utci_supported,electricity_kWh,water_L,resource_kWh,relief_person_degC_h,eta,person_h_UTCI38_before,person_h_UTCI38_after,diagnostic_person_h_UTCI38_after,T_zone_15h,T_out_15h,RH_zone_15h,UTCI_15h,RH_zone_max,hours_RH_over_65,hours_on,powered_hours_RH_over_65,passenger_h,utci_invalid_hours,utci_invalid_person_h,full_day_supported
+Platform screen doors,A Fans ×10,Hot-dry (Phoenix-like),always,occupied,0.0,True,True,40.0,0.0,40.0,-777.8,-19.4,185.5,183.0,183.0,47.3,45.9,11.0,46.8,26.0,0.0,16.0,0.0,220.1,0.0,0.0,True
+Platform screen doors,A Fans ×10,Hot-dry (Phoenix-like),demand,occupied,0.0,True,True,8.0,0.0,8.0,57.1,7.2,185.5,183.0,183.0,47.1,45.9,11.0,46.7,26.0,0.0,3.192,0.0,220.1,0.0,0.0,True
+Platform screen doors,B Evap ×8,Hot-dry (Phoenix-like),always,occupied,0.0,True,True,153.6,4858.0,163.0,2403.5,14.7,185.5,144.5,144.5,43.2,45.9,15.0,43.7,40.0,0.0,16.0,0.0,220.1,0.0,0.0,True
+Platform screen doors,B Evap ×8,Hot-dry (Phoenix-like),demand,occupied,0.0,True,True,145.4,4596.0,154.3,2386.9,15.5,185.5,144.5,144.5,43.2,45.9,15.0,43.7,39.0,0.0,15.147,0.0,220.1,0.0,0.0,True
+Platform screen doors,C Large evap ×5,Hot-dry (Phoenix-like),always,occupied,0.0,True,True,200.0,7919.0,215.3,4170.2,19.4,185.5,99.3,99.3,40.9,45.9,19.0,41.8,50.0,0.0,16.0,0.0,220.1,0.0,0.0,True
+Platform screen doors,C Large evap ×5,Hot-dry (Phoenix-like),demand,occupied,0.0,True,True,179.7,7131.0,193.4,4069.6,21.0,185.5,99.3,99.3,40.9,45.9,19.0,41.8,49.0,0.0,14.372,0.0,220.1,0.0,0.0,True
+Platform screen doors,A Fans ×10,Hot-humid (Houston-like),always,occupied,0.0,True,True,40.0,0.0,40.0,788.2,19.7,105.1,74.0,74.0,39.0,36.9,36.0,41.0,82.0,3.3,16.0,3.347,220.1,0.0,0.0,True
+Platform screen doors,A Fans ×10,Hot-humid (Houston-like),demand,occupied,0.0,True,True,37.7,0.0,37.7,767.5,20.4,105.1,73.9,73.9,39.0,36.9,36.0,41.0,84.0,3.3,15.072,2.664,220.1,0.0,0.0,True
+Platform screen doors,B Evap ×8,Hot-humid (Houston-like),always,occupied,0.0,True,True,153.6,3527.0,155.5,1914.5,12.3,105.1,0.0,0.0,34.5,36.9,49.0,37.1,91.0,8.2,16.0,8.239,220.1,0.0,0.0,True
+Platform screen doors,B Evap ×8,Hot-humid (Houston-like),demand,occupied,0.0,True,True,80.8,2311.0,82.1,1424.1,17.4,105.1,0.0,0.0,34.5,36.9,49.0,37.1,84.0,3.4,8.419,0.0,220.1,0.0,0.0,True
+Platform screen doors,C Large evap ×5,Hot-humid (Houston-like),always,occupied,0.0,True,True,200.0,5657.0,203.0,2738.5,13.5,105.1,0.0,0.0,32.1,36.9,60.0,35.3,94.0,12.0,16.0,12.014,220.1,0.0,0.0,True
+Platform screen doors,C Large evap ×5,Hot-humid (Houston-like),demand,occupied,0.0,True,True,71.6,2647.0,73.0,1773.4,24.3,105.1,0.0,0.0,32.1,36.9,60.0,35.3,84.0,3.4,5.728,0.0,220.1,0.0,0.0,True
+Enclosed waiting room,A Fans ×10,Hot-dry (Phoenix-like),always,occupied,0.0,True,False,40.0,0.0,40.0,,,,,,51.3,45.9,9.0,,24.0,0.0,16.0,0.0,220.1,5.108,68.987,False
+Enclosed waiting room,A Fans ×10,Hot-dry (Phoenix-like),demand,occupied,0.0,True,False,4.8,0.0,4.8,,,,,,50.8,45.9,9.0,,24.0,0.0,1.925,0.0,220.1,4.333,55.941,False
+Enclosed waiting room,B Evap ×8,Hot-dry (Phoenix-like),always,occupied,5.917,False,False,153.6,1998.0,157.5,,,,,165.9,46.2,45.9,11.0,45.9,39.0,0.0,16.0,0.0,220.1,4.333,55.941,False
+Enclosed waiting room,B Evap ×8,Hot-dry (Phoenix-like),demand,occupied,5.914,False,False,147.9,1890.0,151.5,,,,,165.9,46.2,45.9,11.0,45.9,38.0,0.0,15.403,0.0,220.1,4.333,55.941,False
+Enclosed waiting room,C Large evap ×5,Hot-dry (Phoenix-like),always,occupied,0.158,False,False,200.0,4346.0,208.4,,,,,140.6,43.5,45.9,15.0,43.8,50.0,0.0,16.0,0.0,220.1,4.333,55.941,False
+Enclosed waiting room,C Large evap ×5,Hot-dry (Phoenix-like),demand,occupied,0.158,False,False,182.3,3840.0,189.7,,,,,140.6,43.5,45.9,15.0,43.8,49.0,0.0,14.586,0.0,220.1,4.333,55.941,False
+Enclosed waiting room,A Fans ×10,Hot-humid (Houston-like),always,occupied,0.0,True,True,40.0,0.0,40.0,192.3,4.8,144.0,131.1,131.1,44.6,36.9,27.0,46.5,75.0,1.3,16.0,1.297,220.1,0.0,0.0,True
+Enclosed waiting room,A Fans ×10,Hot-humid (Houston-like),demand,occupied,0.0,True,True,32.6,0.0,32.6,329.3,10.1,144.0,131.0,131.0,43.9,36.9,28.0,45.9,77.0,1.3,13.042,1.3,220.1,0.0,0.0,True
+Enclosed waiting room,B Evap ×8,Hot-humid (Houston-like),always,occupied,6.242,False,True,153.6,1305.0,154.3,,,144.0,,46.9,37.6,36.9,39.0,39.5,91.0,6.6,16.0,6.597,220.1,0.0,0.0,False
+Enclosed waiting room,B Evap ×8,Hot-humid (Houston-like),demand,occupied,6.2,False,True,91.0,465.0,91.2,,,144.0,,46.9,37.6,36.9,39.0,39.5,80.0,2.0,9.475,0.0,220.1,0.0,0.0,False
+Enclosed waiting room,C Large evap ×5,Hot-humid (Houston-like),always,occupied,0.0,True,True,200.0,3204.0,201.7,3936.3,19.5,144.0,0.0,0.0,36.4,36.9,43.0,38.5,95.0,9.0,16.0,8.95,220.1,0.0,0.0,True
+Enclosed waiting room,C Large evap ×5,Hot-humid (Houston-like),demand,occupied,0.0,True,True,92.7,1130.0,93.3,2907.4,31.2,144.0,0.0,0.0,36.4,36.9,43.0,38.5,80.0,2.0,7.414,0.0,220.1,0.0,0.0,True

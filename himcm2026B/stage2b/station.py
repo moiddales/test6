@@ -406,20 +406,6 @@ def comfort(st, sysm, sim, base, v_in_override=None, mrt_override=None, n_covere
                 valid=valid, T_person=Tp, RH_person=rel_humidity(Tp, Wp), v_person=vp)
 
 
-def fan_schedule(st, sysm, climate, base):
-    """Smart fan control as in 2a: run an hour only if, averaged over that hour,
-    heat stress is at least strong and the fan lowers covered people's stress."""
-    sim = simulate(st, sysm, climate)
-    cf = comfort(st, sysm, sim, base)
-    gain = stress_dose(cf["U0"], P2A.weights) - stress_dose(cf["U_cov"], P2A.weights)
-    hour = np.floor(sim["t"]).astype(int)
-    on = np.zeros_like(sim["t"], dtype=bool)
-    for h in np.unique(hour):
-        k = hour == h
-        on[k] = (cf["U0"][k].mean() >= 32) and (gain[k].mean() > 0)
-    return on
-
-
 def run(st, sysm, climate, base=None, n_const=None, report_hours=(6.0, 22.0), enable=None):
     if base is None and sysm.kind != "none":
         base = simulate(st, systems()[0], climate, n_const=n_const)
@@ -436,16 +422,23 @@ def run(st, sysm, climate, base=None, n_const=None, report_hours=(6.0, 22.0), en
     invalid = rep & ~cf["valid"] & (sim["N"] > 0)
     pm = rep & (sim["t"] >= 14.5) & (sim["t"] < 15.5)
     rating_drop = cf["U0"] - cf["U_cov"] if sysm.kind == "fan" else base["T"] - cf["T_person"]
+    rating_exceed = rep & (sim["N"] > 0) & (rating_drop > sysm.rated_drop + 1e-5)
+    rating_ok = sysm.rating_policy != "occupied" or not rating_exceed.any()
+    supported = bool(not invalid.any() and rating_ok)
+    hot_after = cf["hot1"][rep].sum() * h
     return dict(
         scenario=st.name, system=sysm.name, climate=climate,
         control=sysm.control,
         rating_policy=sysm.rating_policy,
-        rating_exceed_hours=round(float((rep & (rating_drop > sysm.rated_drop + 1e-5)).sum() * h), 3),
+        rating_exceed_hours=round(float(rating_exceed.sum() * h), 3),
+        rating_supported=bool(rating_ok),
+        utci_supported=bool(not invalid.any()),
         electricity_kWh=round(elec, 1), water_L=round(water, 0), resource_kWh=round(resource, 1),
-        relief_person_degC_h=round(relief, 1),
-        eta=round(relief / resource, 1) if resource > 0 else np.nan,
+        relief_person_degC_h=round(relief, 1) if supported else np.nan,
+        eta=round(relief / resource, 1) if resource > 0 and supported else np.nan,
         person_h_UTCI38_before=round(cf["hot0"][rep].sum() * h, 1),
-        person_h_UTCI38_after=round(cf["hot1"][rep].sum() * h, 1),
+        person_h_UTCI38_after=round(hot_after, 1) if rating_ok else np.nan,
+        diagnostic_person_h_UTCI38_after=round(hot_after, 1),
         T_zone_15h=round(float(sim["T"][pm].mean()), 1),
         T_out_15h=round(float(sim["T_o"][pm].mean()), 1),
         RH_zone_15h=round(float(sim["RH"][pm].mean()), 0),
@@ -457,5 +450,5 @@ def run(st, sysm, climate, base=None, n_const=None, report_hours=(6.0, 22.0), en
         passenger_h=round(float(sim["N"][rep].sum() * h), 1),
         utci_invalid_hours=round(float(invalid.sum() * h), 3),
         utci_invalid_person_h=round(float(sim["N"][invalid].sum() * h), 3),
-        full_day_supported=bool(not invalid.any()),
+        full_day_supported=supported,
     ), sim, cf

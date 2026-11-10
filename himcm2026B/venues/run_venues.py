@@ -81,11 +81,11 @@ def draw(df,cases):
     fig,axes=plt.subplots(1,2,figsize=(10,4.1))
     for ax,case in zip(axes,cases):
         d=df[(df.venue_id==case["id"]) & ~df.system.str.endswith("/ always")]
-        ax.scatter(d.electricity_kWh,d.relief_person_degC_h,c=d.water_L,cmap="viridis",s=45)
+        ax.scatter(d.electricity_kWh,d.relief_person_degC_h,color="#147d8d",s=45)
         for _,r in d.iterrows():
-            if r.system in ("No added equipment","Improved shade only") or "/ demand" in r.system:
+            if r.system in ("No added equipment","Improved shade only") or "/ demand" in r.system or r.system_kind=="ac":
                 label = ("S+A" if r.shade_upgrade and r.system_kind=="fan" else "Shade" if r.shade_upgrade else
-                         "None" if r.system_kind=="none" else r.system[0])
+                         "None" if r.system_kind=="none" else "AC" if r.system_kind=="ac" else r.system[0])
                 offset = (5, -12) if label=="Shade" else (5, 5)
                 ax.annotate(label,(r.electricity_kWh,r.relief_person_degC_h),fontsize=8,xytext=offset,textcoords="offset points")
         ax.set_title(case["id"].replace("_"," ").title())

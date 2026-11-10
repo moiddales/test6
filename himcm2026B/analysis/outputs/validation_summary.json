@@ -1,0 +1,7 @@
+{
+  "numerical_checks_passed": 21,
+  "artifact_invariants": "passed",
+  "complete_actual_weather_days": 45,
+  "venue_scenarios": 20,
+  "limitations": "Numerical and bookkeeping checks do not establish field accuracy."
+}

@@ -304,7 +304,7 @@ def fan_evidence(t2):
 
 
 def rating_reading():
-    """Second reading of the problem's ratings ("Effect on Shelter"): the
+    """Diagnostic for the main occupied-location rating interpretation: the
     air-temperature drop delivered to a covered person at the hottest dry hour.
     Returns the saturation effectiveness that reading implies, and the drop the
     model delivers with its own effectiveness."""
@@ -328,10 +328,10 @@ def rating_reading():
 
 
 def rating_ceiling(t2):
-    """Literal reading of the ratings: "up to 5 / 8 C" is a ceiling on the outlet
-    temperature drop in every climate. Shows how far the base reading (fixed
-    effectiveness) exceeds that ceiling on the design days, and reruns the
-    design days with the ceiling applied."""
+    """Alternative outlet-ceiling reading, compared with the main occupied-location
+    interpretation. Nominal outlet drops are diagnostics; the occupied policy
+    can modulate actual supply. This is an interpretation sensitivity, not
+    independent device calibration."""
     capped, _ = design_days(replace(P, rating_policy="outlet"), "table9_rating_ceiling")
     rows = []
     for cname in CLIMATES:

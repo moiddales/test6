@@ -1,7 +1,7 @@
 climate,device,relief_base,eta_base,very_strong_after_base,relief_ceiling,eta_ceiling,very_strong_after_ceiling,outlet_drop_min,outlet_drop_max,hours_outlet_above_rating
-Hot-dry (Phoenix-like),A Fan,58.6,26.6,61.7,58.6,26.6,61.7,,,
-Hot-dry (Phoenix-like),B Evap cooler,671.7,31.4,52.7,339.0,16.9,56.5,7.1,12.1,16.0
-Hot-dry (Phoenix-like),C Large evap cooler,1310.8,28.8,40.8,683.6,16.2,51.7,11.3,19.4,16.0
-Hot-humid (Houston-like),A Fan,237.1,60.4,24.2,241.5,61.5,24.2,,,
-Hot-humid (Houston-like),B Evap cooler,311.5,16.3,12.6,300.7,15.8,17.9,0.9,5.9,4.0
-Hot-humid (Houston-like),C Large evap cooler,529.7,13.3,0.5,514.8,12.9,0.5,1.4,9.5,4.0
+Hot-dry (Phoenix-like),A Fan,46.7,23.8,57.9,46.7,23.8,57.9,,,
+Hot-dry (Phoenix-like),B Evap cooler,632.5,29.5,49.6,318.9,15.9,56.5,7.1,12.1,16.0
+Hot-dry (Phoenix-like),C Large evap cooler,1236.9,27.2,34.6,636.9,15.1,51.7,11.3,19.4,16.0
+Hot-humid (Houston-like),A Fan,181.7,53.0,18.0,181.7,53.0,18.0,,,
+Hot-humid (Houston-like),B Evap cooler,255.4,15.3,2.6,247.7,14.8,2.6,0.9,5.9,4.0
+Hot-humid (Houston-like),C Large evap cooler,440.3,12.6,0.4,425.3,12.2,0.4,1.4,9.5,4.0

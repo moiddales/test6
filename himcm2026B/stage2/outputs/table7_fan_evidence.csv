@@ -5,7 +5,7 @@ fan break-even,42.0,16.7,1.37,,,,,,
 fan break-even,44.0,23.7,2.16,,,,,,
 lowest air temperature at which the fan harms (RH 5 %),38.6,,,"Morris et al. 2021: never harmful below 39 C (young), 38 C (older), 37 C (older on anticholinergics)",,,,,
 vapour pressure above which wind helps at 40 C,40.0,,0.74,"Broede & Kampmann 2023, moderate exercise: 2 kPa (heart rate, core T), 3 kPa (skin T, sweat)",,,,,
-"design day, smart fan: model",,,,,Hot-dry (Phoenix-like),9.0,58.6,26.6,61.7
+"design day, smart fan: model",,,,,Hot-dry (Phoenix-like),7.852,46.7,23.8,57.9
 "design day, smart fan: no benefit above 35 C (Meade et al. 2024)",,,,,Hot-dry (Phoenix-like),1.0,11.0,44.9,61.7
-"design day, smart fan: model",,,,,Hot-humid (Houston-like),16.0,237.1,60.4,24.2
+"design day, smart fan: model",,,,,Hot-humid (Houston-like),13.72,181.7,53.0,18.0
 "design day, smart fan: no benefit above 35 C (Meade et al. 2024)",,,,,Hot-humid (Houston-like),10.0,140.9,57.7,31.2

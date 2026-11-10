@@ -8,7 +8,7 @@ Chain of sub-models (each maps to one subsection of the paper):
   M4 occupancy             -> how many people are there to benefit (Little's law)
   M5 thermal comfort       -> UTCI, one common "felt temperature" for fans and coolers
   M6 useful relief and efficiency
-       eta = (people benefiting x heat-stress relief) / electric power
+       eta = (people benefiting x heat-stress relief) / electricity plus embedded water energy
        unit: person * degC * h per kWh
 
 Every number in PARAMS is an assumption or an estimate; the plan document

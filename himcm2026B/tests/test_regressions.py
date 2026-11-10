@@ -46,6 +46,14 @@ class RatingTests(unittest.TestCase):
             self.assertLessEqual(np.nanmax(drop), sysm.rated_drop + 1e-5)
 
 
+    def test_unachievable_rating_is_not_ranked(self):
+        r, _, _ = run(station("Enclosed waiting room"), systems()[2], "Hot-humid (Houston-like)")
+        self.assertGreater(r["rating_exceed_hours"], 0)
+        self.assertFalse(r["rating_supported"])
+        self.assertFalse(r["full_day_supported"])
+        self.assertTrue(np.isnan(r["eta"]))
+
+
 class ControlTests(unittest.TestCase):
     def test_evap_off_has_no_resources_and_matches_uncooled_state(self):
         st = station("Platform screen doors")

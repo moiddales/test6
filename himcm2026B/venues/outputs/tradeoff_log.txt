@@ -1,0 +1,21 @@
+       venue_id                          system  annual_cost_USD  pareto  meets_illustrative_target
+  phoenix_plaza              No added equipment             0.00    True                      False
+  phoenix_plaza               A Fan ×6 / always           605.33   False                      False
+  phoenix_plaza               A Fan ×6 / demand           574.35    True                      False
+  phoenix_plaza       B Evap cooler ×4 / always          2359.96    True                      False
+  phoenix_plaza       B Evap cooler ×4 / demand          2415.37   False                      False
+  phoenix_plaza C Large evap cooler ×3 / always          3354.50    True                      False
+  phoenix_plaza C Large evap cooler ×3 / demand          3409.91   False                      False
+  phoenix_plaza           AC 15 kW / thermostat          2281.70   False                      False
+  phoenix_plaza             Improved shade only           923.61    True                      False
+  phoenix_plaza     Improved shade + A / demand          1469.16    True                      False
+houston_veranda              No added equipment             0.00    True                      False
+houston_veranda               A Fan ×6 / always           605.33    True                      False
+houston_veranda               A Fan ×6 / demand           660.75   False                      False
+houston_veranda       B Evap cooler ×4 / always          2185.36    True                      False
+houston_veranda       B Evap cooler ×4 / demand          2080.57    True                       True
+houston_veranda C Large evap cooler ×3 / always          3080.18    True                      False
+houston_veranda C Large evap cooler ×3 / demand          2379.59    True                       True
+houston_veranda           AC 15 kW / thermostat          2170.10   False                      False
+houston_veranda             Improved shade only           923.61    True                      False
+houston_veranda     Improved shade + A / demand          1584.36    True                       True
