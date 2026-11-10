@@ -420,14 +420,14 @@ def fan_schedule(st, sysm, climate, base):
     return on
 
 
-def run(st, sysm, climate, base=None):
+def run(st, sysm, climate, base=None, n_const=None, report_hours=(6.0, 22.0), enable=None):
     if base is None and sysm.kind != "none":
-        base = simulate(st, systems()[0], climate)
-    sim = simulate(st, sysm, climate, base=base)
+        base = simulate(st, systems()[0], climate, n_const=n_const)
+    sim = simulate(st, sysm, climate, base=base, n_const=n_const, on=enable)
     if base is None:
         base = sim
     cf = comfort(st, sysm, sim, base)
-    rep = sim["t"] >= 6.0
+    rep = (sim["t"] >= report_hours[0]) & (sim["t"] < report_hours[1])
     h = sim["dt"] / 3600
     elec = sim["P"][rep].sum() * h
     water = sim["water"][rep].sum()

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "phoenix_plaza",
+    "name": "Phoenix Zoo — Plaza de los Ninos shade area",
+    "climate": "Hot-dry (Phoenix-like)",
+    "source_url": "https://www.phoenixzoo.org/support/big-cats-of-arizona/",
+    "verified_fact": "The operator reports a shade structure at Plaza de los Ninos.",
+    "model_geometry_status": "Assumed 8 m by 5 m study patch under the shade; not a surveyed footprint.",
+    "L": 8.0, "D": 5.0, "Hz": 2.5, "H_open": 2.5,
+    "open_track": 1.0, "open_back": 1.0, "open_ends": 1.0,
+    "people": 24.0, "start_hour": 10.0, "end_hour": 16.0,
+    "operating_window_status": "Common hypothetical hot-day study window; not a claim about visitor counts or official hours.",
+    "weather_status": "PHX airport hot-day proxy, not on-site measurements."
+  },
+  {
+    "id": "houston_veranda",
+    "name": "Discovery Green — Grove Market and Park Provisions shaded veranda",
+    "climate": "Hot-humid (Houston-like)",
+    "source_url": "https://www.discoverygreen.com/restaurants/",
+    "verified_fact": "The operator describes lakeside deck tables and a shaded veranda on Kinder Lake's south shore.",
+    "model_geometry_status": "Assumed 8 m by 5 m study patch with a partly screened back; not a surveyed footprint.",
+    "L": 8.0, "D": 5.0, "Hz": 2.5, "H_open": 2.5,
+    "open_track": 1.0, "open_back": 0.3, "open_ends": 0.8,
+    "people": 24.0, "start_hour": 10.0, "end_hour": 16.0,
+    "operating_window_status": "Common hypothetical hot-day study window; not a claim about dining occupancy or restaurant hours.",
+    "weather_status": "IAH airport hot-day proxy, not on-site measurements."
+  }
+]
