@@ -15,6 +15,7 @@ Every number in PARAMS is an assumption or an estimate; the plan document
 lists its reason and the range used in the sensitivity analysis.
 """
 from dataclasses import dataclass, replace
+import warnings
 import numpy as np
 from pythermalcomfort.models import utci as _utci
 
@@ -95,8 +96,15 @@ V10_FACTOR = np.log(10 / Z0) / np.log(1.1 / Z0)   # ~1.47: 1.1 m speed -> 10 m e
 def utci(T, Tmrt, v_ped, RH):
     """UTCI [degC]. v_ped is air speed at the person (1.1 m); UTCI expects the
     10 m reference speed, so it is scaled up by the log wind profile."""
-    v10 = np.clip(np.asarray(v_ped, dtype=float) * V10_FACTOR, 0.5, 17.0)
-    out = _utci(tdb=T, tr=Tmrt, v=v10, rh=RH, limit_inputs=False, round_output=False)
+    # The 0.5 m/s floor is the UTCI reference convention, not permission to
+    # extrapolate at high wind or temperature. Unsupported inputs stay NaN.
+    v10 = np.maximum(np.asarray(v_ped, dtype=float) * V10_FACTOR, 0.5)
+    # The library enumerates every invalid timestep in its warning. Preserve
+    # the NaNs; callers report aggregate invalid hours instead of thousands
+    # of duplicate input values. Other warnings and exceptions remain visible.
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message=".*outside the applicability limits.*", category=UserWarning)
+        out = _utci(tdb=T, tr=Tmrt, v=v10, rh=RH, limit_inputs=True, round_output=False)
     return np.asarray(out.utci, dtype=float)
 
 

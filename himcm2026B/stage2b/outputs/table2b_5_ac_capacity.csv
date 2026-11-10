@@ -5,9 +5,9 @@ Platform screen doors,Hot-dry (Phoenix-like),120.0,707.9,5.8,40.5,15.0,186.8,99.
 Platform screen doors,Hot-humid (Houston-like),30.0,140.6,5.8,36.9,40.0,108.9,70.1
 Platform screen doors,Hot-humid (Houston-like),60.0,271.9,5.3,35.1,43.0,108.9,0.0
 Platform screen doors,Hot-humid (Houston-like),120.0,512.5,4.5,31.5,51.0,108.9,0.0
-Enclosed waiting room,Hot-dry (Phoenix-like),30.0,177.5,22.7,44.6,12.0,206.2,135.0
-Enclosed waiting room,Hot-dry (Phoenix-like),60.0,343.6,20.2,38.5,17.0,206.2,59.2
-Enclosed waiting room,Hot-dry (Phoenix-like),120.0,539.5,16.5,27.3,32.0,206.2,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),30.0,177.5,,44.6,12.0,,135.0
+Enclosed waiting room,Hot-dry (Phoenix-like),60.0,343.6,,38.5,17.0,,59.2
+Enclosed waiting room,Hot-dry (Phoenix-like),120.0,539.5,,27.3,32.0,,0.0
 Enclosed waiting room,Hot-humid (Houston-like),30.0,137.5,21.5,37.4,37.0,144.1,54.6
 Enclosed waiting room,Hot-humid (Houston-like),60.0,245.5,18.4,30.7,50.0,144.1,0.0
 Enclosed waiting room,Hot-humid (Houston-like),120.0,306.8,16.3,26.0,63.0,144.1,0.0

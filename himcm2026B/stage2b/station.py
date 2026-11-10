@@ -298,9 +298,17 @@ def comfort(st, sysm, sim, base):
         n_cov = np.zeros_like(N)
     D0 = stress_dose(U0, P2A.weights)
     benefit = n_cov * (D0 - stress_dose(U_cov, P2A.weights)) + (N - n_cov) * (D0 - stress_dose(U_unc, P2A.weights))
-    hot0 = N * (U0 >= 38)
-    hot1 = n_cov * (U_cov >= 38) + (N - n_cov) * (U_unc >= 38)
-    return dict(U0=U0, U_unc=U_unc, U_cov=U_cov, benefit=benefit, hot0=hot0, hot1=hot1)
+    valid0 = np.isfinite(U0)
+    valid1 = ((n_cov == 0) | np.isfinite(U_cov)) & ((N == n_cov) | np.isfinite(U_unc))
+    valid = valid0 & valid1
+    # A missing UTCI must never be counted as a safe person-hour. Nor may an
+    # incomplete day be silently rescaled to a full-day efficiency.
+    benefit = np.where(N == 0, 0.0, np.where(valid, benefit, np.nan))
+    hot0 = np.where(N == 0, 0.0, np.where(valid0, N * (U0 >= 38), np.nan))
+    hot1 = np.where(N == 0, 0.0, np.where(valid1,
+                    n_cov * (U_cov >= 38) + (N - n_cov) * (U_unc >= 38), np.nan))
+    return dict(U0=U0, U_unc=U_unc, U_cov=U_cov, benefit=benefit, hot0=hot0, hot1=hot1,
+                valid=valid)
 
 
 def fan_schedule(st, sysm, climate, base):
@@ -331,6 +339,7 @@ def run(st, sysm, climate, base=None):
     water = sim["water"][rep].sum()
     resource = elec + E_WATER[climate] * water / 1000
     relief = cf["benefit"][rep].sum() * h
+    invalid = rep & ~cf["valid"] & (sim["N"] > 0)
     pm = rep & (sim["t"] >= 14.5) & (sim["t"] < 15.5)
     return dict(
         scenario=st.name, system=sysm.name, climate=climate,
@@ -347,4 +356,7 @@ def run(st, sysm, climate, base=None):
         hours_RH_over_65=round(float((sim["RH"][rep] > 65).sum() * h), 1),
         hours_on=round(float(sim["on"][rep].sum() * h), 1) if sysm.kind == "fan" else round(float(rep.sum() * h), 1),
         passenger_h=round(float(sim["N"][rep].sum() * h), 1),
+        utci_invalid_hours=round(float(invalid.sum() * h), 3),
+        utci_invalid_person_h=round(float(sim["N"][invalid].sum() * h), 3),
+        full_day_supported=bool(not invalid.any()),
     ), sim, cf

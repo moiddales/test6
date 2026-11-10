@@ -1,8 +1,8 @@
 t,openness,climate,system,eta,eta_2a_model,RH_zone_max,ph_UTCI38_after,ph_UTCI38_before,T_zone_15h_no_cooling
-0.0,0.03,Hot-dry (Phoenix-like),A Fans ×10,,11.6,25.0,206.2,206.2,51.0
-0.0,0.03,Hot-dry (Phoenix-like),B Evap ×8,41.9,28.8,50.0,0.0,206.2,51.0
-0.0,0.03,Hot-dry (Phoenix-like),C Large evap ×5,38.6,28.6,71.0,0.0,206.2,51.0
-0.0,0.03,Hot-dry (Phoenix-like),D Air conditioner 60 kW,20.2,,42.0,59.2,206.2,51.0
+0.0,0.03,Hot-dry (Phoenix-like),A Fans ×10,,11.6,25.0,,,51.0
+0.0,0.03,Hot-dry (Phoenix-like),B Evap ×8,,28.8,50.0,0.0,,51.0
+0.0,0.03,Hot-dry (Phoenix-like),C Large evap ×5,,28.6,71.0,0.0,,51.0
+0.0,0.03,Hot-dry (Phoenix-like),D Air conditioner 60 kW,,,42.0,59.2,,51.0
 0.0,0.03,Hot-humid (Houston-like),A Fans ×10,13.8,22.8,80.0,131.2,144.1,44.0
 0.0,0.03,Hot-humid (Houston-like),B Evap ×8,26.4,11.1,91.0,0.0,144.1,44.0
 0.0,0.03,Hot-humid (Houston-like),C Large evap ×5,23.8,12.0,95.0,0.0,144.1,44.0

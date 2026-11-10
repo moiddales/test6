@@ -256,7 +256,8 @@ def sensitivity(scen="Platform screen doors"):
                 base = simulate(st, SYS[0], clim)
                 res = {s.name: run(st, s, clim, base)[0] for s in SYS[1:]}
                 etas = {k: r["eta"] for k, r in res.items()}
-                best = max(etas, key=etas.get)
+                finite_etas = {k: v for k, v in etas.items() if np.isfinite(v)}
+                best = max(finite_etas, key=finite_etas.get) if finite_etas else "unsupported UTCI inputs"
                 rows.append(dict(parameter=label, value=val, climate=clim, best=best,
                                  T_zone_15h_no_cooling=round(float(base["T"][np.argmin(abs(base["t"] - 15))]), 1),
                                  **etas, RH_max_B=res[SYS[2].name]["RH_zone_max"],

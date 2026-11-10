@@ -1,5 +1,7 @@
 # 5. Requirement 2b: Revising the Model for a Semi-Open Rail-Station Waiting Area
 
+> Applicability correction: the uncooled enclosed Phoenix room exceeds the UTCI 50 C air-temperature limit for about 4.4 h. Full-day relief and efficiency involving this baseline are unavailable. Use the regenerated CSV validity fields; historical prose below will be replaced during the remaining approved repairs.
+
 *Draft for the paper. Numbers come from `outputs/` (run `run_2b.py`). Outdoor conditions are the measured hot design days of Section 4 (PHX peak 46.4 °C, IAH peak 37.4 °C).*
 
 ## 5.1 Why the bus-stop model is not enough
