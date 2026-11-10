@@ -1,7 +1,4 @@
-check,model,reference,pass
-"door retrofit, test protocol: refrigeration-load reduction (%)",76.2,"68 % (SCE lab test) to 80 % (Hillphoenix, ASHRAE 72)",True
-"door retrofit, test protocol: electricity reduction (%)",65.5,"71 % (Hillphoenix, ASHRAE 72)",True
-open case electricity vs DOE VOP.RC.L limit (kWh/day),127.6,limit 145.5,True
-"same, at the ASHRAE 72 test room (about 24 C / 55 %) (kWh/day)",118.1,limit 145.5,True
-"glass-door case, test protocol: refrigeration load per door (W)",308.0,"267-296 W (Hussmann RL frozen food, AHRI rating; 280 W typical)",True
-latent load = frost x (condensation + fusion) (kWh),41.84,41.84,True
+check,kind,model,reference,passed
+component sum equals thermal load,numerical identity,155.3722935125101,155.3722935125101,True
+latent load equals frost mass times enthalpy change,numerical identity,41.83761360207023,41.83761360207022,True
+electricity boundary closure,numerical identity,127.62743087103864,127.62743087103864,True

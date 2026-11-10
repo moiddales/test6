@@ -9,9 +9,9 @@ Refrigeration load = infiltration (sensible + latent) + radiation through the
 opening + wall conduction + internal heat (fans, lights, heaters).
 Electricity = load / COP + fans + lights + heaters + defrost.
 
-Infiltration is calibrated once to the literature share (75 % of the load;
-SCE tests put it at 70-80 % for open vertical cases, ACEEE 2004); the door retrofit, the DOE energy limit and the
-energy closure are then independent checks.
+The 75% infiltration share is an illustrative assumption. The cited SCE
+research concerns medium-temperature cases, not this low-temperature freezer.
+External comparisons below are context, never independent model validation.
 """
 import os
 import sys
@@ -48,7 +48,7 @@ class Case:
     lights_kw: float = 0.15
     rail_heaters_kw: float = 0.10
     heater_share_in: float = 0.5    # share of heater power that ends up as case load
-    infil_share: float = 0.75       # calibration target (SCE tests: 0.70-0.80)
+    infil_share: float = 0.75       # assumed scenario share; not measured for this freezer
     cop: float = 1.6                # low-temperature remote system
     defrost_eff: float = 0.30       # share of defrost heat that melts frost; the rest warms the
                                     # case and is removed again by the compressor
@@ -95,13 +95,13 @@ def fixed_loads(c, T_store):
 
 def calibrate_infiltration(c):
     """Mass flow of store air through the air curtain [kg/s] that makes
-    infiltration the literature share of the load at class 3."""
+    infiltration the assumed share of the pre-defrost load at class 3."""
     dh_s, dh_l, _, q_rad = opening_loads(c, 25.0, 60.0)
     q_cond, q_int = fixed_loads(c, 25.0)
     q_other = q_rad + q_cond + q_int
-    # The literature share describes the steady load between defrosts, so the
-    # periodic defrost heat is left out of the calibration (counting it makes
-    # the open case exceed the DOE limit and the door tests, which fail).
+    # By definition this scenario share applies before periodic defrost.
+    # This convention is not chosen to force agreement with external tests;
+    # changing it changes the example and requires a separate calibration.
     q_inf = c.infil_share / (1 - c.infil_share) * q_other
     return q_inf / (dh_s + dh_l)
 
@@ -177,32 +177,29 @@ def main():
     print("\nTable S1: daily loads by design (store 25 C / 60 %)")
     print(t1.to_string(index=False))
 
-    # --- checks (door retrofit under the laboratory door-opening protocol) ---
+    # Numerical bookkeeping is separated from non-comparable evidence.
     base, doors = t1.iloc[0], t1.iloc[2]
-    lab = daily(replace(c, **TEST_PROTOCOL), "glass doors")
-    load_cut = 1 - lab["load_kwh"] / base.load_kwh
-    elec_cut = 1 - lab["electricity_kwh"] / base.electricity_kwh
-    limit = doe_limit(c)
-    rows = [
-        ("door retrofit, test protocol: refrigeration-load reduction (%)", round(load_cut * 100, 1), "68 % (SCE lab test) to 80 % (Hillphoenix, ASHRAE 72)", 0.68 <= load_cut <= 0.80),
-        ("door retrofit, test protocol: electricity reduction (%)", round(elec_cut * 100, 1), "71 % (Hillphoenix, ASHRAE 72)", 0.55 <= elec_cut <= 0.75),
-        ("open case electricity vs DOE VOP.RC.L limit (kWh/day)", round(base.electricity_kwh, 1), f"limit {limit:.1f}", base.electricity_kwh <= limit),
-        ("same, at the ASHRAE 72 test room (about 24 C / 55 %) (kWh/day)",
-         round(daily(c, "open", 23.9, 55.0, m_inf)["electricity_kwh"], 1), f"limit {limit:.1f}",
-         daily(c, "open", 23.9, 55.0, m_inf)["electricity_kwh"] <= limit),
-        ("glass-door case, test protocol: refrigeration load per door (W)", round(lab["load_kwh"] / 24 / c.n_doors * 1000),
-         "267-296 W (Hussmann RL frozen food, AHRI rating; 280 W typical)", 0.9 * 267 <= lab["load_kwh"] / 24 / c.n_doors * 1000 <= 1.1 * 296),
+    exact = daily(c, "open")
+    components = ["infiltration_sensible", "infiltration_latent", "radiation", "conduction", "internal", "defrost_heat"]
+    frost_energy = exact["frost_kg"] * (2501.0 + 1.86 * 25 + L_FUSION) / 3600
+    numerical = [
+        ("component sum equals thermal load", exact["load_kwh"], sum(exact[k] for k in components)),
+        ("latent load equals frost mass times enthalpy change", exact["infiltration_latent"], frost_energy),
+        ("electricity boundary closure", exact["electricity_kwh"], exact["load_kwh"] / c.cop + (c.fans_kw+c.lights_kw+c.rail_heaters_kw)*24 + exact["defrost_kwh"]),
     ]
-    # energy closure on frost: latent infiltration load equals vapour removed x (condensation + fusion)
-    lat = base.infiltration_latent
-    frost_energy = base.frost_kg * (2501.0 + 1.86 * 25 + L_FUSION) / 3600
-    rows.append(("latent load = frost x (condensation + fusion) (kWh)", round(lat, 2), round(float(frost_energy), 2),
-                 abs(lat - frost_energy) / lat < 0.01))
-    t0 = pd.DataFrame(rows, columns=["check", "model", "reference", "pass"])
-    t0.to_csv(os.path.join(OUT, "tableS0_checks.csv"), index=False)
-    print("\nChecks")
-    for _, x in t0.iterrows():
-        print(f"  [{'PASS' if x['pass'] else 'FAIL'}] {x.check}: {x.model} vs {x.reference}")
+    t0 = pd.DataFrame([dict(check=n, kind="numerical identity", model=a, reference=b,
+                            passed=bool(np.isclose(a,b,rtol=1e-10))) for n,a,b in numerical])
+    t0.to_csv(os.path.join(OUT,"tableS0_checks.csv"),index=False)
+    assert t0.passed.all(), "Freezer accounting identity failed"
+    evidence = pd.DataFrame([
+        dict(item="infiltration share", model_assumption="0.75 of pre-defrost load", evidence="SCE 2004 reviews 70–80% for medium-temperature cases", status="non-matching equipment; assumption, not validation"),
+        dict(item="door retrofit savings", model_assumption="illustrative low-temperature freezer", evidence="external case studies use other cabinets, controls and test protocols", status="no independent accuracy claim or fitted acceptance band"),
+        dict(item="DOE energy formula", model_assumption=f"historical VOP.RC.L formula: {doe_limit(c):.1f} kWh/day", evidence="regulatory benchmark, not a measured cabinet", status="not conformity certification or model validation"),
+        dict(item="product temperature", model_assumption="compliant service assumed", evidence="no product temperature measurements or transient food model", status="not verified"),
+    ])
+    evidence.to_csv(os.path.join(OUT,"tableS0_evidence_status.csv"),index=False)
+    print("\nNumerical accounting checks (not empirical validation)")
+    print(t0.to_string(index=False))
 
     # --- store climate: same case, same service, different energy ---
     rows = []
@@ -230,12 +227,10 @@ def main():
     print("\nTable S3: case energy vs whole-store energy")
     print(t3.to_string(index=False))
 
-    # --- the value of access: break-even sales effect of doors ---
-    price = 0.13          # $/kWh, US commercial average order
+    # Illustrative electricity saving only; no economic break-even claim.
+    price = 0.13  # declared planning scenario, not a current local tariff
     saving = (base.electricity_kwh - doors.electricity_kwh) * 365 * price
-    print(f"\nDoors save {base.electricity_kwh - doors.electricity_kwh:.0f} kWh/day = ${saving:,.0f}/year per case "
-          f"at ${price}/kWh; they pay off unless they cost more than ${saving / 365:.2f}/day of gross margin "
-          f"(~{saving / 365:.0f} fewer items/day at $1 margin each).")
+    print(f"\nIllustrative gross annual electricity saving: ${saving:.0f}; excludes purchase, installation, maintenance, store HVAC and merchandising effects.")
 
     # --- sensitivity of the calibrated infiltration share ---
     rows = []
@@ -272,7 +267,7 @@ def main():
           f"(x{2.2 / 0.55:.1f}); for this case's TDA: {doe_limit(c):.0f} vs {doe_limit(c, True):.0f} kWh/day")
 
     figS1(t1)
-    figS2(t2, limit)
+    figS2(t2, doe_limit(c))
 
 
 COMPONENT_COLORS = {

@@ -1,4 +1,4 @@
-variant,T_store,RH_store,infiltration_sensible,infiltration_latent,radiation,conduction,internal,defrost_heat,load_kwh,frost_kg,defrost_kwh,electricity_kwh,opening_share,kwh_per_m2_display,service_m2h_per_kwh
+variant,T_store,RH_store,infiltration_sensible,infiltration_latent,radiation,conduction,internal,defrost_heat,load_kwh,frost_kg,defrost_kwh,electricity_kwh,opening_share,kwh_per_m2_display,service_m2h_per_case_kwh
 open,25.0,60.0,64.34,41.84,16.94,8.86,9.6,13.8,155.37,52.27,19.72,127.63,0.88,21.8,0.73
 night covers,25.0,60.0,47.18,30.68,12.42,8.86,9.6,10.12,118.86,38.33,14.46,99.55,0.84,17.0,0.94
 glass doors,25.0,60.0,11.14,7.25,0.0,19.4,14.4,2.39,54.58,9.05,3.42,57.92,0.38,9.9,1.62

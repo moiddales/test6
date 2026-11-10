@@ -1,7 +1,7 @@
-store,variant,case_kwh,store_hvac_kwh,system_kwh
-Cooling-dominated store (Houston-like),open,127.63,-32.0,95.6
-Cooling-dominated store (Houston-like),night covers,99.55,-24.0,75.6
-Cooling-dominated store (Houston-like),glass doors,57.92,-8.9,49.0
-Heating-dominated store (Minneapolis-like),open,127.63,8.0,135.7
-Heating-dominated store (Minneapolis-like),night covers,99.55,6.2,105.8
-Heating-dominated store (Minneapolis-like),glass doors,57.92,3.5,61.5
+store,variant,case_kwh,store_hvac_kwh,system_kwh,service_m2h_per_system_kwh
+Cooling-dominated store (Houston-like),open,127.63,-32.0,95.6,0.98
+Cooling-dominated store (Houston-like),night covers,99.55,-24.0,75.6,1.24
+Cooling-dominated store (Houston-like),glass doors,57.92,-8.9,49.0,1.91
+Heating-dominated store (Minneapolis-like),open,127.63,8.0,135.7,0.691
+Heating-dominated store (Minneapolis-like),night covers,99.55,6.2,105.8,0.886
+Heating-dominated store (Minneapolis-like),glass doors,57.92,3.5,61.5,1.525

@@ -1,0 +1,5 @@
+item,model_assumption,evidence,status
+infiltration share,0.75 of pre-defrost load,SCE 2004 reviews 70–80% for medium-temperature cases,"non-matching equipment; assumption, not validation"
+door retrofit savings,illustrative low-temperature freezer,"external case studies use other cabinets, controls and test protocols",no independent accuracy claim or fitted acceptance band
+DOE energy formula,historical VOP.RC.L formula: 145.5 kWh/day,"regulatory benchmark, not a measured cabinet",not conformity certification or model validation
+product temperature,compliant service assumed,no product temperature measurements or transient food model,not verified
