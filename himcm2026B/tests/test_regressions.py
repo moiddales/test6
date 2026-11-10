@@ -1,6 +1,7 @@
 """Regression tests for audit findings; run with unittest discovery."""
 import sys
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -43,6 +44,27 @@ class RatingTests(unittest.TestCase):
             cf = comfort(st, sysm, sim, base)
             drop = cf["U0"] - cf["U_cov"] if sysm.kind == "fan" else base["T"] - cf["T_person"]
             self.assertLessEqual(np.nanmax(drop), sysm.rated_drop + 1e-5)
+
+
+class ControlTests(unittest.TestCase):
+    def test_evap_off_has_no_resources_and_matches_uncooled_state(self):
+        st = station("Platform screen doors")
+        clim = "Hot-humid (Houston-like)"
+        base = simulate(st, systems()[0], clim)
+        s = simulate(st, systems()[2], clim, on=np.zeros_like(base["t"], dtype=bool), base=base)
+        self.assertEqual(s["P"].sum(), 0)
+        self.assertEqual(s["water"].sum(), 0)
+        np.testing.assert_allclose(s["T"], base["T"])
+        np.testing.assert_allclose(s["W"], base["W"])
+
+    def test_humidistat_finds_usable_window_without_powered_exceedance(self):
+        r, s, _ = run(station("Platform screen doors"), replace(systems()[2], control="demand"),
+                      "Hot-humid (Houston-like)")
+        self.assertGreater(r["hours_on"], 0)
+        self.assertLess(r["hours_on"], 16)
+        self.assertEqual(r["powered_hours_RH_over_65"], 0)
+        self.assertTrue(np.all(s["P"][~s["on"]] == 0))
+        self.assertTrue(np.all(s["water"][~s["on"]] == 0))
 
 
 if __name__ == "__main__":

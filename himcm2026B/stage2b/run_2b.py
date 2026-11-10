@@ -195,6 +195,21 @@ def sweep():
     return df
 
 
+def control_comparison():
+    """Identical station/weather/occupancy baseline for both control policies."""
+    rows = []
+    for scen in ("Platform screen doors", "Enclosed waiting room"):
+        st = station(scen)
+        for clim in CLIM:
+            base = simulate(st, SYS[0], clim)
+            for sysm in SYS[1:4]:
+                for control in ("always", "demand"):
+                    rows.append(run(st, replace(sysm, control=control), clim, base)[0])
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table2b_9_controls.csv"), index=False)
+    return df
+
+
 def ac_capacity():
     rows = []
     for scen in ("Platform screen doors", "Enclosed waiting room"):
@@ -416,6 +431,8 @@ if __name__ == "__main__":
     print(shelter_bridge().to_string(index=False))
     print("\nTable 2b-7 evaporative-cooler intake")
     print(intake().to_string(index=False))
+    print("\nTable 2b-9 comparable always-on and demand controls")
+    print(control_comparison().to_string(index=False))
     fig8(sims)
     fig9(sw)
     fig10(sims)

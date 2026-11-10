@@ -132,6 +132,9 @@ class System:
     low_supply: bool = True  # AC supplies the occupied zone directly (vs. mixing the whole hall)
     rated_drop: float = np.inf
     rating_policy: str = "occupied"
+    control: str = "always"   # always or demand (heat demand + occupancy; evap RH hysteresis)
+    rh_stop: float = 65.0
+    rh_resume: float = 60.0
 
 
 def systems():
@@ -180,7 +183,10 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
         C dT/dt = rho cp [Q_x (T_o - T) + Q_s (T_s - T)] + G - Q_ac
         M dW/dt = rho    [Q_x (W_o - W) + Q_s (W_s - W)] + m_people - m_ac
     Q_x: exchange with outdoors (wind, buoyancy, train gusts); Q_s: cooler supply.
-    `on` (bool per step) switches fans; None means always on.
+    `on` is an external enable mask for every device. Demand control uses
+    local heat-stress/occupancy sensors; evap additionally uses 60/65% RH
+    hysteresis and a one-step moisture prediction. Thermal states continue
+    evolving when a device is off.
     """
     t = np.arange(T_START * 3600, T_END * 3600, dt)
     th = t / 3600
@@ -215,7 +221,15 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
     W_coil = float(humidity_ratio(12.0, 100.0))
 
     T_solair = T_o + st.roof_absorptance * st.I_hor * sun / st.h_out - 3.9
-    on = np.ones_like(t, dtype=bool) if on is None else on
+    requested_on = np.ones_like(t, dtype=bool) if on is None else np.asarray(on, dtype=bool)
+    if requested_on.shape != t.shape:
+        raise ValueError("on must match the simulation time grid")
+    if sysm.control not in ("always", "demand"):
+        raise ValueError("Unknown control")
+    on = np.zeros_like(t, dtype=bool)
+    wet_enabled, useful = True, True
+    if sysm.kind == "evap" and not sysm.recirculate:
+        nominal_ts, nominal_ws, _ = evaporative_outlet(T_o, RH_o, sysm.eps)
 
     T, W = T_o[0], W_o[0]
     out = {k: np.zeros_like(t) for k in ("T", "W", "Q_x", "P", "water", "Q_ac", "T_s", "W_s")}
@@ -227,7 +241,33 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
         if st.dynamic and dwelling[i]:
             Q_x += st.kappa_train * st.volume / st.dwell_s
 
-        running = sysm.kind == "evap" or (sysm.kind == "fan" and on[i])
+        T_in, W_in = (T, W) if sysm.recirculate else (T_o[i], W_o[i])
+        if sysm.kind == "evap":
+            if not sysm.recirculate:
+                Ts_, Ws_ = float(nominal_ts[i]), float(nominal_ws[i])
+            elif i % every == 0:
+                Ts_, Ws_, _ = evaporative_outlet(T_in, rel_humidity(T_in, W_in), sysm.eps)
+                Ts_, Ws_ = float(Ts_), float(Ws_)
+        if sysm.control == "demand" and sysm.kind in ("fan", "evap"):
+            rh_now = float(rel_humidity(T, W))
+            if rh_now >= sysm.rh_stop:
+                wet_enabled = False
+            elif rh_now <= sysm.rh_resume:
+                wet_enabled = True
+            if i % every == 0:
+                vin = max(0.3, 0.5 * v_o[i] * np.mean([st.open_track, st.open_back, st.open_ends]))
+                mrt_now = st.openness * (T_o[i] + st.dR_shade) + (1 - st.openness) * (T + st.dR_inside)
+                theta_now = P2A.theta0 / (1 + vin / sysm.jet_speed)
+                tp = T + theta_now * (Ts_ - T) if sysm.kind == "evap" else T
+                wp = W + theta_now * (Ws_ - W) if sysm.kind == "evap" else W
+                u0 = float(utci(T, mrt_now, vin, rh_now))
+                u1 = float(utci(tp, mrt_now, np.hypot(vin, sysm.jet_speed), rel_humidity(tp, wp)))
+                useful = np.isfinite(u0 + u1) and u0 >= 32 and u1 < u0
+            enabled = useful and N[i] > 0 and (wet_enabled or sysm.kind == "fan")
+        else:
+            enabled = True
+        running = bool(requested_on[i] and enabled and sysm.kind != "none")
+        on[i] = running
         G_kw = 0.0
         if st.gains:
             glass = ((total_w - open_w) * st.H_open).sum()
@@ -237,16 +277,12 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
         m_people = N[i] * 0.045 / H_FG                      # kg/s, 45 W latent each
 
         Q_s = T_s = W_s = 0.0
-        if sysm.kind == "evap":
-            if i % every == 0:
-                T_in, W_in = (T, W) if sysm.recirculate else (T_o[i], W_o[i])
-                Ts_, Ws_, _ = evaporative_outlet(T_in, rel_humidity(T_in, W_in), sysm.eps)
-                Ts_, Ws_ = float(Ts_), float(Ws_)
+        if sysm.kind == "evap" and running:
             Q_s, T_s, W_s = sysm.airflow, Ts_, Ws_
             out["T_s"][i], out["W_s"][i] = T_s, W_s
             out["water"][i] = RHO * Q_s * (W_s - W_in) * dt         # kg
             out["P"][i] = sysm.power_kw
-        elif sysm.kind == "fan" and on[i]:
+        elif sysm.kind == "fan" and running:
             out["P"][i] = sysm.power_kw
 
         a = RHO * CP * (Q_x + Q_s)                                   # kW/K
@@ -269,8 +305,23 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
             out["T_s"][i], out["W_s"][i] = T_s, W_s
             out["water"][i] = RHO * Q_s * max(W_s - W_in, 0) * dt
         T_eq = (RHO * CP * (Q_x * T_o[i] + Q_s * T_s) + G_kw) / a
+        if sysm.kind == "evap" and running and sysm.control == "demand":
+            t_next = T_eq + (T - T_eq) * np.exp(-dt * a / C)
+            b_test = RHO * (Q_x + Q_s)
+            w_eq = (RHO * (Q_x * W_o[i] + Q_s * W_s) + m_people) / b_test
+            w_next = w_eq + (W - w_eq) * np.exp(-dt * b_test / M)
+            if rel_humidity(t_next, w_next) > sysm.rh_stop:
+                # Reject this wet operation before charging water/electricity;
+                # re-solve the off-state balance, retaining stored heat/moisture.
+                wet_enabled = running = on[i] = False
+                Q_s = T_s = W_s = 0.0
+                out["P"][i] = out["water"][i] = 0.0
+                if st.gains:
+                    G_kw -= sysm.power_kw
+                a = RHO * CP * Q_x
+                T_eq = T_o[i] + G_kw / a
         Q_ac = m_ac = 0.0
-        if sysm.kind == "ac":
+        if sysm.kind == "ac" and running:
             share = 1.0 if sysm.low_supply else 0.65                 # mixing also cools the upper hall
             shr = sysm.shr if W > W_coil else 1.0                    # dry air: the coil removes no moisture
             # thermostat: remove enough heat to reach the setpoint by the end of the step
@@ -319,6 +370,8 @@ def comfort(st, sysm, sim, base):
         if sysm.kind == "fan" and sysm.rating_policy != "uncapped":
             U_cov, vp = rated_fan(Tp, Tmrt, v_in, rel_humidity(Tp, Wp), sysm.jet_speed, U0, sysm.rated_drop)
         U_cov = np.where(sim["on"], U_cov, U_unc)
+        Tp = np.where(sim["on"], Tp, sim["T"])
+        Wp = np.where(sim["on"], Wp, sim["W"])
         n_cov = np.minimum(N, sysm.cover)
     else:
         U_cov = U_unc
@@ -357,8 +410,7 @@ def fan_schedule(st, sysm, climate, base):
 def run(st, sysm, climate, base=None):
     if base is None and sysm.kind != "none":
         base = simulate(st, systems()[0], climate)
-    on = fan_schedule(st, sysm, climate, base) if sysm.kind == "fan" else None
-    sim = simulate(st, sysm, climate, on=on, base=base)
+    sim = simulate(st, sysm, climate, base=base)
     if base is None:
         base = sim
     cf = comfort(st, sysm, sim, base)
@@ -373,6 +425,7 @@ def run(st, sysm, climate, base=None):
     rating_drop = cf["U0"] - cf["U_cov"] if sysm.kind == "fan" else base["T"] - cf["T_person"]
     return dict(
         scenario=st.name, system=sysm.name, climate=climate,
+        control=sysm.control,
         rating_policy=sysm.rating_policy,
         rating_exceed_hours=round(float((rep & (rating_drop > sysm.rated_drop + 1e-5)).sum() * h), 3),
         electricity_kWh=round(elec, 1), water_L=round(water, 0), resource_kWh=round(resource, 1),
@@ -386,7 +439,8 @@ def run(st, sysm, climate, base=None):
         UTCI_15h=round(float(cf["U_unc"][pm][sim["N"][pm] > 0].mean()), 1),
         RH_zone_max=round(float(sim["RH"][rep].max()), 0),
         hours_RH_over_65=round(float((sim["RH"][rep] > 65).sum() * h), 1),
-        hours_on=round(float(sim["on"][rep].sum() * h), 1) if sysm.kind == "fan" else round(float(rep.sum() * h), 1),
+        hours_on=round(float(sim["on"][rep].sum() * h), 3),
+        powered_hours_RH_over_65=round(float((rep & sim["on"] & (sim["RH"] > 65 + 1e-6)).sum() * h), 3),
         passenger_h=round(float(sim["N"][rep].sum() * h), 1),
         utci_invalid_hours=round(float(invalid.sum() * h), 3),
         utci_invalid_person_h=round(float(sim["N"][invalid].sum() * h), 3),
