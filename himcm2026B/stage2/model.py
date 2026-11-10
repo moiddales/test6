@@ -54,14 +54,16 @@ class Params:
     Cd: float = 0.6            # discharge coefficient (buoyant spill of cool air)
     shelter_factor: float = 0.5  # wind speed inside / outside
     theta0: float = 0.7        # share of jet air (vs entrained ambient air) at a person, calm
-    dR_shade: float = 4.0      # degC, mean radiant temp. above air temp. in shade
+    dR_shade: float = 12.0     # degC, mean radiant temp. above air temp. under the shelter roof:
+                               # sun ~+28 C (Middel & Krayenhoff 2019) minus ~15 C shelter cooling (Tucson MaRTy)
     # --- M4 occupancy ---
     q_person_W: float = 75.0   # W sensible heat per standing person
     capacity: int = 16         # people who fit under the roof
     # --- M6 heat-stress weights for UTCI bands >=26, >=32, >=38, >=46 ---
     weights: tuple = (1.0, 2.0, 3.0, 4.0)
     # --- resources (Requirement 1: count every input) ---
-    e_water: float = 0.53      # kWh/m3: US water supply ~2,000 kWh per million gallons (ACEEE 2009)
+    e_water: float = 0.53      # kWh/m3: US water supply ~2,000 kWh per million gallons (ACEEE 2009);
+                               # city-specific values in E_WATER
     # --- zero-energy design levers ---
     dR_sun: float = 30.0       # degC, mean radiant temp. above air temp. in full sun
 
@@ -75,6 +77,11 @@ DEVICES = (
 )
 
 UTCI_BANDS = (26.0, 32.0, 38.0, 46.0)   # Broede et al. 2012 heat-stress categories
+
+# Embedded energy of water by design-day city [kWh/m3]. Phoenix: Central Arizona
+# Project conveyance 5.5 kWh/kgal (1.45 kWh/m3) plus city tap-water supply
+# ~1.8 kWh/kgal (0.48 kWh/m3), Arroyo 2010. Houston: US average (ACEEE 2009).
+E_WATER = {"Hot-dry (Phoenix-like)": 1.93, "Hot-humid (Houston-like)": 0.53}
 
 
 # --------------------------------------------------------------------------
@@ -171,6 +178,19 @@ def spot_mode_person(T, W, T_s, W_s, v_in, jet_speed, p):
 # --------------------------------------------------------------------------
 # M4 occupancy
 # --------------------------------------------------------------------------
+def expected_min(n_mean, cap, kmax=80):
+    """E[min(N, cap)] for a Poisson number of waiting people N with mean
+    n_mean. Using min(E[N], cap) instead overstates the people a small device
+    covers, because crowds above its capacity are cut off."""
+    n = np.asarray(n_mean, float)
+    pmf = np.exp(-n)
+    out = np.zeros_like(n)
+    for k in range(kmax):
+        out += pmf * np.minimum(k, cap)
+        pmf = pmf * n / (k + 1)
+    return out
+
+
 def mean_waiting(arrivals_per_h, headway_min, headway_cv=0.5):
     """Little's law: N = lambda * W_q. With random passenger arrivals the mean
     wait is (h/2)(1 + CV^2) (the 'inspection paradox' for irregular buses)."""
@@ -188,13 +208,14 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
     Tmrt = T + p.dR_shade
     v_in = np.maximum(p.shelter_factor * v_w, 0.3)
     U0 = utci(T, Tmrt, v_in, RH)
-    n_in = np.minimum(n_mean, p.capacity)
+    n_in = expected_min(n_mean, p.capacity)          # people under the roof
     cap = dev.airflow / p.q_per_person
+    n_cov = expected_min(n_mean, min(cap, p.capacity))   # people a jet can cover
 
     if dev.kind == "fan":
         Tp, Wp = T, W
         vp = np.hypot(v_in, dev.jet_speed)
-        n_ben = np.minimum(n_in, cap)
+        n_ben = n_cov
         gross_kw = np.zeros_like(T)
         water_lph = np.zeros_like(T)
         share = np.ones_like(T)
@@ -206,7 +227,7 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
         if mode == "spot":
             Tp, Wp, share = spot_mode_person(T, W, T_s, W_s, v_in, dev.jet_speed, p)
             vp = np.hypot(v_in, dev.jet_speed)
-            n_ben = np.minimum(n_in, cap)
+            n_ben = n_cov
         else:
             Tp, Wp, share, _ = volume_mode_zone(T, W, T_s, W_s, dev.airflow, v_w, n_in, p)
             vp = v_in
@@ -219,7 +240,7 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
     eta = n_ben * relief / resource_kw
     # where the cooling goes (spot mode): aimed at people and received, diluted
     # by entrained air on the way, or aimed at places where nobody stands
-    aimed = n_ben / cap
+    aimed = np.minimum(n_ben / cap, 1.0)
     return dict(U0=U0, U1=U1, dU=U0 - U1, eff_drop=eff_drop, relief=relief,
                 n_ben=n_ben, eta=eta, resource_kw=resource_kw, T_person=Tp, RH_person=RHp,
                 v_person=vp, share=share, gross_kw=gross_kw, gross_cop=gross_kw / dev.power_kw,

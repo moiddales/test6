@@ -1,65 +1,65 @@
 t,openness,climate,system,eta,eta_2a_model,RH_zone_max,ph_UTCI38_after,ph_UTCI38_before,T_zone_15h_no_cooling
-0.0,0.03,Hot-dry (Phoenix-like),A Fans ×10,-39.6,-11.0,24.0,200.5,197.9,49.8
-0.0,0.03,Hot-dry (Phoenix-like),B Evap ×8,43.3,30.9,85.0,0.0,197.9,49.8
-0.0,0.03,Hot-dry (Phoenix-like),C Large evap ×5,35.6,29.4,89.0,0.0,197.9,49.8
-0.0,0.03,Hot-dry (Phoenix-like),D Air conditioner 60 kW,16.9,,42.0,102.3,197.9,49.8
-0.0,0.03,Hot-humid (Houston-like),A Fans ×10,7.5,24.2,73.0,111.7,128.2,42.6
-0.0,0.03,Hot-humid (Houston-like),B Evap ×8,16.5,10.6,96.0,0.0,128.2,42.6
-0.0,0.03,Hot-humid (Houston-like),C Large evap ×5,14.3,11.0,97.0,0.0,128.2,42.6
-0.0,0.03,Hot-humid (Houston-like),D Air conditioner 60 kW,13.9,,91.0,0.0,128.2,42.6
-0.05,0.079,Hot-dry (Phoenix-like),A Fans ×10,-26.8,-11.3,25.0,187.2,187.6,47.9
-0.05,0.079,Hot-dry (Phoenix-like),B Evap ×8,39.5,30.3,76.0,0.0,187.6,47.9
-0.05,0.079,Hot-dry (Phoenix-like),C Large evap ×5,33.2,29.2,82.0,0.0,187.6,47.9
-0.05,0.079,Hot-dry (Phoenix-like),D Air conditioner 60 kW,9.9,,40.0,132.1,187.6,47.9
-0.05,0.079,Hot-humid (Houston-like),A Fans ×10,16.6,24.1,78.0,81.9,107.7,39.9
-0.05,0.079,Hot-humid (Houston-like),B Evap ×8,14.3,10.4,95.0,0.0,107.7,39.9
-0.05,0.079,Hot-humid (Houston-like),C Large evap ×5,13.0,10.9,96.0,0.0,107.7,39.9
-0.05,0.079,Hot-humid (Houston-like),D Air conditioner 60 kW,7.5,,92.0,0.0,107.7,39.9
-0.1,0.127,Hot-dry (Phoenix-like),A Fans ×10,-21.7,-11.4,26.0,181.7,183.5,47.2
-0.1,0.127,Hot-dry (Phoenix-like),B Evap ×8,36.9,29.6,70.0,0.0,183.5,47.2
-0.1,0.127,Hot-dry (Phoenix-like),C Large evap ×5,31.8,28.9,76.0,0.0,183.5,47.2
-0.1,0.127,Hot-dry (Phoenix-like),D Air conditioner 60 kW,7.0,,35.0,146.7,183.5,47.2
-0.1,0.127,Hot-humid (Houston-like),A Fans ×10,19.3,24.1,80.0,67.1,98.3,38.9
-0.1,0.127,Hot-humid (Houston-like),B Evap ×8,13.1,10.2,95.0,0.0,98.3,38.9
-0.1,0.127,Hot-humid (Houston-like),C Large evap ×5,12.2,10.8,96.0,0.0,98.3,38.9
-0.1,0.127,Hot-humid (Houston-like),D Air conditioner 60 kW,5.3,,92.0,0.0,98.3,38.9
-0.2,0.224,Hot-dry (Phoenix-like),A Fans ×10,-16.4,-10.6,26.0,175.9,178.8,46.6
-0.2,0.224,Hot-dry (Phoenix-like),B Evap ×8,33.7,28.5,61.0,0.0,178.8,46.6
-0.2,0.224,Hot-dry (Phoenix-like),C Large evap ×5,30.2,28.5,68.0,0.0,178.8,46.6
-0.2,0.224,Hot-dry (Phoenix-like),D Air conditioner 60 kW,4.4,,31.0,153.7,178.8,46.6
-0.2,0.224,Hot-humid (Houston-like),A Fans ×10,21.4,24.1,82.0,49.6,87.6,38.1
-0.2,0.224,Hot-humid (Houston-like),B Evap ×8,11.7,9.8,94.0,0.0,87.6,38.1
-0.2,0.224,Hot-humid (Houston-like),C Large evap ×5,11.4,10.7,95.0,0.0,87.6,38.1
-0.2,0.224,Hot-humid (Houston-like),D Air conditioner 60 kW,3.4,,92.0,0.0,87.6,38.1
-0.35,0.37,Hot-dry (Phoenix-like),A Fans ×10,-10.4,-7.1,26.0,171.7,175.7,46.3
-0.35,0.37,Hot-dry (Phoenix-like),B Evap ×8,31.0,27.4,53.0,0.0,175.7,46.3
-0.35,0.37,Hot-dry (Phoenix-like),C Large evap ×5,29.1,28.0,60.0,0.0,175.7,46.3
-0.35,0.37,Hot-dry (Phoenix-like),D Air conditioner 60 kW,2.9,,30.0,158.3,175.7,46.3
-0.35,0.37,Hot-humid (Houston-like),A Fans ×10,22.6,24.3,84.0,35.5,80.2,37.6
-0.35,0.37,Hot-humid (Houston-like),B Evap ×8,10.6,9.4,93.0,0.0,80.2,37.6
-0.35,0.37,Hot-humid (Houston-like),C Large evap ×5,10.7,10.4,94.0,0.0,80.2,37.6
-0.35,0.37,Hot-humid (Houston-like),D Air conditioner 60 kW,2.2,,92.0,5.4,80.2,37.6
-0.5,0.515,Hot-dry (Phoenix-like),A Fans ×10,-6.2,-4.1,26.0,169.3,174.4,46.1
-0.5,0.515,Hot-dry (Phoenix-like),B Evap ×8,29.2,26.3,48.0,42.9,174.4,46.1
-0.5,0.515,Hot-dry (Phoenix-like),C Large evap ×5,28.2,27.5,55.0,0.0,174.4,46.1
-0.5,0.515,Hot-dry (Phoenix-like),D Air conditioner 60 kW,2.2,,29.0,161.0,174.4,46.1
-0.5,0.515,Hot-humid (Houston-like),A Fans ×10,22.8,24.0,85.0,18.1,75.8,37.3
-0.5,0.515,Hot-humid (Houston-like),B Evap ×8,9.8,9.0,93.0,0.0,75.8,37.3
-0.5,0.515,Hot-humid (Houston-like),C Large evap ×5,10.2,10.1,94.0,0.0,75.8,37.3
-0.5,0.515,Hot-humid (Houston-like),D Air conditioner 60 kW,1.7,,92.0,37.5,75.8,37.3
-0.75,0.758,Hot-dry (Phoenix-like),A Fans ×10,-2.5,-1.3,26.0,167.3,174.1,46.0
-0.75,0.758,Hot-dry (Phoenix-like),B Evap ×8,26.5,24.5,43.0,82.8,174.1,46.0
-0.75,0.758,Hot-dry (Phoenix-like),C Large evap ×5,26.9,26.6,49.0,0.0,174.1,46.0
-0.75,0.758,Hot-dry (Phoenix-like),D Air conditioner 60 kW,1.6,,28.0,163.5,174.1,46.0
-0.75,0.758,Hot-humid (Houston-like),A Fans ×10,21.6,22.5,86.0,0.0,68.5,37.1
-0.75,0.758,Hot-humid (Houston-like),B Evap ×8,8.8,8.3,92.0,0.0,68.5,37.1
-0.75,0.758,Hot-humid (Houston-like),C Large evap ×5,9.4,9.4,93.0,0.0,68.5,37.1
-0.75,0.758,Hot-humid (Houston-like),D Air conditioner 60 kW,1.2,,92.0,44.0,68.5,37.1
-1.0,1.0,Hot-dry (Phoenix-like),A Fans ×10,-1.5,-0.8,27.0,166.6,173.8,45.9
-1.0,1.0,Hot-dry (Phoenix-like),B Evap ×8,24.3,22.8,40.0,96.4,173.8,45.9
-1.0,1.0,Hot-dry (Phoenix-like),C Large evap ×5,25.7,25.6,45.0,0.0,173.8,45.9
-1.0,1.0,Hot-dry (Phoenix-like),D Air conditioner 60 kW,1.3,,28.0,165.4,173.8,45.9
-1.0,1.0,Hot-humid (Houston-like),A Fans ×10,19.3,20.1,86.0,0.0,60.3,37.0
-1.0,1.0,Hot-humid (Houston-like),B Evap ×8,7.8,7.6,91.0,0.0,60.3,37.0
-1.0,1.0,Hot-humid (Houston-like),C Large evap ×5,8.6,8.7,92.0,0.0,60.3,37.0
-1.0,1.0,Hot-humid (Houston-like),D Air conditioner 60 kW,0.9,,92.0,41.4,60.3,37.0
+0.0,0.03,Hot-dry (Phoenix-like),A Fans ×10,,11.6,25.0,206.2,206.2,51.0
+0.0,0.03,Hot-dry (Phoenix-like),B Evap ×8,53.8,32.9,85.0,0.0,206.2,51.0
+0.0,0.03,Hot-dry (Phoenix-like),C Large evap ×5,43.0,29.3,89.0,0.0,206.2,51.0
+0.0,0.03,Hot-dry (Phoenix-like),D Air conditioner 60 kW,20.2,,42.0,59.2,206.2,51.0
+0.0,0.03,Hot-humid (Houston-like),A Fans ×10,13.8,22.8,80.0,131.2,144.1,44.0
+0.0,0.03,Hot-humid (Houston-like),B Evap ×8,23.6,12.6,96.0,0.0,144.1,44.0
+0.0,0.03,Hot-humid (Houston-like),C Large evap ×5,19.7,12.4,97.0,0.0,144.1,44.0
+0.0,0.03,Hot-humid (Houston-like),D Air conditioner 60 kW,18.4,,91.0,0.0,144.1,44.0
+0.05,0.079,Hot-dry (Phoenix-like),A Fans ×10,4.2,11.2,25.0,195.0,196.4,48.6
+0.05,0.079,Hot-dry (Phoenix-like),B Evap ×8,47.1,32.1,76.0,0.0,196.4,48.6
+0.05,0.079,Hot-dry (Phoenix-like),C Large evap ×5,38.5,29.1,82.0,0.0,196.4,48.6
+0.05,0.079,Hot-dry (Phoenix-like),D Air conditioner 60 kW,12.2,,42.0,107.9,196.4,48.6
+0.05,0.079,Hot-humid (Houston-like),A Fans ×10,15.7,23.7,82.0,102.8,127.1,40.8
+0.05,0.079,Hot-humid (Houston-like),B Evap ×8,19.6,12.3,95.0,0.0,127.1,40.8
+0.05,0.079,Hot-humid (Houston-like),C Large evap ×5,16.9,12.3,96.0,0.0,127.1,40.8
+0.05,0.079,Hot-humid (Houston-like),D Air conditioner 60 kW,10.1,,92.0,0.0,127.1,40.8
+0.1,0.127,Hot-dry (Phoenix-like),A Fans ×10,8.1,11.2,26.0,188.6,190.7,47.7
+0.1,0.127,Hot-dry (Phoenix-like),B Evap ×8,43.3,31.2,70.0,0.0,190.7,47.7
+0.1,0.127,Hot-dry (Phoenix-like),C Large evap ×5,35.9,28.8,76.0,0.0,190.7,47.7
+0.1,0.127,Hot-dry (Phoenix-like),D Air conditioner 60 kW,8.7,,37.0,127.8,190.7,47.7
+0.1,0.127,Hot-humid (Houston-like),A Fans ×10,18.9,24.1,83.0,86.9,117.8,39.6
+0.1,0.127,Hot-humid (Houston-like),B Evap ×8,17.4,12.1,95.0,0.0,117.8,39.6
+0.1,0.127,Hot-humid (Houston-like),C Large evap ×5,15.3,12.3,96.0,0.0,117.8,39.6
+0.1,0.127,Hot-humid (Houston-like),D Air conditioner 60 kW,7.1,,92.0,0.0,117.8,39.6
+0.2,0.224,Hot-dry (Phoenix-like),A Fans ×10,10.0,11.4,26.0,182.8,186.5,47.0
+0.2,0.224,Hot-dry (Phoenix-like),B Evap ×8,38.3,29.8,61.0,0.0,186.5,47.0
+0.2,0.224,Hot-dry (Phoenix-like),C Large evap ×5,33.2,28.5,68.0,0.0,186.5,47.0
+0.2,0.224,Hot-dry (Phoenix-like),D Air conditioner 60 kW,5.4,,32.0,150.7,186.5,47.0
+0.2,0.224,Hot-humid (Houston-like),A Fans ×10,21.7,25.0,84.0,72.5,108.7,38.5
+0.2,0.224,Hot-humid (Houston-like),B Evap ×8,14.9,11.6,94.0,0.0,108.7,38.5
+0.2,0.224,Hot-humid (Houston-like),C Large evap ×5,13.8,12.2,95.0,0.0,108.7,38.5
+0.2,0.224,Hot-humid (Houston-like),D Air conditioner 60 kW,4.5,,92.0,0.0,108.7,38.5
+0.35,0.37,Hot-dry (Phoenix-like),A Fans ×10,10.2,12.1,26.0,179.6,185.2,46.5
+0.35,0.37,Hot-dry (Phoenix-like),B Evap ×8,34.2,28.4,53.0,0.0,185.2,46.5
+0.35,0.37,Hot-dry (Phoenix-like),C Large evap ×5,31.5,28.4,60.0,0.0,185.2,46.5
+0.35,0.37,Hot-dry (Phoenix-like),D Air conditioner 60 kW,3.6,,30.0,161.4,185.2,46.5
+0.35,0.37,Hot-humid (Houston-like),A Fans ×10,24.0,26.0,84.0,63.8,106.1,37.9
+0.35,0.37,Hot-humid (Houston-like),B Evap ×8,13.1,11.1,93.0,0.0,106.1,37.9
+0.35,0.37,Hot-humid (Houston-like),C Large evap ×5,13.0,12.1,94.0,0.0,106.1,37.9
+0.35,0.37,Hot-humid (Houston-like),D Air conditioner 60 kW,2.9,,92.0,59.4,106.1,37.9
+0.5,0.515,Hot-dry (Phoenix-like),A Fans ×10,10.7,11.7,26.0,178.4,186.4,46.3
+0.5,0.515,Hot-dry (Phoenix-like),B Evap ×8,31.5,27.0,48.0,50.0,186.4,46.3
+0.5,0.515,Hot-dry (Phoenix-like),C Large evap ×5,30.1,27.8,55.0,0.0,186.4,46.3
+0.5,0.515,Hot-dry (Phoenix-like),D Air conditioner 60 kW,2.6,,29.0,167.4,186.4,46.3
+0.5,0.515,Hot-humid (Houston-like),A Fans ×10,25.4,26.9,85.0,62.5,106.3,37.6
+0.5,0.515,Hot-humid (Houston-like),B Evap ×8,12.0,10.7,92.0,0.0,106.3,37.6
+0.5,0.515,Hot-humid (Houston-like),C Large evap ×5,12.2,11.8,94.0,0.0,106.3,37.6
+0.5,0.515,Hot-humid (Houston-like),D Air conditioner 60 kW,2.2,,92.0,74.9,106.3,37.6
+0.75,0.758,Hot-dry (Phoenix-like),A Fans ×10,10.8,11.2,26.0,179.5,190.2,46.1
+0.75,0.758,Hot-dry (Phoenix-like),B Evap ×8,27.7,24.8,43.0,100.5,190.2,46.1
+0.75,0.758,Hot-dry (Phoenix-like),C Large evap ×5,28.2,26.8,49.0,0.0,190.2,46.1
+0.75,0.758,Hot-dry (Phoenix-like),D Air conditioner 60 kW,1.8,,28.0,178.1,190.2,46.1
+0.75,0.758,Hot-humid (Houston-like),A Fans ×10,25.8,27.0,86.0,65.2,107.0,37.3
+0.75,0.758,Hot-humid (Houston-like),B Evap ×8,10.7,10.1,92.0,0.0,107.0,37.3
+0.75,0.758,Hot-humid (Houston-like),C Large evap ×5,11.3,11.2,93.0,0.0,107.0,37.3
+0.75,0.758,Hot-humid (Houston-like),D Air conditioner 60 kW,1.5,,92.0,90.5,107.0,37.3
+1.0,1.0,Hot-dry (Phoenix-like),A Fans ×10,11.5,11.5,27.0,181.5,195.3,46.0
+1.0,1.0,Hot-dry (Phoenix-like),B Evap ×8,24.8,22.8,40.0,121.7,195.3,46.0
+1.0,1.0,Hot-dry (Phoenix-like),C Large evap ×5,26.6,25.7,45.0,52.7,195.3,46.0
+1.0,1.0,Hot-dry (Phoenix-like),D Air conditioner 60 kW,1.4,,28.0,185.9,195.3,46.0
+1.0,1.0,Hot-humid (Houston-like),A Fans ×10,24.8,25.9,86.0,69.2,107.8,37.2
+1.0,1.0,Hot-humid (Houston-like),B Evap ×8,9.7,9.4,91.0,0.0,107.8,37.2
+1.0,1.0,Hot-humid (Houston-like),C Large evap ×5,10.4,10.5,92.0,0.0,107.8,37.2
+1.0,1.0,Hot-humid (Houston-like),D Air conditioner 60 kW,1.1,,92.0,95.3,107.8,37.2

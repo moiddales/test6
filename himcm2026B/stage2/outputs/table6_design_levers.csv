@@ -1,9 +1,11 @@
-climate,lever,device,energy_kWh,relief_person_degC_h,eta_day_without,eta_day_with
-Hot-dry (Phoenix-like),Shelter roof (shade vs full sun),none,0.0,896.0,,
-Hot-humid (Houston-like),Shelter roof (shade vs full sun),none,0.0,404.1,,
-Hot-dry (Phoenix-like),Side wind screens (inside wind halved),A Fan,1.23,37.5,28.3,30.4
-Hot-dry (Phoenix-like),Side wind screens (inside wind halved),B Evap cooler,18.84,745.5,33.5,38.1
-Hot-dry (Phoenix-like),Side wind screens (inside wind halved),C Large evap cooler,39.24,1355.7,29.4,33.1
-Hot-humid (Houston-like),Side wind screens (inside wind halved),A Fan,3.68,246.3,55.5,66.9
-Hot-humid (Houston-like),Side wind screens (inside wind halved),B Evap cooler,17.66,307.2,14.7,17.1
-Hot-humid (Houston-like),Side wind screens (inside wind halved),C Large evap cooler,36.79,499.8,11.6,13.4
+climate,lever,device,energy_kWh,relief_person_degC_h,relief_device_alone,net_gain_from_screens,eta_day_without,eta_day_with
+Hot-dry (Phoenix-like),Shelter roof (shade vs full sun),none,0.0,637.9,,,,
+Hot-dry (Phoenix-like),Side wind screens alone (inside wind halved),none,0.0,57.3,,,,
+Hot-dry (Phoenix-like),Side wind screens + device,A Fan,1.47,102.4,58.6,43.8,26.6,69.7
+Hot-dry (Phoenix-like),Side wind screens + device,B Evap cooler,18.84,816.9,671.7,145.2,31.4,38.1
+Hot-dry (Phoenix-like),Side wind screens + device,C Large evap cooler,39.24,1538.8,1310.8,228.0,28.8,33.8
+Hot-humid (Houston-like),Shelter roof (shade vs full sun),none,0.0,207.5,,,,
+Hot-humid (Houston-like),Side wind screens alone (inside wind halved),none,0.0,-86.5,,,,
+Hot-humid (Houston-like),Side wind screens + device,A Fan,3.92,200.5,241.5,-41.0,61.5,51.2
+Hot-humid (Houston-like),Side wind screens + device,B Evap cooler,18.84,283.8,311.5,-27.7,16.3,14.9
+Hot-humid (Houston-like),Side wind screens + device,C Large evap cooler,39.24,536.0,529.7,6.3,13.3,13.4

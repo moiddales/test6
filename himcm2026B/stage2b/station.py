@@ -27,7 +27,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "stage2"))
 from psychro import humidity_ratio, rel_humidity, evaporative_outlet  # noqa: E402
 from model import (Params, devices_for, utci, stress_dose, eps_of, RHO, CP, G,  # noqa: E402
-                   sun_factor)
+                   sun_factor, E_WATER)
 from run_stage2 import weather  # noqa: E402
 
 OUT = os.path.join(HERE, "outputs")
@@ -58,10 +58,16 @@ class Station:
     I_vert: float = 400.0      # W/m2 peak irradiance on the glazing (facade average)
     solar_to_zone: float = 0.6 # share of transmitted sun absorbed in the occupied zone
     lights_W_m2: float = 5.0
+    # roof: sol-air method (ASHRAE Fundamentals): T_sa = T_o + a I_hor / h_o - 3.9 K
+    U_roof: float = 1.0        # W/m2K, lightly insulated metal deck
+    roof_absorptance: float = 0.6
+    I_hor: float = 950.0       # W/m2 peak global irradiance on the roof
+    h_out: float = 17.0        # W/m2K outside surface coefficient
     mass_factor: float = 3.0   # fast thermal mass relative to the zone air
     C_w: float = 0.3
     Cd: float = 0.6
-    dR_shade: float = 4.0
+    dR_shade: float = 12.0     # degC radiant excess of the outdoor view (same as the bus shelter, 2a)
+    dR_inside: float = 4.0     # degC radiant excess of enclosed walls and roof over zone air
     # switches used for the model-revision ablation
     gains: bool = True
     dynamic: bool = True
@@ -74,6 +80,12 @@ class Station:
     @property
     def volume(self):
         return self.area * self.Hz
+
+    @property
+    def openness(self):
+        """Open share of the wall band with doors closed."""
+        open_w, total_w = self.wall_bands(False)
+        return float(open_w.sum() / total_w.sum())
 
     def wall_bands(self, dwelling):
         track = min(self.open_track + (self.dwell_open if dwelling else 0.0), 1.0)
@@ -157,7 +169,7 @@ def timetable(t_h):
 # ---------------------------------------------------------------------------
 # Simulation
 # ---------------------------------------------------------------------------
-def simulate(st, sysm, climate, n_const=None, dt=DT):
+def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
     """Time-dependent heat and moisture balance of the occupied zone.
 
     Each step uses the exact solution of the linear balance with the flows
@@ -165,6 +177,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
         C dT/dt = rho cp [Q_x (T_o - T) + Q_s (T_s - T)] + G - Q_ac
         M dW/dt = rho    [Q_x (W_o - W) + Q_s (W_s - W)] + m_people - m_ac
     Q_x: exchange with outdoors (wind, buoyancy, train gusts); Q_s: cooler supply.
+    `on` (bool per step) switches fans; None means always on.
     """
     t = np.arange(T_START * 3600, T_END * 3600, dt)
     th = t / 3600
@@ -194,6 +207,9 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
     every = max(1, int(round(60 / dt)))                  # cooler outlet refreshed each minute
     W_coil = float(humidity_ratio(12.0, 100.0))
 
+    T_solair = T_o + st.roof_absorptance * st.I_hor * sun / st.h_out - 3.9
+    on = np.ones_like(t, dtype=bool) if on is None else on
+
     T, W = T_o[0], W_o[0]
     out = {k: np.zeros_like(t) for k in ("T", "W", "Q_x", "P", "water", "Q_ac")}
     for i in range(len(t)):
@@ -204,11 +220,13 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
         if st.dynamic and dwelling[i]:
             Q_x += st.kappa_train * st.volume / st.dwell_s
 
+        running = sysm.kind == "evap" or (sysm.kind == "fan" and on[i])
         G_kw = 0.0
         if st.gains:
             glass = ((total_w - open_w) * st.H_open).sum()
             G_kw = (N[i] * 0.075 + st.shgc * glass * st.I_vert * sun[i] * st.solar_to_zone / 1000
-                    + lights + (sysm.power_kw if sysm.kind in ("fan", "evap") else 0.0))
+                    + st.U_roof * st.area * (T_solair[i] - T) / 1000
+                    + lights + (sysm.power_kw if running else 0.0))
         m_people = N[i] * 0.045 / H_FG                      # kg/s, 45 W latent each
 
         Q_s = T_s = W_s = 0.0
@@ -220,7 +238,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
             Q_s, T_s, W_s = sysm.airflow, Ts_, Ws_
             out["water"][i] = RHO * Q_s * (W_s - W_in) * dt         # kg
             out["P"][i] = sysm.power_kw
-        elif sysm.kind == "fan":
+        elif sysm.kind == "fan" and on[i]:
             out["P"][i] = sysm.power_kw
 
         a = RHO * CP * (Q_x + Q_s)                                   # kW/K
@@ -228,13 +246,14 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
         Q_ac = m_ac = 0.0
         if sysm.kind == "ac":
             share = 1.0 if sysm.low_supply else 0.65                 # mixing also cools the upper hall
+            shr = sysm.shr if W > W_coil else 1.0                    # dry air: the coil removes no moisture
             # thermostat: remove enough heat to reach the setpoint by the end of the step
             e = np.exp(-dt * a / C)
             T_eq_target = (sysm.setpoint - T * e) / (1 - e)
-            Q_ac = float(np.clip(a * (T_eq - T_eq_target), 0.0, sysm.shr * sysm.cap_kw * share))
+            Q_ac = float(np.clip(a * (T_eq - T_eq_target), 0.0, shr * sysm.cap_kw * share))
             T_eq -= Q_ac / a
             if W > W_coil:
-                m_ac = Q_ac / share * (1 - sysm.shr) / sysm.shr / H_FG
+                m_ac = Q_ac / share * (1 - shr) / shr / H_FG
             out["P"][i] = (Q_ac / share + m_ac * H_FG) / ac_cop(T_o[i])
         T = T_eq + (T - T_eq) * np.exp(-dt * a / C)
 
@@ -244,17 +263,21 @@ def simulate(st, sysm, climate, n_const=None, dt=DT):
 
         out["T"][i], out["W"][i], out["Q_x"][i], out["Q_ac"][i] = T, W, Q_x, Q_ac
 
-    out.update(t=th, T_o=T_o, RH_o=RH_o, W_o=W_o, N=N, dwelling=dwelling, v_o=v_o, dt=dt)
+    out.update(t=th, T_o=T_o, RH_o=RH_o, W_o=W_o, N=N, dwelling=dwelling, v_o=v_o, dt=dt, on=on)
     out["RH"] = rel_humidity(out["T"], out["W"])
     return out
 
 
 def comfort(st, sysm, sim, base):
-    """UTCI of covered and uncovered people, relief versus the no-cooling run."""
+    """UTCI of covered and uncovered people, relief versus the no-cooling run.
+    Radiant field: the open share of the view sees the outdoors (air + dR_shade),
+    the enclosed share sees walls and roof that follow the zone air (+ dR_inside)."""
     open_mean = np.mean([st.open_track, st.open_back, st.open_ends])
     v_in = np.maximum(0.3, 0.5 * sim["v_o"] * open_mean)
-    Tmrt = sim["T_o"] + st.dR_shade
-    U0 = utci(base["T"], Tmrt, v_in, base["RH"])
+    f = st.openness
+    mrt = lambda T_zone: f * (sim["T_o"] + st.dR_shade) + (1 - f) * (T_zone + st.dR_inside)  # noqa: E731
+    U0 = utci(base["T"], mrt(base["T"]), v_in, base["RH"])
+    Tmrt = mrt(sim["T"])
     U_unc = utci(sim["T"], Tmrt, v_in, sim["RH"])
     N = sim["N"]
     if sysm.kind in ("fan", "evap"):
@@ -266,6 +289,7 @@ def comfort(st, sysm, sim, base):
         else:
             Tp, Wp = sim["T"], sim["W"]
         U_cov = utci(Tp, Tmrt, np.hypot(v_in, sysm.jet_speed), rel_humidity(Tp, Wp))
+        U_cov = np.where(sim["on"], U_cov, U_unc)
         n_cov = np.minimum(N, sysm.cover)
     else:
         U_cov = U_unc
@@ -277,16 +301,33 @@ def comfort(st, sysm, sim, base):
     return dict(U0=U0, U_unc=U_unc, U_cov=U_cov, benefit=benefit, hot0=hot0, hot1=hot1)
 
 
-def run(st, sysm, climate, base=None):
+def fan_schedule(st, sysm, climate, base):
+    """Smart fan control as in 2a: run an hour only if, averaged over that hour,
+    heat stress is at least strong and the fan lowers covered people's stress."""
     sim = simulate(st, sysm, climate)
+    cf = comfort(st, sysm, sim, base)
+    gain = stress_dose(cf["U0"], P2A.weights) - stress_dose(cf["U_cov"], P2A.weights)
+    hour = np.floor(sim["t"]).astype(int)
+    on = np.zeros_like(sim["t"], dtype=bool)
+    for h in np.unique(hour):
+        k = hour == h
+        on[k] = (cf["U0"][k].mean() >= 32) and (gain[k].mean() > 0)
+    return on
+
+
+def run(st, sysm, climate, base=None):
+    if base is None and sysm.kind != "none":
+        base = simulate(st, systems()[0], climate)
+    on = fan_schedule(st, sysm, climate, base) if sysm.kind == "fan" else None
+    sim = simulate(st, sysm, climate, on=on)
     if base is None:
-        base = sim if sysm.kind == "none" else simulate(st, systems()[0], climate)
+        base = sim
     cf = comfort(st, sysm, sim, base)
     rep = sim["t"] >= 6.0
     h = sim["dt"] / 3600
     elec = sim["P"][rep].sum() * h
     water = sim["water"][rep].sum()
-    resource = elec + P2A.e_water * water / 1000
+    resource = elec + E_WATER[climate] * water / 1000
     relief = cf["benefit"][rep].sum() * h
     pm = rep & (sim["t"] >= 14.5) & (sim["t"] < 15.5)
     return dict(
@@ -302,5 +343,6 @@ def run(st, sysm, climate, base=None):
         UTCI_15h=round(float(cf["U_unc"][pm][sim["N"][pm] > 0].mean()), 1),
         RH_zone_max=round(float(sim["RH"][rep].max()), 0),
         hours_RH_over_65=round(float((sim["RH"][rep] > 65).sum() * h), 1),
+        hours_on=round(float(sim["on"][rep].sum() * h), 1) if sysm.kind == "fan" else round(float(rep.sum() * h), 1),
         passenger_h=round(float(sim["N"][rep].sum() * h), 1),
     ), sim, cf

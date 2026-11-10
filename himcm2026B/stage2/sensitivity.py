@@ -7,12 +7,12 @@ import numpy as np
 import pandas as pd
 
 from plotstyle import plt, DEVICE_COLORS, INK2
-from model import Params, devices_for, evaluate, mean_waiting
-from run_stage2 import CLIMATES, OUT, peak
+from model import Params, devices_for, evaluate, mean_waiting, E_WATER
+from run_stage2 import CLIMATES, OUT, peak, peak_wind
 
 BASE = Params()
 N_BASE = mean_waiting(40, 10)
-V_BASE = 1.5
+V_PEAK = {name: peak_wind(name) for name in CLIMATES}   # measured wind at the hottest hour
 WEIGHT_SCHEMES = {"linear 1-1-1-1": (1, 1, 1, 1), "base 1-2-3-4": (1, 2, 3, 4), "steep 1-3-9-27": (1, 3, 9, 27)}
 
 
@@ -25,23 +25,27 @@ RANGES = {
     "Fan rating reference T (°C)": (28.0, 33.0, "param", "fan_ref_T"),
     "Airflow per covered person (m³/s)": (0.5, 1.2, "param", "q_per_person"),
     "Jet share at person θ0": (0.5, 0.85, "param", "theta0"),
-    "Radiant excess in shade (°C)": (0.0, 10.0, "param", "dR_shade"),
+    "Radiant excess under the roof (°C)": (8.0, 16.0, "param", "dR_shade"),
     "Wind sheltering factor": (0.3, 0.8, "param", "shelter_factor"),
-    "Outside wind speed (m/s)": (0.5, 3.0, "wind", None),
+    "Outside wind speed (m/s)": (0.5, 4.5, "wind", None),
     "People waiting": (2.0, 12.0, "people", None),
     "Evap jet speed (× base)": (0.7, 1.3, "jet", None),
     "Water energy intensity (kWh/m³)": (0.0, 2.64, "param", "e_water"),
 }
 
 
-def eta_all(p, v=V_BASE, n=N_BASE, jet_scale=1.0):
+def eta_all(p, v=None, n=N_BASE, jet_scale=1.0):
+    """eta at each climate's peak hour. Wind defaults to the measured peak-hour
+    wind and water energy to the city value unless the draw sets them."""
     devs = devices_for(p)
     out = {}
     for cname, (T, RH) in CONDS.items():
+        pc = replace(p, e_water=E_WATER[cname]) if p.e_water == BASE.e_water else p
+        vc = V_PEAK[cname] if v is None else v
         for d in devs:
             if d.kind == "evap":
                 d = replace(d, jet_speed=d.jet_speed * jet_scale)
-            out[(cname, d.name)] = float(evaluate(d, T, RH, v, n, p, "spot")["eta"])
+            out[(cname, d.name)] = float(evaluate(d, T, RH, vc, n, pc, "spot")["eta"])
     return out
 
 
@@ -169,7 +173,7 @@ def fig6(df):
 
 if __name__ == "__main__":
     pd.set_option("display.width", 200)
-    print("Peak conditions:", {k: (round(T, 1), round(RH, 1)) for k, (T, RH) in CONDS.items()})
+    print("Peak conditions (T, RH, wind):", {k: (round(T, 1), round(RH, 1), V_PEAK[k]) for k, (T, RH) in CONDS.items()})
     t = tornado()
     fig5(t)
     swing = t.assign(swing=(t.eta_at_high - t.eta_at_low).abs()).sort_values("swing", ascending=False)

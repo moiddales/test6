@@ -1,31 +1,31 @@
-Peak conditions: {'Hot-dry (Phoenix-like)': (46.4, 10.7), 'Hot-humid (Houston-like)': (37.4, 38.9)}
+Peak conditions (T, RH, wind): {'Hot-dry (Phoenix-like)': (46.4, 10.7, 3.67), 'Hot-humid (Houston-like)': (37.4, 38.9, 2.21)}
 
 Largest one-at-a-time swings
                  climate              device                                 parameter  eta_base  eta_at_low  eta_at_high
-  Hot-dry (Phoenix-like)               A Fan Heat-stress weights (1-1-1-1 to 1-3-9-27)    -62.89      -15.72      -424.50
-  Hot-dry (Phoenix-like)               A Fan               Fan rating reference T (°C)    -62.89      -53.96      -260.27
-Hot-humid (Houston-like)               A Fan Heat-stress weights (1-1-1-1 to 1-3-9-27)     68.09       24.01       192.46
-  Hot-dry (Phoenix-like)       B Evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     38.65       12.25       144.67
-  Hot-dry (Phoenix-like) C Large evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     37.92       12.34       127.47
-  Hot-dry (Phoenix-like) C Large evap cooler                            People waiting     37.92       18.20        85.33
-  Hot-dry (Phoenix-like)               A Fan                  Outside wind speed (m/s)    -62.89      -99.36       -40.06
-Hot-humid (Houston-like)       B Evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     22.51        9.12        52.94
-  Hot-dry (Phoenix-like)       B Evap cooler                            People waiting     38.65       18.55        57.98
-Hot-humid (Houston-like)               A Fan                            People waiting     68.09       34.04        68.09
-Hot-humid (Houston-like) C Large evap cooler                            People waiting     17.31        8.31        38.96
-Hot-humid (Houston-like)               A Fan               Fan rating reference T (°C)     68.09       62.88        34.39
-Hot-humid (Houston-like) C Large evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     17.31        7.64        35.15
-  Hot-dry (Phoenix-like)       B Evap cooler                    Jet share at person θ0     38.65       25.18        49.17
-Hot-humid (Houston-like)       B Evap cooler                            People waiting     22.51       10.80        33.76
-  Hot-dry (Phoenix-like) C Large evap cooler                    Jet share at person θ0     37.92       25.42        45.13
-Hot-humid (Houston-like)       B Evap cooler              Radiant excess in shade (°C)     22.51       19.01        27.84
-Hot-humid (Houston-like) C Large evap cooler                   Evap jet speed (× base)     17.31       13.88        20.30
+  Hot-dry (Phoenix-like)       B Evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     33.16        8.29       223.86
+Hot-humid (Houston-like)               A Fan Heat-stress weights (1-1-1-1 to 1-3-9-27)     60.66       20.22       181.97
+  Hot-dry (Phoenix-like) C Large evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     29.80        8.55       151.80
+  Hot-dry (Phoenix-like)               A Fan Heat-stress weights (1-1-1-1 to 1-3-9-27)    -18.38       -4.60      -124.07
+Hot-humid (Houston-like)       B Evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     24.67        8.22        74.01
+  Hot-dry (Phoenix-like) C Large evap cooler                            People waiting     29.80       14.34        64.29
+Hot-humid (Houston-like) C Large evap cooler Heat-stress weights (1-1-1-1 to 1-3-9-27)     19.27        7.22        50.66
+  Hot-dry (Phoenix-like)               A Fan                  Outside wind speed (m/s)    -18.38      -62.12       -23.07
+Hot-humid (Houston-like)               A Fan                            People waiting     60.66       35.51        73.74
+  Hot-dry (Phoenix-like)       B Evap cooler                            People waiting     33.16       16.69        51.92
+Hot-humid (Houston-like)               A Fan                  Outside wind speed (m/s)     60.66       63.00        29.30
+Hot-humid (Houston-like) C Large evap cooler                            People waiting     19.27        9.28        41.57
+Hot-humid (Houston-like)       B Evap cooler                            People waiting     24.67       12.41        38.62
+  Hot-dry (Phoenix-like)               A Fan               Fan rating reference T (°C)    -18.38      -13.28       -35.32
+  Hot-dry (Phoenix-like)       B Evap cooler                    Jet share at person θ0     33.16       22.65        39.52
+  Hot-dry (Phoenix-like) C Large evap cooler                    Jet share at person θ0     29.80       21.51        36.10
+Hot-humid (Houston-like)       B Evap cooler                   Evap jet speed (× base)     24.67       18.19        30.25
+Hot-humid (Houston-like) C Large evap cooler                  Outside wind speed (m/s)     19.27       22.29        13.90
 
 Monte Carlo summary
                  climate              device  P_rank1  eta_p05  eta_median  eta_p95  P_eta_negative
-  Hot-dry (Phoenix-like)               A Fan    0.000 -594.718     -53.589   -8.021           1.000
-  Hot-dry (Phoenix-like)       B Evap cooler    0.363    7.234      36.648  269.847           0.000
-  Hot-dry (Phoenix-like) C Large evap cooler    0.637    7.823      43.900  261.315           0.000
-Hot-humid (Houston-like)               A Fan    0.979   13.947      51.237  233.774           0.003
-Hot-humid (Houston-like)       B Evap cooler    0.007    5.925      21.900   91.378           0.000
-Hot-humid (Houston-like) C Large evap cooler    0.014    5.155      20.426   74.219           0.000
+  Hot-dry (Phoenix-like)               A Fan    0.000 -345.546     -28.802   -4.273           1.000
+  Hot-dry (Phoenix-like)       B Evap cooler    0.392    6.293      37.319  359.573           0.000
+  Hot-dry (Phoenix-like) C Large evap cooler    0.608    7.136      42.822  322.590           0.000
+Hot-humid (Houston-like)               A Fan    0.932    8.503      49.049  243.094           0.003
+Hot-humid (Houston-like)       B Evap cooler    0.032    5.025      22.838  104.735           0.000
+Hot-humid (Houston-like) C Large evap cooler    0.036    4.737      21.754   91.288           0.000

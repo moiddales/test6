@@ -9,7 +9,7 @@ from plotstyle import plt, DEVICE_COLORS, BASELINE, INK2
 from psychro import (wet_bulb, evaporative_outlet, humidity_ratio, dew_point,
                      p_ws, H_FG)
 from model import (Params, devices_for, evaluate, mean_waiting, eps_of, shade_relief,
-                   RHO, CP)
+                   utci, stress_dose, E_WATER, RHO, CP)
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
 os.makedirs(OUT, exist_ok=True)
@@ -45,6 +45,12 @@ def peak(climate):
     g = CLIMATES[climate]
     k = g["T"].idxmax()
     return float(g["T"][k]), float(100 * p_ws(g.Td[k]) / p_ws(g["T"][k]))
+
+
+def peak_wind(climate):
+    """Measured pedestrian-height wind at the hottest hour of the design day."""
+    g = CLIMATES[climate]
+    return float(g.v_ped[g["T"].idxmax()])
 
 
 def lines(label, ok):
@@ -175,9 +181,10 @@ def design_days(p=P, tag="table2_design_days"):
     rows, hourly = [], {}
     for cname in CLIMATES:
         T, RH, v, n = day_profile(cname)
+        pc = replace(p, e_water=E_WATER[cname])
         hourly[cname] = dict(T=T, RH=RH, n=n, U={})
         for d in devs:
-            r = evaluate(d, T, RH, v, n, p, "spot")
+            r = evaluate(d, T, RH, v, n, pc, "spot")
             hourly[cname]["U"][d.name] = r["U1"]
             hourly[cname]["U0"] = r["U0"]
             p_occ = 1 - np.exp(-n)                   # Poisson: chance someone is waiting
@@ -218,20 +225,102 @@ def design_days(p=P, tag="table2_design_days"):
 # 2b. Zero-energy design levers (the bus stop's "doors and night covers")
 # ---------------------------------------------------------------------------
 def design_levers(t2):
+    """Zero-energy levers. Every relief figure is measured against the same
+    baseline: open shelter (no screens), no device. Screens change the
+    felt temperature of everybody waiting, so their own effect is counted."""
     rows = []
+    ps = replace(P, shelter_factor=0.25)
+    screens, _ = design_days(ps, "table6b_wind_screens")
     for cname in CLIMATES:
         T, RH, v, n = day_profile(cname)
         _, _, rel = shade_relief(T, RH, v, HOURS, P)
         rows.append(dict(climate=cname, lever="Shelter roof (shade vs full sun)", device="none",
                          energy_kWh=0.0, relief_person_degC_h=round(float((n * rel).sum()), 1)))
-    screens, _ = design_days(replace(P, shelter_factor=0.25), "table6b_wind_screens")
-    for _, b in t2[t2.control == "smart"].iterrows():
-        s = screens[(screens.climate == b.climate) & (screens.device == b.device) & (screens.control == "smart")].iloc[0]
-        rows.append(dict(climate=b.climate, lever="Side wind screens (inside wind halved)", device=b.device,
-                         energy_kWh=s.energy_kWh, relief_person_degC_h=s.relief_person_degC_h,
-                         eta_day_without=b.eta_day, eta_day_with=s.eta_day))
+        U_open = utci(T, T + P.dR_shade, np.maximum(P.shelter_factor * v, 0.3), RH)
+        U_scr = utci(T, T + P.dR_shade, np.maximum(ps.shelter_factor * v, 0.3), RH)
+        alone = float((n * (stress_dose(U_open, P.weights) - stress_dose(U_scr, P.weights))).sum())
+        rows.append(dict(climate=cname, lever="Side wind screens alone (inside wind halved)", device="none",
+                         energy_kWh=0.0, relief_person_degC_h=round(alone, 1)))
+        for _, b in t2[(t2.climate == cname) & (t2.control == "smart")].iterrows():
+            sc = screens[(screens.climate == cname) & (screens.device == b.device)
+                         & (screens.control == "smart")].iloc[0]
+            total = alone + sc.relief_person_degC_h
+            rows.append(dict(climate=cname, lever="Side wind screens + device", device=b.device,
+                             energy_kWh=sc.energy_kWh, relief_person_degC_h=round(total, 1),
+                             relief_device_alone=b.relief_person_degC_h,
+                             net_gain_from_screens=round(total - b.relief_person_degC_h, 1),
+                             eta_day_without=b.eta_day,
+                             eta_day_with=round(total / sc.resource_kWh, 1)))
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table6_design_levers.csv"), index=False)
+    return df
+
+
+# ---------------------------------------------------------------------------
+# 2c. Fans above skin temperature: model vs the physiological literature
+# ---------------------------------------------------------------------------
+def fan_evidence(t2):
+    """Compare the fan's help/harm boundary with three studies, and show what
+    the design-day result becomes under the most pessimistic reading (no fan
+    benefit above 35 C air, Meade et al. 2024)."""
+    d = DEVS[0]
+    rows = []
+    RH = np.linspace(2, 95, 931)
+    for T in (38.0, 40.0, 42.0, 44.0):
+        dU = evaluate(d, T, RH, 1.0, 4, P)["dU"]
+        rh0 = float(RH[dU > 0].min()) if (dU > 0).any() else np.nan
+        rows.append(dict(item="fan break-even", T=T, model_RH_pct=round(rh0, 1),
+                         model_vapour_kPa=round(rh0 / 100 * float(p_ws(T)) / 1000, 2)))
+    Ts = np.arange(35.0, 48.01, 0.1)
+    harm = Ts[evaluate(d, Ts, 5.0, 1.0, 4, P)["dU"] < 0]
+    rows.append(dict(item="lowest air temperature at which the fan harms (RH 5 %)",
+                     T=round(float(harm.min()), 1) if len(harm) else np.nan,
+                     reference="Morris et al. 2021: never harmful below 39 C (young), 38 C (older), 37 C (older on anticholinergics)"))
+    rows.append(dict(item="vapour pressure above which wind helps at 40 C", T=40.0,
+                     model_vapour_kPa=rows[1]["model_vapour_kPa"],
+                     reference="Broede & Kampmann 2023, moderate exercise: 2 kPa (heart rate, core T), 3 kPa (skin T, sweat)"))
+    # design-day consequence under the Meade et al. 2024 reading
+    for cname in CLIMATES:
+        T, RH_, v, n = day_profile(cname)
+        r = evaluate(d, T, RH_, v, n, P, "spot")
+        base = t2[(t2.climate == cname) & (t2.device == d.name) & (t2.control == "smart")].iloc[0]
+        rel = np.where(T > 35, np.minimum(r["relief"], 0), r["relief"])
+        on = ((r["U0"] >= 32) & (rel > 0)).astype(float)
+        run = on * (1 - np.exp(-n))
+        hot_after = ((n - on * r["n_ben"]) * (r["U0"] >= 38) + on * r["n_ben"] * (r["U1"] >= 38)).sum()
+        rows.append(dict(item="design day, smart fan: model", climate=cname, hours_on=base.hours_on,
+                         relief_person_degC_h=base.relief_person_degC_h, eta_day=base.eta_day,
+                         person_h_very_strong_after=base.person_h_very_strong_after))
+        rows.append(dict(item="design day, smart fan: no benefit above 35 C (Meade et al. 2024)", climate=cname,
+                         hours_on=float(on.sum()), relief_person_degC_h=round(float((on * r["n_ben"] * rel).sum()), 1),
+                         eta_day=round(float((on * r["n_ben"] * rel).sum() / max((r["resource_kw"] * run).sum(), 1e-9)), 1),
+                         person_h_very_strong_after=round(float(hot_after), 1)))
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table7_fan_evidence.csv"), index=False)
+    return df
+
+
+def rating_reading():
+    """Second reading of the problem's ratings ("Effect on Shelter"): the
+    air-temperature drop delivered to a covered person at the hottest dry hour.
+    Returns the saturation effectiveness that reading implies, and the drop the
+    model delivers with its own effectiveness."""
+    hd = "Hot-dry (Phoenix-like)"
+    T, RH = peak(hd)
+    v = peak_wind(hd)
+    dep = T - float(wet_bulb(T, RH))
+    rows = []
+    for d in DEVS[1:]:
+        r = evaluate(d, T, RH, v, N_REF, P)
+        theta = float(r["share"])
+        theta_rating = P.theta0 / (1 + max(P.shelter_factor * V_REF, 0.3) / d.jet_speed)
+        rows.append(dict(device=d.name, wet_bulb_depression=round(dep, 1),
+                         eps_model=round(eps_of(d, P), 2),
+                         eps_implied_by_shelter_reading=round(d.rated_drop / (theta_rating * dep), 2),
+                         theta_at_peak_wind=round(theta, 2),
+                         air_drop_at_person_peak=round(T - float(r["T_person"]), 1)))
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table8_rating_reading.csv"), index=False)
     return df
 
 
@@ -249,10 +338,12 @@ def decision_rules():
         rows.append(dict(rule="fan vs evaporative boundary", T=T, value=round(rh_max, 1),
                          unit="max RH (%) where evaporative beats the fan",
                          wet_bulb_depression=round(float(T - wet_bulb(T, rh_max)), 1)))
-    T, RH = peak("Hot-dry (Phoenix-like)")
+    hd = "Hot-dry (Phoenix-like)"
+    T, RH = peak(hd)
+    v, pc = peak_wind(hd), replace(P, e_water=E_WATER[hd])
     for n in [1, 2, 4, 6, 8, 10, 12]:
-        rB = evaluate(DEVS[1], T, RH, V_REF, n, P)
-        rC = evaluate(DEVS[2], T, RH, V_REF, n, P)
+        rB = evaluate(DEVS[1], T, RH, v, n, pc)
+        rC = evaluate(DEVS[2], T, RH, v, n, pc)
         rows.append(dict(rule="B vs C by crowd size at hot-dry peak", T=T, value=n, unit="people waiting",
                          eta_B=round(float(rB["eta"]), 1), eta_C=round(float(rC["eta"]), 1),
                          UTCI_after_B=round(float(rB["U1"]), 1), UTCI_after_C=round(float(rC["U1"]), 1)))
@@ -416,7 +507,11 @@ if __name__ == "__main__":
     fig3_winner_map()
     fig4_design_days(hourly)
     t6 = design_levers(t2)
-    print("\nTable 6 (design levers)")
+    print("\nTable 6 (design levers, common baseline: open shelter, no device)")
     print(t6.to_string(index=False))
+    print("\nTable 7 (fans above skin temperature)")
+    print(fan_evidence(t2).to_string(index=False))
+    print("\nTable 8 (second reading of the device ratings)")
+    print(rating_reading().to_string(index=False))
     fig7_cooling_fate(t2)
     print("\nFigures written to", OUT)

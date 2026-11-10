@@ -10,7 +10,7 @@ Section 3 showed why a ratio like that misleads, and gave three principles. We a
 
 | Principle from the freezer case | Applied to the bus stop |
 |---|---|
-| Count only cooling that reaches its target (87 % of a freezer's cooling never touches the product) | The numerator counts heat-stress relief **received by people** |
+| Count only cooling that reaches its target (88 % of a freezer's cooling load is caused by its opening) | The numerator counts heat-stress relief **received by people** |
 | A device's effect depends on the surrounding air | Efficiency is reported at two **rating conditions**, mapped over all temperatures and humidities (Fig. 3), and integrated over **measured hot days** |
 | Efficiency = service ÷ all resources, within a stated boundary | The denominator is **electricity plus the energy embedded in the water used**. Escaping cooling goes to the street and is not recovered |
 
@@ -22,7 +22,7 @@ $$
 - $N_{\text{ben}}$: people the device reaches.
 - $R$: heat-stress relief each person receives (Section 4.3).
 - $P$: electric power.
-- $\dot V_w$: water use. $e_w = 0.53$ kWh/m³, because the average US water supply system uses almost 2,000 kWh per million gallons (Hamilton et al., 2009).
+- $\dot V_w$: water use. $e_w$ is the energy embedded in each cubic metre of water, set by city. The average US water supply system uses almost 2,000 kWh per million gallons, 0.53 kWh/m³ (Hamilton et al., 2009); we use it for Houston and the rating conditions. Phoenix water is pumped up to 2,900 ft by the Central Arizona Project (5.5 kWh per 1,000 gallons) before city supply (about 1.8 kWh per 1,000 gallons; WRRC *Arroyo*, 2010), so $e_w$ = 1.93 kWh/m³ there.
 
 **Rating conditions:**
 
@@ -46,8 +46,9 @@ Wind is converted from 10 m to 1.1 m height with a log profile.
 | A2 | The "up to" values are outlet ratings at a wet-bulb depression $D_{\text{ref}} = 10$ °C. | Gives effectiveness $\varepsilon$ = 0.50 (B) and 0.80 (C), inside the 0.5–0.9 range of direct evaporative coolers. |
 | A3 | The fan's "3 °C" is a felt-temperature reduction at 30 °C / 50 % RH. | Fan ratings are quoted for warm conditions; varied 28–33 °C. |
 | A4 | Airflow follows commercial data sheets: B 5.0 m³/s at 1.2 kW; C 7.5 m³/s at 2.5 kW. | 18,000 m³/h at 1.1 kW; 30,000 m³/h at 3.0 kW. |
-| A5 | Passengers arrive at random; bus headways have a coefficient of variation of 0.5. | Sets the mean wait. |
+| A5 | Passengers arrive at random; bus headways have a coefficient of variation of 0.5. | Sets the mean wait. Arrivals are close to random for headways up to about 12 minutes (Kaparias et al., 2015). |
 | A6 | Devices do not change the radiant environment; the roof does. | Fans and coolers act on air. |
+| A7 | Under the roof, MRT is 12 °C above air temperature. | Sun raises MRT about 28 °C above air temperature in Tempe (Middel & Krayenhoff, 2019); bus shelters remove only about 15 °C of that, less than building or tree shade (Middel et al., 2021; Tucson MaRTy survey). Varied 8–16 °C. |
 
 ## 4.3 Sub-models
 
@@ -65,7 +66,7 @@ The wet-bulb temperature solves the ASHRAE adiabatic-saturation equation.
 
 - Evaporative coolers: $T_s=T-\varepsilon(T-T_{wb})$, with $W_s$ from constant enthalpy.
 - Sensible cooling made: $\rho c_pQ_s(T-T_s)$. Water used: $\rho Q_s(W_s-W)$.
-- The fan raises air speed at the person. Calibrated to its 3 °C rating, that speed is 2.93 m/s.
+- The fan raises air speed at the person. Calibrated to its 3 °C rating, that speed is 2.74 m/s.
 - Above skin temperature, UTCI's heat-balance model makes the fan add heat.
 
 **M3 Delivery: the open-freezer problem.**
@@ -90,12 +91,12 @@ $$
 T_p=T-\theta(T-T_s),\qquad \theta=\frac{\theta_0}{1+v_{\text{in}}/u_{\text{jet}}}.
 $$
 
-**M4 People.** Little's law gives $N=\lambda W$, with mean wait $W=\tfrac{h}{2}(1+CV^2)$. A device covers $Q/0.8$ people.
+**M4 People.** Little's law gives the mean number waiting, $\bar N=\lambda W$, with mean wait $W=\tfrac{h}{2}(1+CV^2)$. A device can cover at most $\text{cap}=Q/0.8$ people. The number waiting varies at random (Poisson), so the people a device reaches are $N_{\text{ben}}=E[\min(N,\text{cap})]$. Using $\min(\bar N,\text{cap})$ instead would overstate the fan's reach by 15 %, because whenever more people wait than it covers, the extra people get nothing.
 
 **M5 Felt temperature.** UTCI combines air temperature, humidity, wind and mean radiant temperature (MRT).
 
-- In shade, MRT = air temperature + 4 °C.
-- In sun, MRT = air temperature + 30 °C at solar noon. Mean radiant temperatures up to 75.6 °C (168 °F) were measured at noon over a sunlit concrete walkway in Tempe (ASU News, 2019).
+- Under the shelter roof, MRT = air temperature + 12 °C (A7).
+- In sun, MRT = air temperature + 30 °C at solar noon. In Tempe, MRT reached 76.4 °C at an air temperature of 48.5 °C (Middel & Krayenhoff, 2019).
 
 **M6 Relief.**
 
@@ -117,47 +118,55 @@ $$
 
 | Condition | Device | UTCI before → after | $R$ | $\eta$ | Water (L/h) |
 |---|---|---|---|---|---|
-| R-dry | A | 42.6 → 42.7 | −0.30 | **−4.8** | 0 |
-| | B | 42.6 → 38.6 | 11.87 | **39.7** | 85 |
-| | C | 42.6 → 35.1 | 19.61 | 31.3 | 205 |
-| R-humid | A | 38.0 → 36.0 | 4.23 | **67.7** | 0 |
-| | B | 38.0 → 36.0 | 4.05 | 13.9 | 33 |
-| | C | 38.0 → 34.6 | 6.95 | 11.4 | 80 |
+| R-dry | A | 44.5 → 44.3 | 0.41 | 5.4 | 0 |
+| | B | 44.5 → 40.5 | 11.92 | **38.0** | 85 |
+| | C | 44.5 → 36.9 | 21.48 | 34.2 | 205 |
+| R-humid | A | 39.9 → 37.7 | 6.33 | **83.3** | 0 |
+| | B | 39.9 → 37.8 | 6.16 | 20.1 | 33 |
+| | C | 39.9 → 36.3 | 9.16 | 15.0 | 80 |
 
-At 30 °C / 50 % the fan scores 46.7 against 7.9 (B) and 6.5 (C); at 32 °C / 75 %, 87.9 against 10.8 and 8.6.
+At 30 °C / 50 % the fan scores 55.9 against 12.1 (B) and 8.8 (C); at 32 °C / 75 %, 79.2 against 12.5 and 9.8.
 
 **Table 2. Measured design days** (06:00–22:00; smart control: run only when UTCI ≥ 32, the device helps, and someone is waiting).
 
 | Day | Device | Electricity (kWh) | Water (L) | Total resource (kWh) | Relief (person·°C·h) | $\eta_{\text{day}}$ | UTCI ≥ 38 person-h: before → after |
 |---|---|---|---|---|---|---|---|
-| Hot-dry (PHX) | A | 1.7 | 0 | 1.7 | 49 | 28.3 | 55.5 → 55.5 |
-| | B | 18.8 | 1337 | 19.6 | 655 | **33.5** | 55.5 → 47.7 |
-| | C | 39.2 | 3223 | 41.0 | 1203 | 29.4 | 55.5 → **33.6** |
-| Hot-humid (IAH) | A | 3.4 | 0 | 3.4 | 190 | **55.5** | 20.3 → 4.5 |
-| | B | 16.5 | 487 | 16.7 | 245 | 14.7 | 20.3 → 0 |
-| | C | 34.3 | 1172 | 34.9 | 406 | 11.6 | 20.3 → 0 |
+| Hot-dry (PHX) | A | 2.2 | 0 | 2.2 | 59 | 26.6 | 61.7 → 61.7 |
+| | B | 18.8 | 1337 | 21.4 | 672 | **31.4** | 61.7 → 52.7 |
+| | C | 39.2 | 3223 | 45.5 | 1311 | 28.8 | 61.7 → **40.8** |
+| Hot-humid (IAH) | A | 3.9 | 0 | 3.9 | 242 | **61.5** | 34.4 → 24.2 |
+| | B | 18.8 | 504 | 19.1 | 312 | 16.3 | 34.4 → 12.6 |
+| | C | 39.2 | 1212 | 39.9 | 530 | 13.3 | 34.4 → **0.5** |
 
 **Findings.**
 
-1. **Climate decides the winner (Fig. 3).** The fan wins everywhere except hot, dry air. Evaporative cooling wins at 36 °C or more once the wet-bulb depression exceeds about 20 °C (at 36 °C), 16 °C (40 °C), 15 °C (42 °C) or 14 °C (44 °C).
-2. **On a real Phoenix hot day the fan is harmful from 12:00 to 21:00.**
-   - Always on, its daily efficiency is negative (−1.8).
-   - Run only in the 7 hours when it helps, it scores 28.3. This is the bus stop's night cover: switching off is part of the design.
-3. **B or C?** At the 46.4 °C peak, B and C are almost tied for up to 6 waiting people (55.7 vs 54.6 at 6). From 8 people C is clearly ahead (72.8 vs 58.0). Over 3,000 random parameter sets C leads in 64 % and B in 36 %.
-4. **Efficiency and effectiveness diverge.** At the 46.4 °C peak no device brings waiting passengers below the very-strong band:
-   - B reaches UTCI 42.9 and C 38.8;
-   - over the day, C removes 40 % of very-strong heat-stress person-hours (55.5 → 33.6) and B removes 14 %.
+1. **Climate decides the winner (Fig. 3).** The fan wins everywhere except hot, dry air. Evaporative cooling wins at 36 °C or more once the wet-bulb depression exceeds about 19 °C (at 36 °C), 16 °C (40 °C), 15 °C (42 °C) or 14 °C (44 °C).
+2. **On a real Phoenix hot day the fan is harmful from 13:00 to 20:00.**
+   - Always on, its daily efficiency is only 8.8.
+   - Run only in the 9 hours when it helps, it scores 26.6. This is the bus stop's night cover: switching off is part of the design.
+3. **B or C?** At the 46.4 °C peak (measured wind 3.7 m/s), B is slightly ahead or level for up to 6 waiting people (42.9 vs 42.1 at 6). From 8 people C is clearly ahead (53.1 vs 48.7). Over 3,000 random parameter sets C leads in 61 % and B in 39 %.
+4. **Efficiency and effectiveness diverge.**
+   - At the 46.4 °C peak no device brings waiting passengers below the very-strong band: B reaches UTCI 46.1 and C 42.9. Over the day, C removes 34 % of very-strong heat-stress person-hours (61.7 → 40.8) and B removes 15 %.
+   - On the humid day the most efficient device is the least protective: the fan leaves 24.2 of 34.4 very-strong person-hours, while C leaves 0.5.
 
    Requirement 4 must therefore combine devices with shade and refuges.
 5. **Most cooling never reaches anyone (Fig. 7).**
-   - B delivers 27 % of its cooling to people; 45 % is diluted by entrained hot air on the way and 28 % is aimed at empty space.
-   - C delivers 20 %; 52 % is aimed at empty space.
-6. **Aim at people.** Spot mode beats volume mode by 16 % to about 5 times.
+   - B delivers 24–26 % of its cooling to people; 40–41 % is diluted by entrained hot air on the way and 34 % is aimed at empty space.
+   - C delivers 20–21 %; 52–53 % is aimed at empty space.
+6. **Aim at people.** Spot mode beats volume mode by 19 % to about 3.7 times.
 
-**Design levers (Table 6).** As with the freezer's doors and covers, design beats machinery:
+**Design levers (Table 6).** All relief figures share one baseline: an open shelter with no device. This matters because a lever such as a wind screen changes the felt temperature of everyone waiting, not only of those a device reaches.
 
-- **Shade.** Standing under the shelter roof instead of in the sun gives 896 person·°C·h of relief on the hot-dry day (more than device B's 655, three-quarters of C's 1,203) and 404 on the hot-humid day (equal to C, twice the fan), with zero energy.
-- **Wind screens.** Screens that halve the wind inside the shelter raise every device's $\eta_{\text{day}}$ by 7–21 %.
+| Lever (relief in person·°C·h per day) | Hot-dry | Hot-humid |
+|---|---|---|
+| Shelter roof (shade vs full sun), 0 kWh | 638 | 208 |
+| Side wind screens alone, 0 kWh | +57 | −87 |
+| Screens + fan (fan alone) | 102 (59) | 201 (242) |
+| Screens + B (B alone) | 817 (672) | 284 (312) |
+| Screens + C (C alone) | 1,539 (1,311) | 536 (530) |
+
+- **Shade.** Standing under the shelter roof instead of in the sun gives 638 person·°C·h of relief on the hot-dry day (close to device B's 672, half of C's 1,311) and 208 on the hot-humid day (86 % of the fan's 242), with zero energy.
+- **Wind screens help only in dry heat.** Above skin temperature, wind heats people, so halving it helps everyone waiting (+57) and every device does more. In humid heat, wind helps people shed heat by sweating, so screens make everyone hotter (−87); they cancel more than the fan or B adds. Humid-climate shelters should stay open to the breeze.
 
 ## 4.5 Validation and sensitivity
 
@@ -169,29 +178,39 @@ At 30 °C / 50 % the fan scores 46.7 against 7.9 (B) and 6.5 (C); at 32 °C / 75
 
   | Condition | Measured | Model ΔUTCI |
   |---|---|---|
-  | 40 °C / 50 % | fans helped (Morris et al., 2019) | +1.38 |
-  | 47 °C / 10 % | fans harmed (Morris et al., 2019) | −1.39 |
-  | 42 °C / 50 % | fans helped (Ravanelli et al., 2015) | +1.17 |
+  | 40 °C / 50 % | fans helped (Morris et al., 2019) | +1.6 |
+  | 47 °C / 10 % | fans harmed (Morris et al., 2019) | −1.0 |
+  | 42 °C / 50 % | fans helped (Ravanelli et al., 2015) | +1.4 |
 
-  A study of physical work capacity (Foster et al., 2022) found fans unhelpful above 35 °C when RH is below 50 %. That is stricter than our model for people at rest, and it argues for switching fans off earlier for anyone exerting themselves.
+  The evidence above skin temperature is contested, so we compare the model's help-or-harm boundary with three further studies (Table 7):
+
+  | Study | Finding | Model |
+  |---|---|---|
+  | Morris et al. (2021), biophysical model | Fans never harmful below 39 °C (young), 38 °C (older), 37 °C (older on anticholinergic drugs) at any humidity | Fan harms from 38.6 °C at 5 % RH: consistent |
+  | Bröde & Kampmann (2023), 198 walking trials | Above 35 °C, wind helps only above 2 kPa (heart rate, core temperature) or 3 kPa (skin temperature, sweat) vapour pressure; UTCI tracks the measured wind effects (r = 0.9) | Fan helps above 0.74 kPa at 40 °C and 2.16 kPa at 44 °C: more favourable to fans than these trials of people walking |
+  | Meade et al. (2024), critical review | Above 35 °C fans do not lower core temperature meaningfully | Most pessimistic reading, tested below |
+
+  Under the Meade et al. reading (no fan benefit above 35 °C), the Houston fan runs 10 hours instead of 16, its relief falls from 242 to 145 person·°C·h and 31.2 instead of 24.2 very-strong person-hours remain. The fan is still the most efficient device ($\eta_{\text{day}}$ 59.5), but the hottest hours then need evaporative cooling or a cooled refuge. For older passengers we recommend this cautious reading.
+- **Order-of-magnitude checks.** Read as "air-temperature drop delivered at the hottest dry hour", the ratings imply saturation effectiveness 0.44 (B) and 0.65 (C), close to the 0.50 and 0.80 of A2. At the dry peak the model lowers air temperature at a covered person by 3.8 °C (B) and 7.1 °C (C), under a third of the 24 °C wet-bulb depression; field tests of outdoor misting report 8.2 °C in a light breeze (Ulpiani et al., 2019).
 - The mixing model has correct limits.
 
 **One-at-a-time sensitivity (Fig. 5, design-day peaks):**
 
-- The heat-stress weights scale $\eta$ by 4.6–12 times. They never change the fan-versus-evaporative ranking, but they can swap B and C, which are nearly tied at the dry peak.
-- Next come the fan's rating reference temperature, crowd size, the jet share $\theta_0$ (B: 25.2–49.2) and $D_{\text{ref}}$ (B: 28.0–46.9).
-- Water energy from 0 to 2.64 kWh/m³ (five times the US average, the top of California's range) lowers C's dry-peak $\eta$ from 39.9 to 31.8 (−20 %).
+- Wind and water energy start from each city's measured or local value (Phoenix peak wind 3.7 m/s, Houston 2.2 m/s).
+- The heat-stress weights change $\eta$ by a factor of 7–27 between equal weights (1-1-1-1) and the steepest scheme (1-3-9-27). They never change the fan-versus-evaporative ranking, but they can swap B and C, which are close at the dry peak. Mortality data support weights that rise with the band: in eight Polish cities the relative risk of death rose 10–20 % above UTCI 32 °C and 25–30 % above 38 °C (Kuchcik, 2021).
+- Next come crowd size (C at the dry peak: 14.3–64.3), wind and the fan's rating reference temperature, the jet share $\theta_0$ (B: 22.7–39.5) and $D_{\text{ref}}$ (B: 25.5–37.5).
+- Water energy from 0 to 2.64 kWh/m³ (five times the US average, the top of California's range) lowers C's dry-peak $\eta$ from 35.4 to 28.2 (−20 %).
 
 **Monte Carlo (Fig. 6, 3,000 draws):**
 
-- The fan is most efficient at the humid peak in 97.9 % of draws.
-- At the dry peak C leads in 64 % and B in 36 %, and the fan's $\eta$ is negative in every draw.
+- The fan is most efficient at the humid peak in 93.2 % of draws.
+- At the dry peak C leads in 61 % and B in 39 %, and the fan's $\eta$ is negative in every draw.
 
 ## 4.6 Answer to Requirement 2a
 
-- **Humid or moderately hot weather:** the fan (A). It delivers 3–10 times more relief per kWh than either cooler and uses no water.
-- **Hot, dry weather** (≥ 36 °C and a wet-bulb depression of about 14–20 °C or more): evaporative cooling, with the fan switched off. B and C are nearly equal at quiet stops; use C at busy stops, where it is also the more effective.
-- **On the hottest dry days** no single device keeps waiting passengers out of very strong heat stress. Shade, which costs no energy, comes first.
+- **Humid or moderately hot weather:** the fan (A). It delivers about 4–8 times more relief per kWh than either cooler and uses no water. Above 35 °C its benefit is contested (Table 7), so the hottest humid hours also need evaporative cooling or a cooled refuge, especially for older passengers.
+- **Hot, dry weather** (≥ 36 °C and a wet-bulb depression of about 14–19 °C or more): evaporative cooling, with the fan switched off. B and C are close at quiet stops; use C at busy stops, where it is also the more effective.
+- **On the hottest dry days** no single device keeps waiting passengers out of very strong heat stress. Shade, which costs no energy, comes first, and side screens help there; in humid climates the shelter should stay open to the breeze.
 
 ---
 
@@ -211,6 +230,15 @@ At 30 °C / 50 % the fan scores 46.7 against 7.9 (B) and 6.5 (C); at 32 °C / 75
 - Foster, J., Smallcombe, J. W., Hodder, S., Jay, O., Flouris, A. D., Havenith, G. (2022). Quantifying the impact of heat on human physical work capacity; part II. *Int J Biometeorol* 66(3):507–520 (citing Morris et al., 2019).
 - Bröde, P., et al. (2012). Deriving the operational procedure for the Universal Thermal Climate Index (UTCI). *Int J Biometeorol* 56(3):481–494.
 - Hamilton, G., Arzbaecher, C., Ehrhard, R., Murphy, J. (2009). Driving energy efficiency in the U.S. water & wastewater industry. ACEEE Summer Study on Energy Efficiency in Industry.
+- Water Resources Research Center, University of Arizona (2010). Water–energy nexus. *Arroyo* (annual newsletter).
+- Middel, A., Krayenhoff, E. S. (2019). Micrometeorological determinants of pedestrian thermal exposure during record-breaking heat in Tempe, Arizona. *Sci Total Environ* 687:137–151.
+- Middel, A., et al. (2021). 50 grades of shade. *Bull Amer Meteor Soc* 102:E1805–E1820.
+- Morris, N. B., et al. (2021). Electric fan use for cooling during hot weather: a biophysical modelling study. *Lancet Planet Health* 5:e368–e377.
+- Bröde, P., Kampmann, B. (2023). Temperature–humidity-dependent wind effects on physiological heat strain of moderately exercising individuals reproduced by the UTCI. *Biology* 12:802.
+- Meade, R. D., et al. (2024). A critical review of the effectiveness of electric fans as a personal cooling intervention in hot weather and heatwaves. *Lancet Planet Health* 8:e256–e269.
+- Kuchcik, M. (2021). Mortality and thermal environment (UTCI) in Poland—long-term, multi-city study. *Int J Biometeorol* 65:1529–1541.
+- Ulpiani, G., et al. (2019). Thermal comfort improvement in urban spaces with water spray systems: field measurements and survey. *Build Environ* 156:46–61.
+- Kaparias, I., et al. (2015). Analysing passenger arrival rates and waiting time at bus stops. TRB Annual Meeting.
 - Seckel, S. (2019). Devilishly hot. ASU News (MRT measurements by A. Middel and E. S. Krayenhoff).
 - Iowa Environmental Mesonet, ASOS archive (PHX, IAH, 2020–2024).
 - Tartarini & Schiavon (2020), pythermalcomfort.

@@ -7,7 +7,7 @@ import pandas as pd
 
 from station import (Station, SCENARIOS, station, blend, systems, simulate, run, ac_cop, OUT, P2A, DEVS2A,
                      comfort)
-from model import volume_mode_zone, evaporative_outlet
+from model import volume_mode_zone, evaporative_outlet, E_WATER
 from run_stage2 import CLIMATES
 from plotstyle import plt, BASELINE, INK2
 
@@ -18,8 +18,7 @@ SYS_COLORS = {"A Fans ×10": "#2a78d6", "B Evap ×8": "#eb6834", "C Large evap �
 
 
 def openness_index(st):
-    open_w, total_w = st.wall_bands(False)
-    return float(open_w.sum() / total_w.sum())
+    return st.openness
 
 
 # ---------------------------------------------------------------------------
@@ -47,7 +46,7 @@ def validation():
     base2 = simulate(st, SYS[0], CLIM[1], dt=2.0)
     cf2 = comfort(st, SYS[3], s2, base2)
     rep = s2["t"] >= 6
-    res2 = (s2["P"][rep].sum() + 0) * 2 / 3600 + P2A.e_water * s2["water"][rep].sum() / 1000
+    res2 = s2["P"][rep].sum() * 2 / 3600 + E_WATER[CLIM[1]] * s2["water"][rep].sum() / 1000
     eta2 = cf2["benefit"][rep].sum() * 2 / 3600 / res2
     rows.append(("time step: eta with dt = 10 s vs dt = 2 s (C, screen doors, hot-humid)",
                  r10["eta"], round(float(eta2), 1), abs(r10["eta"] - eta2) / eta2 < 0.02))
@@ -158,6 +157,9 @@ SENS = {
     "Wind exchange coefficient C_w": ("C_w", 0.15, 0.5),
     "Thermal mass factor": ("mass_factor", 1.0, 6.0),
     "Entrance openness (street side)": ("open_back", 0.1, 0.4),
+    "Roof U-value (W/m²K)": ("U_roof", 0.3, 5.0),
+    "Radiant excess of the outdoor view (°C)": ("dR_shade", 8.0, 16.0),
+    "Radiant excess of enclosed surfaces (°C)": ("dR_inside", 2.0, 8.0),
 }
 
 
@@ -243,9 +245,10 @@ def fig9(sw):
         ax.set_title(clim, fontsize=9)
         ax.set_xlabel("Open share of the waiting-area walls (%)")
     axes[0].set_ylabel("η (person·°C·h per kWh)")
-    axes[1].legend(loc="upper right", fontsize=7)
+    h, lab = axes[1].get_legend_handles_labels()
+    fig.legend(h, lab, loc="lower center", ncol=4, fontsize=7, frameon=False)
     fig.suptitle("Fig. 9  Enclosure decides the technology: η across openness", x=0.01, ha="left", fontsize=10)
-    fig.tight_layout(rect=(0, 0, 1, 0.92))
+    fig.tight_layout(rect=(0, 0.08, 1, 0.92))
     fig.savefig(os.path.join(OUT, "fig9_eta_vs_openness.png"))
     plt.close(fig)
 

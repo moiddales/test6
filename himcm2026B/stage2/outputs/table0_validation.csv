@@ -6,10 +6,10 @@ wet bulb vs Stull,30C/50%,22.01,22.3,True
 energy closure (kJ/kg air),42C/15%,16.46,16.05,True
 energy closure (kJ/kg air),35C/55%,6.29,6.25,True
 fan rated effect at reference,30C/50%,3.0,3.0,True
-fan dU at 46C/10% (expect <= 0),46C/10%,-1.21,0.0,True
-fan helps at 40 C / 50 % (Morris 2019),40C/50%,1.38,> 0,True
-fan harms at 47 C / 10 % (Morris 2019),47C/10%,-1.39,< 0,True
-fan helps at 42 C / 50 % (Ravanelli 2015),42C/50%,1.17,> 0,True
+fan dU at 46C/10% (expect <= 0),46C/10%,-0.84,0.0,True
+fan helps at 40 C / 50 % (Morris 2019),40C/50%,1.6,> 0,True
+fan harms at 47 C / 10 % (Morris 2019),47C/10%,-1.0,< 0,True
+fan helps at 42 C / 50 % (Ravanelli 2015),42C/50%,1.4,> 0,True
 air-temp drop implied by catalog 17.5 L/h at 5 m3/s,catalog,2.04,~2,True
 huge supply -> zone = supply temp,Qs->inf,30.0,30.0,True
 no supply -> zone = ambient,Qs->0,40.0,40.0,True

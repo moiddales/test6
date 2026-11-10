@@ -1,0 +1,3 @@
+device,wet_bulb_depression,eps_model,eps_implied_by_shelter_reading,theta_at_peak_wind,air_drop_at_person_peak
+B Evap cooler,24.1,0.5,0.44,0.31,3.8
+C Large evap cooler,24.1,0.8,0.65,0.37,7.1

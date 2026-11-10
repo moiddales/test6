@@ -1,7 +1,7 @@
 climate,device,P_rank1,eta_p05,eta_median,eta_p95,P_eta_negative
-Hot-dry (Phoenix-like),A Fan,0.0,-594.718,-53.589,-8.021,1.0
-Hot-dry (Phoenix-like),B Evap cooler,0.363,7.234,36.648,269.847,0.0
-Hot-dry (Phoenix-like),C Large evap cooler,0.637,7.823,43.9,261.315,0.0
-Hot-humid (Houston-like),A Fan,0.979,13.947,51.237,233.774,0.003
-Hot-humid (Houston-like),B Evap cooler,0.007,5.925,21.9,91.378,0.0
-Hot-humid (Houston-like),C Large evap cooler,0.014,5.155,20.426,74.219,0.0
+Hot-dry (Phoenix-like),A Fan,0.0,-345.546,-28.802,-4.273,1.0
+Hot-dry (Phoenix-like),B Evap cooler,0.392,6.293,37.319,359.573,0.0
+Hot-dry (Phoenix-like),C Large evap cooler,0.608,7.136,42.822,322.59,0.0
+Hot-humid (Houston-like),A Fan,0.932,8.503,49.049,243.094,0.003
+Hot-humid (Houston-like),B Evap cooler,0.032,5.025,22.838,104.735,0.0
+Hot-humid (Houston-like),C Large evap cooler,0.036,4.737,21.754,91.288,0.0

@@ -1,5 +1,5 @@
 check,model,reference,pass
 "nesting: bus-shelter case reproduces 2a volume mode (zone T at 15:00, C)",39.33,39.33,True
-"time step: eta with dt = 10 s vs dt = 2 s (C, screen doors, hot-humid)",11.6,11.8,True
+"time step: eta with dt = 10 s vs dt = 2 s (C, screen doors, hot-humid)",14.2,14.4,True
 AC COP at 35 C outdoor (AHRI EER 10-12.5 = COP 2.9-3.7),3.19,2.9-3.7,True
 "sealed room + ample AC holds the 26 C setpoint (max zone T, 06-22 h)",26.0,26.0,True

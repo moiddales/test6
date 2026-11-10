@@ -55,23 +55,23 @@
 
 每个假设的取值、依据和敏感性范围见各阶段 README 的"参数表"。
 
-## 5. 2026-11-09 审计新增的数据（尚未用进模型）
+## 5. 2026-11-09 审计新增的数据（2026-11-10 已用进模型）
 
-这些数据会在审计修改计划（`../AUDIT.md` 第 7 节）执行时用进模型；在那之前，模型仍然使用上面各节的取值。
+下表最后一列是这些数据在模型里的用途；它们优先于上面各节的旧取值。
 
-| 数据 | 数值 | 等级 | 出处与原文摘录 | 计划用途 |
+| 数据 | 数值 | 等级 | 出处与原文摘录 | 用途 |
 |---|---|---|---|---|
-| 凤凰城输水能耗 | CAP 平均 5.5 kWh/千加仑（≈ 1.45 kWh/m³）；自来水约 1.8 kWh/千加仑（≈ 0.48 kWh/m³） | 原文核实 | Arroyo 2010, "Water–Energy Nexus"，亚利桑那大学 WRRC。"On average, CAP uses 5.5 kilowatt-hours of electricity for each thousand gallons (kgal) of water it delivers." | 凤凰城的水隐含能耗取约 1.9 kWh/m³ |
-| 低温柜 EER（AHRI 计算 DOE 电耗所用） | 调整露点 −36°F 时 5.48，−1°F 时 8.95 Btu/Wh（COP 1.6–2.6） | 原文核实 | ANSI/AHRI Standard 1200-2023 (I-P)，表 1 "EER for Remote Commercial Refrigerated Display Merchandisers and Storage Cabinets"（law.resource.org 法规引用版） | 说明 COP 1.6 位于最低端，DOE 对比的口径 |
-| 低温玻璃门柜的冷负荷 | 冷冻食品 AHRI 额定 910–1,010 Btu/h/门（267–290 W） | 原文核实 | Hussmann RL 数据表 P/N 0510175，"BTU/h (W) per door … 955 (280 W)" | 新的独立检验：模型 284 W/门 |
-| 低温玻璃门的防凝露加热 | 5 门：门加热 260–455 W + 门框 236 W；风扇 90 W | 原文核实 | 同上，"Component Specifications"表；注："Maximum door watts without anti-sweat cycling controls shown." | 防凝露加热从 0.3 kW 改为 0.5 kW（范围 0.3–0.7） |
+| 凤凰城输水能耗 | CAP 平均 5.5 kWh/千加仑（≈ 1.45 kWh/m³）；自来水约 1.8 kWh/千加仑（≈ 0.48 kWh/m³） | 原文核实 | Arroyo 2010, "Water–Energy Nexus"，亚利桑那大学 WRRC。"On average, CAP uses 5.5 kilowatt-hours of electricity for each thousand gallons (kgal) of water it delivers." | 凤凰城的水隐含能耗取 1.93 kWh/m³（`model.E_WATER`） |
+| 低温柜 EER（AHRI 计算 DOE 电耗所用） | 调整露点 −36°F 时 5.48，−1°F 时 8.95 Btu/Wh（COP 1.6–2.6） | 原文核实 | ANSI/AHRI Standard 1200-2023 (I-P)，表 1 "EER for Remote Commercial Refrigerated Display Merchandisers and Storage Cabinets"（law.resource.org 法规引用版） | 阶段一：说明 COP 1.6 位于最低端，DOE 检验偏保守 |
+| 低温玻璃门柜的冷负荷 | 冷冻食品 AHRI 额定 910–1,010 Btu/h/门（267–290 W） | 原文核实 | Hussmann RL 数据表 P/N 0510175，"BTU/h (W) per door … 955 (280 W)" | 阶段一新检验：模型 308 W/门（高 10%） |
+| 低温玻璃门的防凝露加热 | 5 门：门加热 260–455 W + 门框 236 W；风扇 90 W | 原文核实 | 同上，"Component Specifications"表；注："Maximum door watts without anti-sweat cycling controls shown." | 玻璃门防凝露加热从 0.3 kW 改为 0.5 kW，敏感性范围 0.3–0.7 |
 | 低温门防凝露加热（佐证） | 每扇门 100–200 W | 检索 | ACCA HVAC 博客；SCE 防凝露加热报告 | 同上 |
 | 日晒下的平均辐射温度 | 气温 48.5°C 时 MRT 最高 76.4°C（15:00，东西向街谷） | 摘要 | Middel & Krayenhoff 2019, *Sci Total Environ* 687:137–151 | 支持日晒比气温高 +30°C |
-| 不同遮阳的效果 | 轻质遮阳结构的效果排在建筑阴影和树荫之后；ΔMRT 相差可达 50°C | 摘要 | Middel et al. 2021, "50 Grades of Shade", *BAMS* 102:E1805–E1820 | 阴影下 MRT 取值 |
-| 候车亭的辐射降温 | 候车亭平均让 MRT 比全日晒低 15°C；建筑阴影低 23°C | 检索（原文 403） | 亚利桑那大学图森 MaRTy 报告，repository.arizona.edu/handle/10150/679953 | 阴影下 MRT ≈ 气温 + 13°C |
-| 风对热应激的作用与 UTCI | 超过 35°C 时，水汽压 > 2 kPa（心率、核心体温）或 > 3 kPa（皮温、出汗）风才有益；UTCI 与实测相关系数 r = 0.9 | 摘要 | Bröde & Kampmann 2023, *Biology* 12(6):802（Europe PMC，PMC10295525） | 风扇检验 |
-| 风扇无害的温度上限 | 年轻人 39°C、老年人 38°C、服抗胆碱药的老年人 37°C | 摘要 | Morris et al. 2021, *Lancet Planet Health* 5:e368–e377 | 风扇检验 |
-| 35°C 以上风扇的作用 | 对核心体温没有有意义的降低 | 摘要 | Meade et al. 2024, *Lancet Planet Health* 8:e256–e269 | 文献分歧，写进论文 |
+| 不同遮阳的效果 | 轻质遮阳结构的效果排在建筑阴影和树荫之后；ΔMRT 相差可达 50°C | 摘要 | Middel et al. 2021, "50 Grades of Shade", *BAMS* 102:E1805–E1820 | 同上 |
+| 候车亭的辐射降温 | 候车亭平均让 MRT 比全日晒低 15°C；建筑阴影低 23°C | 检索（原文 403） | 亚利桑那大学图森 MaRTy 报告，repository.arizona.edu/handle/10150/679953 | 顶棚下 MRT 取气温 + 12°C，敏感性范围 8–16°C |
+| 风对热应激的作用与 UTCI | 超过 35°C 时，水汽压 > 2 kPa（心率、核心体温）或 > 3 kPa（皮温、出汗）风才有益；UTCI 与实测相关系数 r = 0.9 | 摘要 | Bröde & Kampmann 2023, *Biology* 12(6):802（Europe PMC，PMC10295525） | 2a 表 7 |
+| 风扇无害的温度上限 | 年轻人 39°C、老年人 38°C、服抗胆碱药的老年人 37°C | 摘要 | Morris et al. 2021, *Lancet Planet Health* 5:e368–e377 | 2a 表 7 |
+| 35°C 以上风扇的作用 | 对核心体温没有有意义的降低 | 摘要 | Meade et al. 2024, *Lancet Planet Health* 8:e256–e269 | 2a 表 7：按此截断后风扇的设计日结果 |
 | UTCI 与死亡风险 | UTCI > 32°C 时死亡相对风险上升 10–20%，> 38°C 时上升 25–30% | 摘要 | Kuchcik 2021, *Int J Biometeorol* 65:1529–1541 | 热应激权重的依据 |
 | 喷雾降温实测 | 气温降 8.2°C、UTCI 降 7.9°C；1–2 m/s 微风下效果最好 | 摘要 | Ulpiani et al. 2019, *Build Environ* 156:46–61 | 送到人身上的降温量级检验 |
 | 乘客随机到站的班距上限 | 约 12 分钟以内随机到达 | 检索 | Kaparias et al., TRB 2015（综述 Seddon & Day） | 平峰候车人数 |
