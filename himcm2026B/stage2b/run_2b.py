@@ -7,8 +7,8 @@ import pandas as pd
 
 from station import (Station, System, SCENARIOS, station, blend, systems, simulate, run, ac_cop, OUT, P2A, DEVS2A,
                      comfort, T_START, T_END, DT)
-from model import volume_mode_zone, evaporative_outlet, evaluate, eps_of, mean_waiting, stress_dose, E_WATER
-from run_stage2 import CLIMATES, day_profile, ridership
+from model import volume_mode_zone, evaporative_outlet, evaluate, eps_of, mean_waiting, expected_min, stress_dose, E_WATER
+from run_stage2 import CLIMATES, weather, ridership
 from plotstyle import plt, BASELINE, INK2
 
 SYS = systems()
@@ -67,7 +67,7 @@ def validation():
 
 # ---------------------------------------------------------------------------
 ABLATION = [
-    ("R0  2a model applied to the station", dict(gains=False, dynamic=False)),
+    ("R0  station without heat/moisture gains or train dynamics", dict(gains=False, dynamic=False)),
     ("R1  + heat gains (people, sun, lights, motors)", dict(gains=True, dynamic=False)),
     ("R2  + train-driven dynamics (full model)", dict(gains=True, dynamic=True)),
 ]
@@ -127,36 +127,47 @@ def scenarios():
 
 
 def shelter_bridge():
-    """The 2a bus shelter run through the station model: one device, always on,
-    2a's hourly mean crowd. 2a's spot mode counts the jet on covered people
-    against outdoor air. The station model differs in three ways: it cools the
-    zone air that everyone stands in and that the jet entrains, its inside wind
-    follows the open share of the walls, and the closed back panel radiates at
-    zone temperature. 'jet only' keeps the last two and leaves the zone air
-    uncooled, which separates the first."""
-    shelter = replace(Station(name="bus shelter"), L=6.0, D=1.8, Hz=2.0, H_open=2.5, open_track=1.0, open_back=0.0,
-                      open_ends=1.0, kappa_train=0.0, mass_factor=1.0, gains=False, dynamic=False)
+    """Actual 2a and 2b engines, aligned weather, time grid, crowd law,
+    wind, MRT, rating policy, water energy, and no-device comfort baseline.
+    Remaining difference: dynamic zone capture plus its coupled supply control.
+    This is a structural comparison, not evidence that either engine is true.
+    """
+    shelter = replace(Station(name="bus shelter"), L=P2A.L, D=P2A.D, Hz=P2A.Hz, H_open=P2A.H,
+                      open_track=1., open_back=0., open_ends=1., kappa_train=0., mass_factor=1.,
+                      gains=False, dynamic=False, occupied_wind_factor=P2A.shelter_factor)
     th = np.arange(T_START * 3600, T_END * 3600, DT) / 3600
-    crowd = mean_waiting(*ridership(th))
+    mean_n = mean_waiting(*ridership(th))
+    crowd = expected_min(mean_n, P2A.capacity)
     rows = []
     for clim in CLIM:
-        T, RH, v, n = day_profile(clim)
+        T, RH, v = weather(clim, th)
         pc = replace(P2A, e_water=E_WATER[clim])
-        base = simulate(shelter, SYS[0], clim, n_const=crowd)
-        rep = base["t"] >= 6
+        physical_base = simulate(shelter, SYS[0], clim, n_const=crowd)
+        # Both comparisons reference ambient uncooled shelter air. The
+        # physical no-device state remains the rating controller's reference.
+        from psychro import humidity_ratio
+        common_base = dict(physical_base, T=T, W=humidity_ratio(T, RH), RH=RH)
+        rep = (th >= 6) & (th < 22)
         h = DT / 3600
-        for d in DEVS2A[1:]:
+        for d in DEVS2A:
             cap = d.airflow / P2A.q_per_person
-            r = evaluate(d, T, RH, v, n, pc, "spot")
-            eta_2a = float((np.minimum(n, cap) * r["relief"]).sum() / r["resource_kw"].sum())
-            one = System(d.name, "evap", d.power_kw, d.airflow, eps_of(d, P2A), d.jet_speed, cap)
-            sim = simulate(shelter, one, clim, n_const=crowd)
+            r = evaluate(d, T, RH, v, mean_n, pc, "spot")
+            benefit2a = r["n_ben"] * r["relief"]
+            eta2a = benefit2a[rep].sum() / r["resource_kw"][rep].sum()
+            one = System(d.name, d.kind, d.power_kw, d.airflow, eps_of(d, P2A),
+                         d.jet_speed, cap, rated_drop=d.rated_drop)
+            sim = simulate(shelter, one, clim, n_const=crowd, base=physical_base)
+            cf = comfort(shelter, one, sim, common_base,
+                         v_in_override=np.maximum(P2A.shelter_factor * v, .3),
+                         mrt_override=T + P2A.dR_shade,
+                         n_covered=expected_min(mean_n, min(cap, P2A.capacity)))
             res = sim["P"][rep].sum() * h + E_WATER[clim] * sim["water"][rep].sum() / 1000
-            full = comfort(shelter, one, sim, base)["benefit"][rep].sum() * h / res
-            jet = comfort(shelter, one, dict(base, T_s=sim["T_s"], W_s=sim["W_s"]), base)["benefit"][rep].sum() * h / res
-            rows.append(dict(climate=clim, device=d.name, eta_2a_spot=round(eta_2a, 1),
-                             eta_station_jet_only=round(float(jet), 1), eta_station=round(float(full), 1),
-                             station_over_2a=round(float(full) / eta_2a, 2)))
+            full = cf["benefit"][rep].sum() * h / res
+            rows.append(dict(climate=clim, device=d.name, eta_2a_spot=round(float(eta2a), 3),
+                             eta_2b_zone_and_jet=round(float(full), 3),
+                             station_over_2a=round(float(full / eta2a), 3),
+                             shared_passenger_h=round(float(crowd[rep].sum() * h), 3),
+                             comparison="aligned inputs; dynamic zone capture remains"))
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table2b_8_shelter_bridge.csv"), index=False)
     return df
@@ -186,7 +197,7 @@ def sweep():
                 r = run(st, sysm, clim, base)[0]
                 eta_2a = run(st0, sysm, clim, base0)[0]["eta"] if sysm.kind != "ac" else np.nan
                 rows.append(dict(t=t, openness=round(openness_index(st), 3), climate=clim, system=sysm.name,
-                                 eta=r["eta"], eta_2a_model=eta_2a, RH_zone_max=r["RH_zone_max"],
+                                 eta=r["eta"], eta_station_simplified=eta_2a, RH_zone_max=r["RH_zone_max"],
                                  ph_UTCI38_after=r["person_h_UTCI38_after"],
                                  ph_UTCI38_before=r["person_h_UTCI38_before"],
                                  T_zone_15h_no_cooling=round(float(base["T"][np.argmin(abs(base["t"] - 15))]), 1)))
@@ -385,18 +396,18 @@ def fig11(sw):
         for name in ("A Fans ×10", "B Evap ×8", "C Large evap ×5"):
             d = s[s.system == name].sort_values("openness")
             ax.plot(d.openness * 100, d.eta, color=SYS_COLORS[name], marker="o", ms=3.5, label=f"{name}: revised model")
-            ax.plot(d.openness * 100, d.eta_2a_model, color=SYS_COLORS[name], ls="--", lw=1.1,
-                    label=f"{name}: 2a model")
+            ax.plot(d.openness * 100, d.eta_station_simplified, color=SYS_COLORS[name], ls="--", lw=1.1,
+                    label=f"{name}: simplified station")
         ax.axhline(0, color="#b8b7b2", lw=0.7)
         ax.set_title(clim, fontsize=9)
         ax.set_xlabel("Open share of the waiting-area walls (%)")
     axes[0].set_ylabel("η (person·°C·h per kWh)")
     h, lab = axes[0].get_legend_handles_labels()
     fig.legend(h, lab, loc="lower center", ncol=3, fontsize=6.5, frameon=False)
-    fig.suptitle("Fig. 11  The bus-stop (2a) model versus the revised model across openness",
+    fig.suptitle("Fig. 11  Station ablation: full versus gains/dynamics disabled",
                  x=0.01, ha="left", fontsize=10)
     fig.tight_layout(rect=(0, 0.13, 1, 0.92))
-    fig.savefig(os.path.join(OUT, "fig11_2a_model_error.png"))
+    fig.savefig(os.path.join(OUT, "fig11_station_ablation.png"))
     plt.close(fig)
 
 
@@ -417,7 +428,7 @@ if __name__ == "__main__":
           ", ".join(f"{a}-{b} C ({c.split(' (')[0].lower()})" for c, (a, b) in door_jump(sims).items()))
     sw = sweep()
     print("\nTable 2b-3 openness sweep")
-    print(sw.pivot_table(index=["climate", "openness"], columns="system", values=["eta", "eta_2a_model"]).round(1).to_string())
+    print(sw.pivot_table(index=["climate", "openness"], columns="system", values=["eta", "eta_station_simplified"]).round(1).to_string())
     acc = ac_capacity()
     print("\nTable 2b-5 AC capacity")
     print(acc.to_string(index=False))

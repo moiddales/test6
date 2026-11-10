@@ -69,6 +69,7 @@ class Station:
     Cd: float = 0.6
     dR_shade: float = 12.0     # degC radiant excess of the outdoor view (same as the bus shelter, 2a)
     dR_inside: float = 4.0     # degC radiant excess of enclosed walls and roof over zone air
+    occupied_wind_factor: float | None = None  # override for aligned model comparisons
     # switches used for the model-revision ablation
     gains: bool = True
     dynamic: bool = True
@@ -80,6 +81,11 @@ class Station:
     @property
     def volume(self):
         return self.area * self.Hz
+
+    @property
+    def wind_factor(self):
+        return (0.5 * np.mean([self.open_track, self.open_back, self.open_ends])
+                if self.occupied_wind_factor is None else self.occupied_wind_factor)
 
     @property
     def openness(self):
@@ -255,7 +261,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
             elif rh_now <= sysm.rh_resume:
                 wet_enabled = True
             if i % every == 0:
-                vin = max(0.3, 0.5 * v_o[i] * np.mean([st.open_track, st.open_back, st.open_ends]))
+                vin = max(0.3, st.wind_factor * v_o[i])
                 mrt_now = st.openness * (T_o[i] + st.dR_shade) + (1 - st.openness) * (T + st.dR_inside)
                 theta_now = P2A.theta0 / (1 + vin / sysm.jet_speed)
                 tp = T + theta_now * (Ts_ - T) if sysm.kind == "evap" else T
@@ -274,7 +280,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
             G_kw = (N[i] * 0.075 + st.shgc * glass * st.I_vert * sun[i] * st.solar_to_zone / 1000
                     + st.U_roof * st.area * (T_solair[i] - T) / 1000
                     + lights + (sysm.power_kw if running else 0.0))
-        m_people = N[i] * 0.045 / H_FG                      # kg/s, 45 W latent each
+        m_people = N[i] * 0.045 / H_FG if st.gains else 0.0  # kg/s, 45 W latent each
 
         Q_s = T_s = W_s = 0.0
         if sysm.kind == "evap" and running:
@@ -292,7 +298,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
             else:
                 # Solve the frozen-flow balance for a bypass supply that
                 # bounds both covered and uncovered occupied temperatures.
-                v_in = max(0.3, 0.5 * v_o[i] * np.mean([st.open_track, st.open_back, st.open_ends]))
+                v_in = max(0.3, st.wind_factor * v_o[i])
                 theta = P2A.theta0 / (1 + v_in / sysm.jet_speed)
                 e = np.exp(-dt * a / C)
                 coef = (1 - e) * Q_s / (Q_x + Q_s)
@@ -345,14 +351,17 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
     return out
 
 
-def comfort(st, sysm, sim, base):
+def comfort(st, sysm, sim, base, v_in_override=None, mrt_override=None, n_covered=None):
     """UTCI of covered and uncovered people, relief versus the no-cooling run.
     Radiant field: the open share of the view sees the outdoors (air + dR_shade),
     the enclosed share sees walls and roof that follow the zone air (+ dR_inside)."""
-    open_mean = np.mean([st.open_track, st.open_back, st.open_ends])
-    v_in = np.maximum(0.3, 0.5 * sim["v_o"] * open_mean)
+    v_in = np.maximum(0.3, st.wind_factor * sim["v_o"])
+    if v_in_override is not None:
+        v_in = np.asarray(v_in_override)
     f = st.openness
     mrt = lambda T_zone: f * (sim["T_o"] + st.dR_shade) + (1 - f) * (T_zone + st.dR_inside)  # noqa: E731
+    if mrt_override is not None:
+        mrt = lambda T_zone: np.asarray(mrt_override)  # noqa: E731
     U0 = utci(base["T"], mrt(base["T"]), v_in, base["RH"])
     Tmrt = mrt(sim["T"])
     U_unc = utci(sim["T"], Tmrt, v_in, sim["RH"])
@@ -373,6 +382,8 @@ def comfort(st, sysm, sim, base):
         Tp = np.where(sim["on"], Tp, sim["T"])
         Wp = np.where(sim["on"], Wp, sim["W"])
         n_cov = np.minimum(N, sysm.cover)
+        if n_covered is not None:
+            n_cov = np.asarray(n_covered)
     else:
         U_cov = U_unc
         n_cov = np.zeros_like(N)
