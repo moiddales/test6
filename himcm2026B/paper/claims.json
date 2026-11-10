@@ -1,0 +1,236 @@
+[
+  {
+    "id": "humid_b_always_hours_on",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "always"
+    },
+    "column": "hours_on",
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 3,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_always_electricity_kWh",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "always"
+    },
+    "column": "electricity_kWh",
+    "unit": "kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_always_water_L",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "always"
+    },
+    "column": "water_L",
+    "unit": "L",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_always_eta",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "always"
+    },
+    "column": "eta",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_always_powered_hours_RH_over_65",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "always"
+    },
+    "column": "powered_hours_RH_over_65",
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_demand_hours_on",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "demand"
+    },
+    "column": "hours_on",
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 3,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_demand_electricity_kWh",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "demand"
+    },
+    "column": "electricity_kWh",
+    "unit": "kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_demand_water_L",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "demand"
+    },
+    "column": "water_L",
+    "unit": "L",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_demand_eta",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "demand"
+    },
+    "column": "eta",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "humid_b_demand_powered_hours_RH_over_65",
+    "csv": "stage2b/outputs/table2b_9_controls.csv",
+    "where": {
+      "scenario": "Platform screen doors",
+      "climate": "Hot-humid (Houston-like)",
+      "system": "B Evap ×8",
+      "control": "demand"
+    },
+    "column": "powered_hours_RH_over_65",
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_dry_A",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-dry (Phoenix-like)",
+      "device": "A Fan",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_dry_B",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-dry (Phoenix-like)",
+      "device": "B Evap cooler",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_dry_C",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-dry (Phoenix-like)",
+      "device": "C Large evap cooler",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_humid_A",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-humid (Houston-like)",
+      "device": "A Fan",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_humid_B",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-humid (Houston-like)",
+      "device": "B Evap cooler",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  },
+  {
+    "id": "bus_humid_C",
+    "csv": "stage2/outputs/table2_design_days.csv",
+    "where": {
+      "climate": "Hot-humid (Houston-like)",
+      "device": "C Large evap cooler",
+      "control": "smart"
+    },
+    "column": "eta_day",
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4",
+    "decimals": 1,
+    "document": "paper/key_results.md"
+  }
+]

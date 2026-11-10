@@ -1,0 +1,10 @@
+# Metric contract
+
+- `relief_person_degC_h`: time-integrated population-weighted change in a piecewise UTCI stress index. Weights are dimensionless, not empirically fitted mortality or productivity coefficients. Changing weights changes the utility scale, not the physical units. Negative relief is retained.
+- `eta` / `eta_day`: that relief divided by electric kWh plus assumed embedded water-supply kWh. It is a decision score in person·°C·h/kWh, not COP or guaranteed individual health protection. Compare only under identical weights, population, reference condition and reporting time.
+- `person_h_UTCI38_*`: estimated person-hours at UTCI ≥38°C; a missing UTCI is not a safe exposure. This category is not a clinical dose model.
+- `capture_index`, `mixing_index`, `unused_index`: dimensionless occupancy/jet-mixing heuristics, weighted by modeled gross sensible cooling for daily aggregation. Their sum is one algebraically. They do not constitute a measured or conserved thermal-energy partition; no percentage is called energy reaching people.
+- Freezer `service_m2h_per_case_kwh`: assumed compliant display-area-hours divided by cabinet electricity only. `service_m2h_per_system_kwh` uses the explicit cabinet-plus-incremental-store-HVAC scenario denominator. Product compliance is assumed, not simulated or verified.
+- `rating_policy`: occupied location is the main interpretation of the problem's “Effect on Shelter”; outlet is a separate sensitivity scenario; uncapped is diagnostic. Rated drops do not add when multiple units serve more people.
+- `full_day_supported=false`: do not rank full-day efficiency. Physical electricity/water totals can still be reported. No dropping or scaling of unsupported occupied time.
+- All cost inputs in the final trade-off are declared planning scenarios, not vendor quotes. Airport weather is measured; venue microclimate, geometry, occupancy and equipment layouts are assumptions unless an explicit source says otherwise.

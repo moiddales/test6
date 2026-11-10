@@ -172,7 +172,7 @@ def main():
     t1 = pd.DataFrame([daily(c, v) for v in variants]).round(2)
     t1["kwh_per_m2_display"] = (t1.electricity_kwh / c.opening_area).round(1)
     # service delivered: display area accessible to shoppers during trading hours, product at <= -18 C
-    t1["service_m2h_per_kwh"] = (c.opening_area * TRADING_HOURS / t1.electricity_kwh).round(2)
+    t1["service_m2h_per_case_kwh"] = (c.opening_area * TRADING_HOURS / t1.electricity_kwh).round(2)
     t1.to_csv(os.path.join(OUT, "tableS1_variants.csv"), index=False)
     print("\nTable S1: daily loads by design (store 25 C / 60 %)")
     print(t1.to_string(index=False))
@@ -223,7 +223,8 @@ def main():
         for _, r in t1.iterrows():
             credit = store_hvac_credit(r, fcool)
             rows.append(dict(store=climate, variant=r.variant, case_kwh=r.electricity_kwh,
-                             store_hvac_kwh=round(credit, 1), system_kwh=round(r.electricity_kwh + credit, 1)))
+                             store_hvac_kwh=round(credit, 1), system_kwh=round(r.electricity_kwh + credit, 1),
+                             service_m2h_per_system_kwh=round(c.opening_area * TRADING_HOURS / (r.electricity_kwh + credit), 3)))
     t3 = pd.DataFrame(rows)
     t3.to_csv(os.path.join(OUT, "tableS3_system_boundary.csv"), index=False)
     print("\nTable S3: case energy vs whole-store energy")

@@ -1,0 +1,26 @@
+{
+  "stage2b/outputs/table2b_9_controls.csv:hours_on": {
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4"
+  },
+  "stage2b/outputs/table2b_9_controls.csv:electricity_kWh": {
+    "unit": "kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4"
+  },
+  "stage2b/outputs/table2b_9_controls.csv:water_L": {
+    "unit": "L",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4"
+  },
+  "stage2b/outputs/table2b_9_controls.csv:eta": {
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4"
+  },
+  "stage2b/outputs/table2b_9_controls.csv:powered_hours_RH_over_65": {
+    "unit": "h",
+    "baseline": "same uncooled screen-door station; 06–22; weights 1,2,3,4"
+  },
+  "stage2/outputs/table2_design_days.csv:eta_day": {
+    "unit": "person·°C·h/kWh",
+    "baseline": "same uncooled shaded bus shelter; 06–22; weights 1,2,3,4"
+  }
+}

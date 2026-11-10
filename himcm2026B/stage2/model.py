@@ -299,8 +299,8 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
     return dict(U0=U0, U1=U1, dU=U0 - U1, eff_drop=eff_drop, relief=relief,
                 n_ben=n_ben, eta=eta, resource_kw=resource_kw, T_person=Tp, RH_person=RHp,
                 v_person=vp, share=share, gross_kw=gross_kw, gross_cop=gross_kw / dev.power_kw,
-                water_lph=water_lph, fate_delivered=aimed * share,
-                fate_diluted=aimed * (1 - share), fate_unused=1 - aimed)
+                water_lph=water_lph, capture_index=aimed * share,
+                mixing_index=aimed * (1 - share), unused_index=1 - aimed)
 
 
 def sun_factor(hour):

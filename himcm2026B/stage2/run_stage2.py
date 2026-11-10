@@ -210,9 +210,9 @@ def design_days(p=P, tag="table2_design_days"):
                     relief_person_degC_h=round(float(benefit.sum()), 1),
                     eta_day=round(float(benefit.sum() / resource.sum()), 1),
                     cooling_made_kWh=round(float(made), 1),
-                    share_delivered=round(float((r["gross_kw"] * run * r["fate_delivered"]).sum() / made), 3) if made > 0 else np.nan,
-                    share_diluted=round(float((r["gross_kw"] * run * r["fate_diluted"]).sum() / made), 3) if made > 0 else np.nan,
-                    share_unused=round(float((r["gross_kw"] * run * r["fate_unused"]).sum() / made), 3) if made > 0 else np.nan,
+                    capture_index=round(float((r["gross_kw"] * run * r["capture_index"]).sum() / made), 3) if made > 0 else np.nan,
+                    mixing_index=round(float((r["gross_kw"] * run * r["mixing_index"]).sum() / made), 3) if made > 0 else np.nan,
+                    unused_index=round(float((r["gross_kw"] * run * r["unused_index"]).sum() / made), 3) if made > 0 else np.nan,
                     person_h_very_strong_before=round(float(hot_before), 1),
                     person_h_very_strong_after=round(float(hot_after), 1),
                 ))
@@ -383,12 +383,12 @@ def decision_rules():
 # ---------------------------------------------------------------------------
 # Figures
 # ---------------------------------------------------------------------------
-def fig7_cooling_fate(t2):
+def fig7_coverage_mixing_indices(t2):
     sub = t2[(t2.control == "smart") & (t2.device != "A Fan")]
     labels = [f"{r.device.split()[0]}  {r.climate.split(' (')[0]}" for r in sub.itertuples()]
-    parts = [("share_delivered", "Reaches people", "#2a78d6"),
-             ("share_diluted", "Diluted by hot air on the way", "#eb6834"),
-             ("share_unused", "Aimed where nobody stands", "#b8b7b2")]
+    parts = [("capture_index", "Occupancy x jet share", "#2a78d6"),
+             ("mixing_index", "Occupancy x entrainment", "#eb6834"),
+             ("unused_index", "Unoccupied capacity", "#b8b7b2")]
     fig, ax = plt.subplots(figsize=(6.8, 2.4))
     y = np.arange(len(sub))
     left = np.zeros(len(sub))
@@ -396,17 +396,17 @@ def fig7_cooling_fate(t2):
         vals = sub[col].values * 100
         ax.barh(y, vals, left=left, color=colr, height=0.55, label=lab, edgecolor="white", linewidth=1.0)
         left += vals
-    for yi, v in zip(y, sub.share_delivered.values):
+    for yi, v in zip(y, sub.capture_index.values):
         ax.text(1.5, yi, f"{v:.0%}", va="center", fontsize=7.5, color="white", fontweight="bold")
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
     ax.invert_yaxis()
     ax.set_xlim(0, 100)
-    ax.set_xlabel("Share of the sensible cooling the cooler makes over the design day (%)")
+    ax.set_xlabel("Dimensionless coverage/mixing indices (%) — not energy fractions")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=3, fontsize=7)
     ax.grid(axis="y", visible=False)
-    ax.set_title("Fig. 7  Where an evaporative cooler's cooling goes at the bus stop", loc="left", fontsize=9)
-    fig.savefig(os.path.join(OUT, "fig7_cooling_fate.png"))
+    ax.set_title("Fig. 7  Coverage and mixing indices at the bus stop", loc="left", fontsize=9)
+    fig.savefig(os.path.join(OUT, "fig7_coverage_mixing_indices.png"))
     plt.close(fig)
 
 
@@ -543,5 +543,5 @@ if __name__ == "__main__":
     print(rating_reading().to_string(index=False))
     print("\nTable 9 (literal reading: ratings cap the outlet temperature drop; smart control)")
     print(rating_ceiling(t2).to_string(index=False))
-    fig7_cooling_fate(t2)
+    fig7_coverage_mixing_indices(t2)
     print("\nFigures written to", OUT)
