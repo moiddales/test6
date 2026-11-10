@@ -27,8 +27,7 @@ def validation():
     # (1) nesting: the station model with the bus shelter's geometry and 2a's
     # assumptions reproduces the 2a volume-mode zone temperature
     shelter = replace(Station(name="bus shelter"), L=6.0, D=1.8, Hz=2.0, H_open=2.5, open_track=1.0, open_back=0.0,
-                      open_ends=1.0, kappa_train=0.0, mass_factor=1.0, gains=False, dynamic=False,
-                      recirculate=False)
+                      open_ends=1.0, kappa_train=0.0, mass_factor=1.0, gains=False, dynamic=False)
     c = SYS[3]
     c1 = replace(c, power_kw=DEVS2A[2].power_kw, airflow=DEVS2A[2].airflow)
     sim = simulate(shelter, c1, CLIM[0], n_const=0.0, dt=5.0)
@@ -68,10 +67,9 @@ def validation():
 
 # ---------------------------------------------------------------------------
 ABLATION = [
-    ("R0  2a model applied to the station", dict(gains=False, dynamic=False, recirculate=False)),
-    ("R1  + heat gains (people, sun, lights, motors)", dict(gains=True, dynamic=False, recirculate=False)),
-    ("R2  + train-driven dynamics", dict(gains=True, dynamic=True, recirculate=False)),
-    ("R3  + coolers recirculate zone air (full model)", dict(gains=True, dynamic=True, recirculate=True)),
+    ("R0  2a model applied to the station", dict(gains=False, dynamic=False)),
+    ("R1  + heat gains (people, sun, lights, motors)", dict(gains=True, dynamic=False)),
+    ("R2  + train-driven dynamics (full model)", dict(gains=True, dynamic=True)),
 ]
 
 
@@ -83,7 +81,7 @@ def ablation():
             for clim in CLIM:
                 base = simulate(st, SYS[0], clim)
                 for sysm in SYS[1:]:
-                    if sysm.kind == "ac" and not label.startswith("R3"):
+                    if sysm.kind == "ac" and not label.startswith("R2"):
                         continue
                     r = run(st, sysm, clim, base)[0]
                     rows.append(dict(scenario=scen, revision=label, climate=clim, system=sysm.name,
@@ -110,6 +108,18 @@ def scenarios():
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table2b_2_scenarios.csv"), index=False)
     return df, sims
+
+
+def door_jump(sims, scen="Platform screen doors", name="C Large evap ×5"):
+    """Rise of zone air temperature within two minutes of each train arrival, 14:00-16:00."""
+    out = {}
+    for clim in CLIM:
+        s, _ = sims[(scen, clim, name)]
+        arrivals = np.flatnonzero((s["t"] >= 14) & (s["t"] < 16) & s["dwelling"] & ~np.r_[False, s["dwelling"][:-1]])
+        n = int(120 / s["dt"])
+        rise = [s["T"][i:i + n].max() - s["T"][i - 1] for i in arrivals]
+        out[clim] = (round(float(min(rise)), 1), round(float(max(rise)), 1))
+    return out
 
 
 def sweep():
@@ -150,6 +160,28 @@ def ac_capacity():
     return df
 
 
+def intake():
+    """Where the evaporative coolers take their air: outdoors (ducted, the
+    default) or the zone itself (free-standing units that recirculate)."""
+    rows = []
+    for scen in SCENARIOS:
+        st = station(scen)
+        for clim in CLIM:
+            base = simulate(st, SYS[0], clim)
+            for sysm in SYS[2:4]:
+                for rec in (False, True):
+                    r = run(st, replace(sysm, recirculate=rec), clim, base)[0]
+                    rows.append(dict(scenario=scen, climate=clim, system=sysm.name,
+                                     intake="zone air (recirculating)" if rec else "outdoor air",
+                                     eta=r["eta"], relief=r["relief_person_degC_h"], water_L=r["water_L"],
+                                     T_zone_15h=r["T_zone_15h"], RH_zone_15h=r["RH_zone_15h"],
+                                     RH_zone_max=r["RH_zone_max"], hours_RH_over_65=r["hours_RH_over_65"],
+                                     ph_UTCI38_after=r["person_h_UTCI38_after"]))
+    df = pd.DataFrame(rows)
+    df.to_csv(os.path.join(OUT, "table2b_7_intake.csv"), index=False)
+    return df
+
+
 SENS = {
     "Peak irradiance on glazing (W/m²)": ("I_vert", 200.0, 600.0),
     "Glazing SHGC": ("shgc", 0.25, 0.6),
@@ -170,11 +202,13 @@ def sensitivity(scen="Platform screen doors"):
             st = station(scen) if field is None else replace(station(scen), **{field: val})
             for clim in CLIM:
                 base = simulate(st, SYS[0], clim)
-                etas = {s.name: run(st, s, clim, base)[0]["eta"] for s in SYS[1:]}
+                res = {s.name: run(st, s, clim, base)[0] for s in SYS[1:]}
+                etas = {k: r["eta"] for k, r in res.items()}
                 best = max(etas, key=etas.get)
                 rows.append(dict(parameter=label, value=val, climate=clim, best=best,
                                  T_zone_15h_no_cooling=round(float(base["T"][np.argmin(abs(base["t"] - 15))]), 1),
-                                 **{k: v for k, v in etas.items()}))
+                                 **etas, RH_max_B=res[SYS[2].name]["RH_zone_max"],
+                                 RH_max_C=res[SYS[3].name]["RH_zone_max"]))
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table2b_6_sensitivity.csv"), index=False)
     return df
@@ -311,6 +345,8 @@ if __name__ == "__main__":
     sc, sims = scenarios()
     print("\nTable 2b-2 scenarios")
     print(sc.drop(columns=["passenger_h"]).to_string(index=False))
+    print("\nDoor openings (screen doors, C): zone air rises by",
+          ", ".join(f"{a}-{b} C ({c.split(' (')[0].lower()})" for c, (a, b) in door_jump(sims).items()))
     sw = sweep()
     print("\nTable 2b-3 openness sweep")
     print(sw.pivot_table(index=["climate", "openness"], columns="system", values=["eta", "eta_2a_model"]).round(1).to_string())
@@ -323,6 +359,8 @@ if __name__ == "__main__":
     acs = ac_supply()
     print("\nTable 2b-4 AC supply")
     print(acs.to_string(index=False))
+    print("\nTable 2b-7 evaporative-cooler intake")
+    print(intake().to_string(index=False))
     fig8(sims)
     fig9(sw)
     fig10(sims)

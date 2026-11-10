@@ -10,8 +10,9 @@ assumptions, so this model adds four things:
   2. Dynamics: passengers accumulate between trains and leave in a block; each
      train arrival flushes air. The zone is solved as a time-dependent heat
      and moisture balance (dt = 10 s).
-  3. Recirculation: coolers draw zone air, so evaporative cooling adds moisture
-     that only ventilation removes.
+  3. Moisture: the zone keeps the moisture that evaporative coolers add until
+     ventilation removes it. Coolers draw outdoor air (ducted, the default) or
+     zone air (free-standing units that recirculate).
   4. Air conditioning: with enough enclosure a vapour-compression unit becomes a
      candidate; its COP depends on outdoor temperature.
 
@@ -71,7 +72,6 @@ class Station:
     # switches used for the model-revision ablation
     gains: bool = True
     dynamic: bool = True
-    recirculate: bool = True
 
     @property
     def area(self):
@@ -125,6 +125,7 @@ class System:
     eps: float = 0.0
     jet_speed: float = 0.0 # m/s at covered people
     cover: float = 0.0     # people covered by jets / fans
+    recirculate: bool = False  # evaporative cooler draws zone air instead of outdoor air
     cap_kw: float = 0.0    # AC total cooling capacity at 35 C
     shr: float = 0.75
     setpoint: float = 26.0
@@ -211,7 +212,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
     on = np.ones_like(t, dtype=bool) if on is None else on
 
     T, W = T_o[0], W_o[0]
-    out = {k: np.zeros_like(t) for k in ("T", "W", "Q_x", "P", "water", "Q_ac")}
+    out = {k: np.zeros_like(t) for k in ("T", "W", "Q_x", "P", "water", "Q_ac", "T_s", "W_s")}
     for i in range(len(t)):
         open_w, total_w = st.wall_bands(dwelling[i])
         Q_wind = st.C_w * (open_w * st.H_open).max() * v_o[i]
@@ -232,10 +233,11 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None):
         Q_s = T_s = W_s = 0.0
         if sysm.kind == "evap":
             if i % every == 0:
-                T_in, W_in = (T, W) if st.recirculate else (T_o[i], W_o[i])
+                T_in, W_in = (T, W) if sysm.recirculate else (T_o[i], W_o[i])
                 Ts_, Ws_, _ = evaporative_outlet(T_in, rel_humidity(T_in, W_in), sysm.eps)
                 Ts_, Ws_ = float(Ts_), float(Ws_)
             Q_s, T_s, W_s = sysm.airflow, Ts_, Ws_
+            out["T_s"][i], out["W_s"][i] = T_s, W_s
             out["water"][i] = RHO * Q_s * (W_s - W_in) * dt         # kg
             out["P"][i] = sysm.power_kw
         elif sysm.kind == "fan" and on[i]:
@@ -282,10 +284,10 @@ def comfort(st, sysm, sim, base):
     N = sim["N"]
     if sysm.kind in ("fan", "evap"):
         if sysm.kind == "evap":
-            Ts, Ws, _ = evaporative_outlet(sim["T"], sim["RH"], sysm.eps)
+            # the jet carries the cooler's outlet air (as simulated) and entrains zone air
             theta = P2A.theta0 / (1 + v_in / sysm.jet_speed)
-            Tp = sim["T"] - theta * (sim["T"] - Ts)
-            Wp = sim["W"] + theta * (Ws - sim["W"])
+            Tp = sim["T"] - theta * (sim["T"] - sim["T_s"])
+            Wp = sim["W"] + theta * (sim["W_s"] - sim["W"])
         else:
             Tp, Wp = sim["T"], sim["W"]
         U_cov = utci(Tp, Tmrt, np.hypot(v_in, sysm.jet_speed), rel_humidity(Tp, Wp))

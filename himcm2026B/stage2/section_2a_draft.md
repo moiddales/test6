@@ -161,7 +161,7 @@ At 30 °C / 50 % the fan scores 55.9 against 12.1 (B) and 8.8 (C); at 32 °C / 7
 |---|---|---|
 | Shelter roof (shade vs full sun), 0 kWh | 638 | 208 |
 | Side wind screens alone, 0 kWh | +57 | −87 |
-| Screens + fan (fan alone) | 102 (59) | 201 (242) |
+| Screens + fan (fan alone) | 102 (59) | 200.5 (242) |
 | Screens + B (B alone) | 817 (672) | 284 (312) |
 | Screens + C (C alone) | 1,539 (1,311) | 536 (530) |
 

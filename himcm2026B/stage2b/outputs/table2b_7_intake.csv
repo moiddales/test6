@@ -1,0 +1,33 @@
+scenario,climate,system,intake,eta,relief,water_L,T_zone_15h,RH_zone_15h,RH_zone_max,hours_RH_over_65,ph_UTCI38_after
+Open-sided platform,Hot-dry (Phoenix-like),B Evap ×8,outdoor air,20.4,3555.3,10900.0,41.9,17.0,37.0,0.0,143.9
+Open-sided platform,Hot-dry (Phoenix-like),B Evap ×8,zone air (recirculating),24.8,4214.6,8410.0,41.0,19.0,40.0,0.0,121.6
+Open-sided platform,Hot-dry (Phoenix-like),C Large evap ×5,outdoor air,24.4,5656.2,16426.0,39.8,21.0,43.0,0.0,73.0
+Open-sided platform,Hot-dry (Phoenix-like),C Large evap ×5,zone air (recirculating),26.6,5916.4,11447.0,39.3,22.0,45.0,0.0,52.8
+Open-sided platform,Hot-humid (Houston-like),B Evap ×8,outdoor air,8.7,1361.2,4107.0,34.6,49.0,90.0,5.9,0.0
+Open-sided platform,Hot-humid (Houston-like),B Evap ×8,zone air (recirculating),9.7,1504.6,3120.0,33.9,51.0,91.0,6.5,0.0
+Open-sided platform,Hot-humid (Houston-like),C Large evap ×5,outdoor air,10.0,2039.5,6173.0,33.3,54.0,92.0,7.5,0.0
+Open-sided platform,Hot-humid (Houston-like),C Large evap ×5,zone air (recirculating),10.4,2102.1,4192.0,33.0,56.0,92.0,7.9,0.0
+Semi-open waiting area,Hot-dry (Phoenix-like),B Evap ×8,outdoor air,21.2,3702.3,10900.0,41.8,17.0,37.0,0.0,120.0
+Semi-open waiting area,Hot-dry (Phoenix-like),B Evap ×8,zone air (recirculating),26.0,4404.7,8317.0,41.0,19.0,41.0,0.0,99.4
+Semi-open waiting area,Hot-dry (Phoenix-like),C Large evap ×5,outdoor air,24.9,5770.0,16426.0,39.6,21.0,44.0,0.0,0.0
+Semi-open waiting area,Hot-dry (Phoenix-like),C Large evap ×5,zone air (recirculating),27.1,6004.2,11230.0,39.2,23.0,46.0,0.0,0.0
+Semi-open waiting area,Hot-humid (Houston-like),B Evap ×8,outdoor air,9.3,1449.3,4107.0,34.6,49.0,90.0,5.9,0.0
+Semi-open waiting area,Hot-humid (Houston-like),B Evap ×8,zone air (recirculating),10.3,1603.8,3120.0,33.9,52.0,91.0,6.5,0.0
+Semi-open waiting area,Hot-humid (Houston-like),C Large evap ×5,outdoor air,10.8,2188.1,6173.0,33.2,54.0,92.0,7.5,0.0
+Semi-open waiting area,Hot-humid (Houston-like),C Large evap ×5,zone air (recirculating),11.1,2250.4,4171.0,32.9,56.0,92.0,7.9,0.0
+Platform screen doors,Hot-dry (Phoenix-like),B Evap ×8,outdoor air,29.7,5180.6,10900.0,37.9,25.0,46.0,0.0,0.6
+Platform screen doors,Hot-dry (Phoenix-like),B Evap ×8,zone air (recirculating),40.1,6534.7,4753.0,33.9,39.0,66.0,0.2,0.0
+Platform screen doors,Hot-dry (Phoenix-like),C Large evap ×5,outdoor air,30.0,6957.6,16426.0,33.2,39.0,62.0,0.0,0.0
+Platform screen doors,Hot-dry (Phoenix-like),C Large evap ×5,zone air (recirculating),34.0,7162.6,5617.0,31.6,48.0,73.0,4.3,0.0
+Platform screen doors,Hot-humid (Houston-like),B Evap ×8,outdoor air,13.7,2133.5,4107.0,33.0,56.0,91.0,8.4,0.0
+Platform screen doors,Hot-humid (Houston-like),B Evap ×8,zone air (recirculating),15.7,2427.6,1842.0,30.8,70.0,94.0,15.6,0.0
+Platform screen doors,Hot-humid (Houston-like),C Large evap ×5,outdoor air,14.3,2898.2,6173.0,30.5,68.0,94.0,15.4,0.0
+Platform screen doors,Hot-humid (Houston-like),C Large evap ×5,zone air (recirculating),14.2,2849.7,2161.0,29.8,76.0,96.0,16.0,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),B Evap ×8,outdoor air,41.9,7309.2,10900.0,35.9,31.0,50.0,0.0,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),B Evap ×8,zone air (recirculating),53.8,8484.7,2134.0,29.7,67.0,85.0,12.5,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),C Large evap ×5,outdoor air,38.6,8934.9,16426.0,29.7,53.0,71.0,3.6,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),C Large evap ×5,zone air (recirculating),43.0,8797.2,2317.0,28.5,75.0,89.0,15.5,0.0
+Enclosed waiting room,Hot-humid (Houston-like),B Evap ×8,outdoor air,26.4,4108.9,4107.0,32.3,59.0,91.0,10.0,0.0
+Enclosed waiting room,Hot-humid (Houston-like),B Evap ×8,zone air (recirculating),23.6,3636.6,978.0,30.8,84.0,96.0,16.0,0.0
+Enclosed waiting room,Hot-humid (Houston-like),C Large evap ×5,outdoor air,23.8,4836.9,6173.0,29.2,75.0,95.0,16.0,0.0
+Enclosed waiting room,Hot-humid (Houston-like),C Large evap ×5,zone air (recirculating),19.7,3943.2,1076.0,30.3,88.0,97.0,16.0,0.0
