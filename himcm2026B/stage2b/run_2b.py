@@ -7,7 +7,7 @@ import pandas as pd
 
 from station import (Station, System, SCENARIOS, station, blend, systems, simulate, run, ac_cop, OUT, P2A, DEVS2A,
                      comfort, T_START, T_END, DT)
-from model import volume_mode_zone, evaporative_outlet, evaluate, eps_of, mean_waiting, expected_min, stress_dose, E_WATER
+from model import volume_mode_zone, evaporative_outlet, evaluate, eps_of, mean_waiting, expected_min, sun_factor, stress_dose, E_WATER
 from run_stage2 import CLIMATES, weather, ridership
 from plotstyle import plt, BASELINE, INK2
 
@@ -151,7 +151,7 @@ def shelter_bridge():
         h = DT / 3600
         for d in DEVS2A:
             cap = d.airflow / P2A.q_per_person
-            r = evaluate(d, T, RH, v, mean_n, pc, "spot")
+            r = evaluate(d, T, RH, v, mean_n, pc, "spot", hour=th)
             benefit2a = r["n_ben"] * r["relief"]
             eta2a = benefit2a[rep].sum() / r["resource_kw"][rep].sum()
             one = System(d.name, d.kind, d.power_kw, d.airflow, eps_of(d, P2A),
@@ -159,7 +159,7 @@ def shelter_bridge():
             sim = simulate(shelter, one, clim, n_const=crowd, base=physical_base)
             cf = comfort(shelter, one, sim, common_base,
                          v_in_override=np.maximum(P2A.shelter_factor * v, .3),
-                         mrt_override=T + P2A.dR_shade,
+                         mrt_override=T + P2A.dR_shade * sun_factor(th),
                          n_covered=expected_min(mean_n, min(cap, P2A.capacity)))
             res = sim["P"][rep].sum() * h + E_WATER[clim] * sim["water"][rep].sum() / 1000
             full = cf["benefit"][rep].sum() * h / res
@@ -299,11 +299,11 @@ def ac_supply():
         st = station(scen)
         for clim in CLIM:
             base = simulate(st, SYS[0], clim)
-            for low in (True, False):
-                sysm = replace(SYS[4], low_supply=low)
+            for share in (0.4, 0.65, 0.85, 1.0):
+                sysm = replace(SYS[4], supply_share=share)
                 r = run(st, sysm, clim, base)[0]
                 rows.append(dict(scenario=scen, climate=clim,
-                                 supply="low-level supply to occupied zone" if low else "mixing (cools whole hall)",
+                                 supply=f"assumed occupied-zone fraction {share:.2f}", supply_share=share,
                                  electricity_kWh=r["electricity_kWh"], eta=r["eta"], T_zone_15h=r["T_zone_15h"],
                                  ph_UTCI38_after=r["person_h_UTCI38_after"]))
     df = pd.DataFrame(rows)

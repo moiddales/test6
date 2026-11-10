@@ -56,8 +56,7 @@ class Params:
     Cd: float = 0.6            # discharge coefficient (buoyant spill of cool air)
     shelter_factor: float = 0.5  # wind speed inside / outside
     theta0: float = 0.7        # share of jet air (vs entrained ambient air) at a person, calm
-    dR_shade: float = 12.0     # degC, mean radiant temp. above air temp. under the shelter roof:
-                               # sun ~+28 C (Middel & Krayenhoff 2019) minus ~15 C shelter cooling (Tucson MaRTy)
+    dR_shade: float = 12.0     # assumed midday radiant excess; varied 8–16 C, not site-calibrated
     # --- M4 occupancy ---
     q_person_W: float = 75.0   # W sensible heat per standing person
     capacity: int = 16         # people who fit under the roof
@@ -234,11 +233,11 @@ def mean_waiting(arrivals_per_h, headway_min, headway_cv=0.5):
 # --------------------------------------------------------------------------
 # M6 evaluation for one device in one condition
 # --------------------------------------------------------------------------
-def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
+def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot", hour=None):
     """Return a dict of arrays (broadcast over T, RH, v_w, n_mean)."""
     T, RH, v_w, n_mean = np.broadcast_arrays(*(np.asarray(x, float) for x in (T, RH, v_w, n_mean)))
     W = humidity_ratio(T, RH)
-    Tmrt = T + p.dR_shade
+    Tmrt = T + p.dR_shade * (1.0 if hour is None else sun_factor(hour))
     v_in = np.maximum(p.shelter_factor * v_w, 0.3)
     U0 = utci(T, Tmrt, v_in, RH)
     n_in = expected_min(n_mean, p.capacity)          # people under the roof
@@ -293,8 +292,7 @@ def evaluate(dev, T, RH, v_w, n_mean, p, mode="spot"):
     eff_drop = np.maximum(U0, 26) - np.maximum(U1, 26)
     resource_kw = dev.power_kw + p.e_water * water_lph / 1000
     eta = n_ben * relief / resource_kw
-    # where the cooling goes (spot mode): aimed at people and received, diluted
-    # by entrained air on the way, or aimed at places where nobody stands
+    # Occupancy/jet-mixing indices; no claim of a conserved energy partition.
     aimed = np.minimum(n_ben / cap, 1.0)
     return dict(U0=U0, U1=U1, dU=U0 - U1, eff_drop=eff_drop, relief=relief,
                 n_ben=n_ben, eta=eta, resource_kw=resource_kw, T_person=Tp, RH_person=RHp,
@@ -313,6 +311,6 @@ def shade_relief(T, RH, v_w, hour, p):
     """Heat-stress relief per person from standing under the shelter roof
     instead of in the sun (zero energy)."""
     T, RH, v_w = np.broadcast_arrays(*(np.asarray(x, float) for x in (T, RH, v_w)))
-    U_sun = utci(T, T + p.dR_shade + (p.dR_sun - p.dR_shade) * sun_factor(hour), v_w, RH)
-    U_shade = utci(T, T + p.dR_shade, np.maximum(p.shelter_factor * v_w, 0.3), RH)
+    U_sun = utci(T, T + p.dR_sun * sun_factor(hour), v_w, RH)
+    U_shade = utci(T, T + p.dR_shade * sun_factor(hour), np.maximum(p.shelter_factor * v_w, 0.3), RH)
     return U_sun, U_shade, stress_dose(U_sun, p.weights) - stress_dose(U_shade, p.weights)

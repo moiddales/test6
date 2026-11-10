@@ -135,7 +135,7 @@ class System:
     cap_kw: float = 0.0    # AC total cooling capacity at 35 C
     shr: float = 0.75
     setpoint: float = 26.0
-    low_supply: bool = True  # AC supplies the occupied zone directly (vs. mixing the whole hall)
+    supply_share: float = 1.0  # fraction of AC sensible capacity serving the occupied zone; uncertain
     rated_drop: float = np.inf
     rating_policy: str = "occupied"
     control: str = "always"   # always or demand (heat demand + occupancy; evap RH hysteresis)
@@ -194,6 +194,8 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
     hysteresis and a one-step moisture prediction. Thermal states continue
     evolving when a device is off.
     """
+    if not 0 < sysm.supply_share <= 1:
+        raise ValueError("supply_share must be in (0, 1]")
     t = np.arange(T_START * 3600, T_END * 3600, dt)
     th = t / 3600
     T_o, RH_o, v_o = outdoor(climate, th)
@@ -251,7 +253,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
         if sysm.kind == "evap":
             if not sysm.recirculate:
                 Ts_, Ws_ = float(nominal_ts[i]), float(nominal_ws[i])
-            elif i % every == 0:
+            else:
                 Ts_, Ws_, _ = evaporative_outlet(T_in, rel_humidity(T_in, W_in), sysm.eps)
                 Ts_, Ws_ = float(Ts_), float(Ws_)
         if sysm.control == "demand" and sysm.kind in ("fan", "evap"):
@@ -262,7 +264,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
                 wet_enabled = True
             if i % every == 0:
                 vin = max(0.3, st.wind_factor * v_o[i])
-                mrt_now = st.openness * (T_o[i] + st.dR_shade) + (1 - st.openness) * (T + st.dR_inside)
+                mrt_now = st.openness * (T_o[i] + st.dR_shade * sun[i]) + (1 - st.openness) * (T + st.dR_inside)
                 theta_now = P2A.theta0 / (1 + vin / sysm.jet_speed)
                 tp = T + theta_now * (Ts_ - T) if sysm.kind == "evap" else T
                 wp = W + theta_now * (Ws_ - W) if sysm.kind == "evap" else W
@@ -328,7 +330,7 @@ def simulate(st, sysm, climate, n_const=None, dt=DT, on=None, base=None):
                 T_eq = T_o[i] + G_kw / a
         Q_ac = m_ac = 0.0
         if sysm.kind == "ac" and running:
-            share = 1.0 if sysm.low_supply else 0.65                 # mixing also cools the upper hall
+            share = sysm.supply_share  # explicitly assumed, not inferred from an outlet height
             shr = sysm.shr if W > W_coil else 1.0                    # dry air: the coil removes no moisture
             # thermostat: remove enough heat to reach the setpoint by the end of the step
             e = np.exp(-dt * a / C)
@@ -359,7 +361,7 @@ def comfort(st, sysm, sim, base, v_in_override=None, mrt_override=None, n_covere
     if v_in_override is not None:
         v_in = np.asarray(v_in_override)
     f = st.openness
-    mrt = lambda T_zone: f * (sim["T_o"] + st.dR_shade) + (1 - f) * (T_zone + st.dR_inside)  # noqa: E731
+    mrt = lambda T_zone: f * (sim["T_o"] + st.dR_shade * sun_factor(sim["t"])) + (1 - f) * (T_zone + st.dR_inside)  # noqa: E731
     if mrt_override is not None:
         mrt = lambda T_zone: np.asarray(mrt_override)  # noqa: E731
     U0 = utci(base["T"], mrt(base["T"]), v_in, base["RH"])

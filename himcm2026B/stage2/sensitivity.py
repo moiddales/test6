@@ -144,16 +144,20 @@ def monte_carlo(n_draws=3000, seed=1):
         for i, c in enumerate(clim):
             for j, d in enumerate(devs):
                 eta[k, i, j] = r[(c, d)]
-    best = eta.argmax(axis=2)                                           # draws x climates x crowd sizes
-    p_best = np.stack([(best == j).mean(axis=0) for j in range(len(devs))], axis=1)   # climates x devices x crowd sizes
+    valid_sets = np.isfinite(eta).all(axis=2)
+    best = np.where(np.isfinite(eta), eta, -np.inf).argmax(axis=2)                                           # draws x climates x crowd sizes
+    p_best = np.stack([np.divide(((best == j) & valid_sets).sum(axis=0), valid_sets.sum(axis=0),
+                                 out=np.full(valid_sets.shape[1:], np.nan), where=valid_sets.sum(axis=0)>0)
+                       for j in range(len(devs))], axis=1)   # climates x devices x crowd sizes
     p_neg = (eta < 0).mean(axis=0)
     rows = []
     for i, c in enumerate(clim):
         for n in N_GRID:
             m = int(np.argmin(abs(N_FINE - n)))
             for j, d in enumerate(devs):
-                rows.append(dict(climate=c, people_waiting=n, device=d, P_rank1=round(float(p_best[i, j, m]), 3),
-                                 P_eta_negative=round(float(p_neg[i, j, m]), 3)))
+                rows.append(dict(climate=c, people_waiting=n, device=d, share_rank1_given_supported=round(float(p_best[i, j, m]), 3),
+                                 supported_draw_fraction=round(float(valid_sets[:,i,m].mean()),3),
+                                 share_negative_all_draws=round(float(p_neg[i, j, m]), 3)))
     summary = pd.DataFrame(rows)
     summary.to_csv(os.path.join(OUT, "table4_monte_carlo.csv"), index=False)
 

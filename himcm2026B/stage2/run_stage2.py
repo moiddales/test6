@@ -184,7 +184,8 @@ def design_days(p=P, tag="table2_design_days"):
         pc = replace(p, e_water=E_WATER[cname])
         hourly[cname] = dict(T=T, RH=RH, n=n, U={})
         for d in devs:
-            r = evaluate(d, T, RH, v, n, pc, "spot")
+            r = evaluate(d, T, RH, v, n, pc, "spot", hour=HOURS)
+            supported = bool(np.isfinite(r["U0"]).all() and np.isfinite(r["U1"]).all())
             hourly[cname]["U"][d.name] = r["U1"]
             hourly[cname]["U0"] = r["U0"]
             p_occ = 1 - np.exp(-n)                   # Poisson: chance someone is waiting
@@ -203,18 +204,20 @@ def design_days(p=P, tag="table2_design_days"):
                 hot_after = ((n - on * r["n_ben"]) * (r["U0"] >= 38) + on * r["n_ben"] * (r["U1"] >= 38)).sum()
                 rows.append(dict(
                     climate=cname, device=d.name, control=rule,
-                    hours_on=round(float(on.sum()), 1),
+                    hours_on=round(float(run.sum()), 3),
+                    full_day_supported=supported,
+                    utci_invalid_hours=int((~(np.isfinite(r["U0"]) & np.isfinite(r["U1"]))).sum()),
                     energy_kWh=round(float(energy.sum()), 2),
                     water_L=round(float((r["water_lph"] * run).sum()), 0),
                     resource_kWh=round(float(resource.sum()), 2),
-                    relief_person_degC_h=round(float(benefit.sum()), 1),
-                    eta_day=round(float(benefit.sum() / resource.sum()), 1),
+                    relief_person_degC_h=round(float(benefit.sum()), 1) if supported else np.nan,
+                    eta_day=round(float(benefit.sum() / resource.sum()), 1) if supported and resource.sum() > 0 else np.nan,
                     cooling_made_kWh=round(float(made), 1),
                     capture_index=round(float((r["gross_kw"] * run * r["capture_index"]).sum() / made), 3) if made > 0 else np.nan,
                     mixing_index=round(float((r["gross_kw"] * run * r["mixing_index"]).sum() / made), 3) if made > 0 else np.nan,
                     unused_index=round(float((r["gross_kw"] * run * r["unused_index"]).sum() / made), 3) if made > 0 else np.nan,
-                    person_h_very_strong_before=round(float(hot_before), 1),
-                    person_h_very_strong_after=round(float(hot_after), 1),
+                    person_h_very_strong_before=round(float(hot_before), 1) if supported else np.nan,
+                    person_h_very_strong_after=round(float(hot_after), 1) if supported else np.nan,
                 ))
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, f"{tag}.csv"), index=False)

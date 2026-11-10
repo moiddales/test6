@@ -1,9 +1,17 @@
-scenario,climate,supply,electricity_kWh,eta,T_zone_15h,ph_UTCI38_after
-Platform screen doors,Hot-dry (Phoenix-like),low-level supply to occupied zone,355.0,6.4,43.8,141.9
-Platform screen doors,Hot-dry (Phoenix-like),mixing (cools whole hall),355.0,4.3,45.0,158.4
-Platform screen doors,Hot-humid (Houston-like),low-level supply to occupied zone,271.9,5.3,35.1,0.0
-Platform screen doors,Hot-humid (Houston-like),mixing (cools whole hall),278.0,3.8,36.3,48.2
-Enclosed waiting room,Hot-dry (Phoenix-like),low-level supply to occupied zone,343.6,,38.5,59.2
-Enclosed waiting room,Hot-dry (Phoenix-like),mixing (cools whole hall),353.4,,42.7,112.9
-Enclosed waiting room,Hot-humid (Houston-like),low-level supply to occupied zone,245.5,18.4,30.7,0.0
-Enclosed waiting room,Hot-humid (Houston-like),mixing (cools whole hall),267.3,13.5,35.3,0.0
+scenario,climate,supply,supply_share,electricity_kWh,eta,T_zone_15h,ph_UTCI38_after
+Platform screen doors,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.40,0.4,355.0,2.7,45.8,167.6
+Platform screen doors,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.65,0.65,355.0,4.3,45.0,157.6
+Platform screen doors,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.85,0.85,355.0,5.5,44.3,148.8
+Platform screen doors,Hot-dry (Phoenix-like),assumed occupied-zone fraction 1.00,1.0,355.0,6.4,43.8,140.1
+Platform screen doors,Hot-humid (Houston-like),assumed occupied-zone fraction 0.40,0.4,283.8,2.5,37.3,74.7
+Platform screen doors,Hot-humid (Houston-like),assumed occupied-zone fraction 0.65,0.65,278.0,3.7,36.3,43.4
+Platform screen doors,Hot-humid (Houston-like),assumed occupied-zone fraction 0.85,0.85,274.4,4.6,35.6,0.0
+Platform screen doors,Hot-humid (Houston-like),assumed occupied-zone fraction 1.00,1.0,271.9,5.2,35.1,0.0
+Enclosed waiting room,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.40,0.4,355.0,,45.9,148.9
+Enclosed waiting room,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.65,0.65,353.4,,42.7,112.6
+Enclosed waiting room,Hot-dry (Phoenix-like),assumed occupied-zone fraction 0.85,0.85,349.1,,40.3,90.5
+Enclosed waiting room,Hot-dry (Phoenix-like),assumed occupied-zone fraction 1.00,1.0,343.6,,38.5,58.5
+Enclosed waiting room,Hot-humid (Houston-like),assumed occupied-zone fraction 0.40,0.4,278.6,9.3,38.7,76.2
+Enclosed waiting room,Hot-humid (Houston-like),assumed occupied-zone fraction 0.65,0.65,267.3,13.5,35.3,0.0
+Enclosed waiting room,Hot-humid (Houston-like),assumed occupied-zone fraction 0.85,0.85,255.1,16.4,32.7,0.0
+Enclosed waiting room,Hot-humid (Houston-like),assumed occupied-zone fraction 1.00,1.0,245.5,18.4,30.7,0.0
