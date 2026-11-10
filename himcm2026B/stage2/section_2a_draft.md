@@ -144,7 +144,7 @@ At 30 °C / 50 % the fan scores 55.9 against 12.1 (B) and 8.8 (C); at 32 °C / 7
 2. **On a real Phoenix hot day the fan is harmful from 13:00 to 20:00.**
    - Always on, its daily efficiency is only 8.8.
    - Run only in the 9 hours when it helps, it scores 26.6. This is the bus stop's night cover: switching off is part of the design.
-3. **B or C?** At the 46.4 °C peak (measured wind 3.7 m/s), B is slightly ahead or level for up to 6 waiting people (42.9 vs 42.1 at 6). From 8 people C is clearly ahead (53.1 vs 48.7). Over 3,000 random parameter sets C leads in 61 % and B in 39 %.
+3. **B or C?** At the 46.4 °C peak (measured wind 3.7 m/s), B is slightly ahead or level for up to 6 waiting people (42.9 vs 42.1 at 6). From 8 people C is clearly ahead (53.1 vs 48.7). Across 3,000 random parameter sets, C overtakes B at a median of 5.25 waiting people (Fig. 6).
 4. **Efficiency and effectiveness diverge.**
    - At the 46.4 °C peak no device brings waiting passengers below the very-strong band: B reaches UTCI 46.1 and C 42.9. Over the day, C removes 34 % of very-strong heat-stress person-hours (61.7 → 40.8) and B removes 15 %.
    - On the humid day the most efficient device is the least protective: the fan leaves 24.2 of 34.4 very-strong person-hours, while C leaves 0.5.
@@ -211,10 +211,11 @@ The fan then has the highest $\eta$, but it delivers 59 person·°C·h in nine m
 - Next come crowd size (C at the dry peak: 14.3–64.3), wind and the fan's rating reference temperature, the jet share $\theta_0$ (B: 22.7–39.5) and $D_{\text{ref}}$ (B: 25.5–37.5).
 - Water energy from 0 to 2.64 kWh/m³ (five times the US average, the top of California's range) lowers C's dry-peak $\eta$ from 35.4 to 28.2 (−20 %).
 
-**Monte Carlo (Fig. 6, 3,000 draws):**
+**Monte Carlo (Fig. 6, 3,000 draws).** Crowd size is a property of the stop that a planner knows, so it is not drawn at random; every other parameter and the weight scheme are, and the ranking is counted at each crowd size.
 
-- The fan is most efficient at the humid peak in 93.2 % of draws.
-- At the dry peak C leads in 61 % and B in 39 %, and the fan's $\eta$ is negative in every draw.
+- At the humid peak the fan is most efficient in 91.0–96.2 % of draws for 2 to 12 waiting people.
+- At the dry peak B leads in 81.8 % of draws with 2 people waiting and 61.5 % with 4; C leads in 59.0 % with 6, 70.9 % with 8 and 85.5 % with 12. The fan's $\eta$ is negative in every draw.
+- The design-day crowd, 3.1–6.2 people on average, straddles that crossover, which is why B and C finish close over the day (31.4 vs 28.8).
 
 ## 4.6 Answer to Requirement 2a
 

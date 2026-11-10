@@ -1,6 +1,6 @@
 """Stage 2 robustness: one-at-a-time tornado (Fig. 5) and Monte Carlo ranking
-(Fig. 6) of the efficiency eta for the three bus-stop devices, at the 15:00
-peak of the two design days."""
+by crowd size (Fig. 6) of the efficiency eta for the three bus-stop devices,
+at the hottest hour of the two design days."""
 import os
 from dataclasses import replace
 import numpy as np
@@ -8,7 +8,7 @@ import pandas as pd
 
 from plotstyle import plt, DEVICE_COLORS, INK2
 from model import Params, devices_for, evaluate, mean_waiting, E_WATER
-from run_stage2 import CLIMATES, OUT, peak, peak_wind
+from run_stage2 import CLIMATES, OUT, HOURS, peak, peak_wind, ridership
 
 BASE = Params()
 N_BASE = mean_waiting(40, 10)
@@ -18,6 +18,11 @@ WEIGHT_SCHEMES = {"linear 1-1-1-1": (1, 1, 1, 1), "base 1-2-3-4": (1, 2, 3, 4), 
 
 CONDS = {name: peak(name) for name in CLIMATES}
 WEIGHT_ROW = "Heat-stress weights (1-1-1-1 to 1-3-9-27)"
+# Crowd size is a property of the stop, known to the planner, so the Monte
+# Carlo reports the ranking at each crowd size instead of drawing it at random.
+N_FINE = np.arange(1.0, 16.01, 0.25)      # mean people waiting
+N_GRID = (2.0, 4.0, 6.0, 8.0, 10.0, 12.0)
+N_DAY = mean_waiting(*ridership(HOURS))   # crowd sizes met on the design day
 
 # name: (low, high, how to apply). Ranges are the plausible spans argued in the plan.
 RANGES = {
@@ -35,8 +40,9 @@ RANGES = {
 
 
 def eta_all(p, v=None, n=N_BASE, jet_scale=1.0):
-    """eta at each climate's peak hour. Wind defaults to the measured peak-hour
-    wind and water energy to the city value unless the draw sets them."""
+    """eta at each climate's peak hour (an array when n is an array). Wind
+    defaults to the measured peak-hour wind and water energy to the city value
+    unless the draw sets them."""
     devs = devices_for(p)
     out = {}
     for cname, (T, RH) in CONDS.items():
@@ -45,7 +51,7 @@ def eta_all(p, v=None, n=N_BASE, jet_scale=1.0):
         for d in devs:
             if d.kind == "evap":
                 d = replace(d, jet_speed=d.jet_speed * jet_scale)
-            out[(cname, d.name)] = float(evaluate(d, T, RH, vc, n, pc, "spot")["eta"])
+            out[(cname, d.name)] = evaluate(d, T, RH, vc, n, pc, "spot")["eta"]
     return out
 
 
@@ -70,14 +76,14 @@ def tornado():
         r_lo, r_hi = apply(name, lo), apply(name, hi)
         for key in base:
             rows.append(dict(climate=key[0], device=key[1], parameter=name, low=lo, high=hi,
-                             eta_base=round(base[key], 2), eta_at_low=round(r_lo[key], 2),
-                             eta_at_high=round(r_hi[key], 2)))
+                             eta_base=round(float(base[key]), 2), eta_at_low=round(float(r_lo[key]), 2),
+                             eta_at_high=round(float(r_hi[key]), 2)))
     r_lin = eta_all(replace(BASE, weights=WEIGHT_SCHEMES["linear 1-1-1-1"]))
     r_steep = eta_all(replace(BASE, weights=WEIGHT_SCHEMES["steep 1-3-9-27"]))
     for key in base:
         rows.append(dict(climate=key[0], device=key[1], parameter=WEIGHT_ROW, low="1-1-1-1", high="1-3-9-27",
-                         eta_base=round(base[key], 2), eta_at_low=round(r_lin[key], 2),
-                         eta_at_high=round(r_steep[key], 2)))
+                         eta_base=round(float(base[key]), 2), eta_at_low=round(float(r_lin[key]), 2),
+                         eta_at_high=round(float(r_steep[key]), 2)))
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(OUT, "table3_sensitivity_oat.csv"), index=False)
     return df
@@ -113,60 +119,77 @@ def fig5(df):
 
 
 def monte_carlo(n_draws=3000, seed=1):
+    """Draw every uncertain parameter except crowd size; for each draw compute
+    eta over the whole crowd-size grid. Returns the share of draws in which each
+    device is the most efficient, by climate and crowd size."""
     rng = np.random.default_rng(seed)
     schemes = list(WEIGHT_SCHEMES.values())
-    rows = []
+    clim, devs = list(CONDS), list(DEVICE_COLORS)
+    eta = np.zeros((n_draws, len(clim), len(devs), len(N_FINE)))
     for k in range(n_draws):
         p = BASE
         kw = {}
         for name, (lo, hi, how, field) in RANGES.items():
+            if how == "people":
+                continue
             x = rng.uniform(lo, hi)
             if how == "param":
                 p = replace(p, **{field: x})
             elif how == "wind":
                 kw["v"] = x
-            elif how == "people":
-                kw["n"] = x
             else:
                 kw["jet_scale"] = x
         p = replace(p, weights=schemes[rng.integers(len(schemes))])
-        r = eta_all(p, **kw)
-        for (c, d), e in r.items():
-            rows.append(dict(draw=k, climate=c, device=d, eta=e))
-    df = pd.DataFrame(rows)
-    df["rank"] = df.groupby(["draw", "climate"])["eta"].rank(ascending=False, method="first")
-    summary = (df.groupby(["climate", "device"])
-                 .agg(P_rank1=("rank", lambda s: (s == 1).mean()),
-                      eta_p05=("eta", lambda s: s.quantile(0.05)),
-                      eta_median=("eta", "median"),
-                      eta_p95=("eta", lambda s: s.quantile(0.95)),
-                      P_eta_negative=("eta", lambda s: (s < 0).mean()))
-                 .round(3).reset_index())
+        r = eta_all(p, n=N_FINE, **kw)
+        for i, c in enumerate(clim):
+            for j, d in enumerate(devs):
+                eta[k, i, j] = r[(c, d)]
+    best = eta.argmax(axis=2)                                           # draws x climates x crowd sizes
+    p_best = np.stack([(best == j).mean(axis=0) for j in range(len(devs))], axis=1)   # climates x devices x crowd sizes
+    p_neg = (eta < 0).mean(axis=0)
+    rows = []
+    for i, c in enumerate(clim):
+        for n in N_GRID:
+            m = int(np.argmin(abs(N_FINE - n)))
+            for j, d in enumerate(devs):
+                rows.append(dict(climate=c, people_waiting=n, device=d, P_rank1=round(float(p_best[i, j, m]), 3),
+                                 P_eta_negative=round(float(p_neg[i, j, m]), 3)))
+    summary = pd.DataFrame(rows)
     summary.to_csv(os.path.join(OUT, "table4_monte_carlo.csv"), index=False)
-    return df, summary
+
+    # crowd size from which C is more efficient than B
+    rows = []
+    iB, iC = devs.index("B Evap cooler"), devs.index("C Large evap cooler")
+    for i, c in enumerate(clim):
+        ahead = eta[:, i, iC, :] > eta[:, i, iB, :]
+        n_star = np.where(ahead.any(axis=1), N_FINE[ahead.argmax(axis=1)], np.inf)
+        q = np.quantile(n_star, [0.05, 0.5, 0.95], method="lower")
+        rows.append(dict(climate=c, n_star_p05=q[0], n_star_median=q[1], n_star_p95=q[2],
+                         share_C_ahead_at_every_crowd=round(float(ahead.all(axis=1).mean()), 3),
+                         share_C_never_ahead_up_to_16=round(float((~ahead.any(axis=1)).mean()), 3)))
+    cross = pd.DataFrame(rows)
+    cross.to_csv(os.path.join(OUT, "table4b_break_even_crowd.csv"), index=False)
+    return p_best, summary, cross
 
 
-def fig6(df):
-    cl = list(CONDS)
-    devs = list(DEVICE_COLORS)
-    fig, axes = plt.subplots(1, len(cl), figsize=(8.2, 3.0))
-    for ax, c in zip(axes, cl):
-        data = [df[(df.climate == c) & (df.device == d)].eta.values for d in devs]
-        bp = ax.boxplot(data, orientation="horizontal", widths=0.5, patch_artist=True, showfliers=False,
-                        medianprops=dict(color="#0b0b0b", lw=1.2))
-        for patch, d in zip(bp["boxes"], devs):
-            patch.set_facecolor(DEVICE_COLORS[d])
-            patch.set_edgecolor(DEVICE_COLORS[d])
-        p1 = df[df.climate == c].groupby("device")["rank"].apply(lambda s: (s == 1).mean())
-        ax.set_yticks(range(1, len(devs) + 1))
-        ax.set_yticklabels([f"{d}\nP(most efficient) = {p1[d]:.0%}" for d in devs], fontsize=7)
-        ax.axvline(0, color="#b8b7b2", lw=0.7)
-        ax.set_title(c, fontsize=9)
-        ax.set_xlabel("η (person·°C·h per kWh)")
-        ax.invert_yaxis()
-    fig.suptitle("Fig. 6  Monte Carlo: η across 3,000 random parameter sets (box = 25–75%, whiskers = 1.5 IQR)",
+def fig6(p_best):
+    clim, devs = list(CONDS), list(DEVICE_COLORS)
+    fig, axes = plt.subplots(1, len(clim), figsize=(7.6, 3.0), sharey=True)
+    for i, (ax, c) in enumerate(zip(axes, clim)):
+        ax.axvspan(N_DAY.min(), N_DAY.max(), color="#f0efeb", lw=0, zorder=0)
+        ax.text(0.5 * (N_DAY.min() + N_DAY.max()), 103, "design-day\ncrowds", ha="center", va="bottom",
+                fontsize=6.5, color=INK2)
+        for j, d in enumerate(devs):
+            ax.plot(N_FINE, 100 * p_best[i, j], color=DEVICE_COLORS[d], label=d)
+        ax.set_title(c, fontsize=9, pad=18)
+        ax.set_xlabel("Mean number of people waiting")
+        ax.set_xlim(1, 16)
+        ax.set_ylim(-2, 102)
+    axes[0].set_ylabel("Share of parameter sets in which\nthe device is most efficient (%)")
+    axes[1].legend(loc="center right", fontsize=7)
+    fig.suptitle("Fig. 6  Monte Carlo: the most efficient device by crowd size (3,000 parameter sets, hottest hour)",
                  x=0.01, ha="left", fontsize=10)
-    fig.tight_layout(rect=(0, 0, 1, 0.92))
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(os.path.join(OUT, "fig6_monte_carlo.png"))
     plt.close(fig)
 
@@ -180,7 +203,12 @@ if __name__ == "__main__":
     print("\nLargest one-at-a-time swings")
     print(swing.groupby(["climate", "device"]).head(3)[["climate", "device", "parameter", "eta_base",
                                                           "eta_at_low", "eta_at_high"]].to_string(index=False))
-    mc, summary = monte_carlo()
-    fig6(mc)
-    print("\nMonte Carlo summary")
-    print(summary.to_string(index=False))
+    p_best, summary, cross = monte_carlo()
+    fig6(p_best)
+    print(f"\nDesign-day mean crowd: {N_DAY.min():.1f}-{N_DAY.max():.1f} people waiting")
+    print("\nMonte Carlo: share of draws in which each device is most efficient, by crowd size")
+    print(summary.pivot_table(index=["climate", "people_waiting"], columns="device", values="P_rank1").to_string())
+    print("\nFan eta negative (share of draws):")
+    print(summary[summary.device == "A Fan"].pivot_table(index="climate", columns="people_waiting", values="P_eta_negative").to_string())
+    print("\nCrowd size from which C is more efficient than B")
+    print(cross.to_string(index=False))

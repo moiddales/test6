@@ -1,7 +1,37 @@
-climate,device,P_rank1,eta_p05,eta_median,eta_p95,P_eta_negative
-Hot-dry (Phoenix-like),A Fan,0.0,-345.546,-28.802,-4.273,1.0
-Hot-dry (Phoenix-like),B Evap cooler,0.392,6.293,37.319,359.573,0.0
-Hot-dry (Phoenix-like),C Large evap cooler,0.608,7.136,42.822,322.59,0.0
-Hot-humid (Houston-like),A Fan,0.932,8.503,49.049,243.094,0.003
-Hot-humid (Houston-like),B Evap cooler,0.032,5.025,22.838,104.735,0.0
-Hot-humid (Houston-like),C Large evap cooler,0.036,4.737,21.754,91.288,0.0
+climate,people_waiting,device,P_rank1,P_eta_negative
+Hot-dry (Phoenix-like),2.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),2.0,B Evap cooler,0.818,0.0
+Hot-dry (Phoenix-like),2.0,C Large evap cooler,0.182,0.0
+Hot-dry (Phoenix-like),4.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),4.0,B Evap cooler,0.615,0.0
+Hot-dry (Phoenix-like),4.0,C Large evap cooler,0.385,0.0
+Hot-dry (Phoenix-like),6.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),6.0,B Evap cooler,0.41,0.0
+Hot-dry (Phoenix-like),6.0,C Large evap cooler,0.59,0.0
+Hot-dry (Phoenix-like),8.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),8.0,B Evap cooler,0.291,0.0
+Hot-dry (Phoenix-like),8.0,C Large evap cooler,0.709,0.0
+Hot-dry (Phoenix-like),10.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),10.0,B Evap cooler,0.197,0.0
+Hot-dry (Phoenix-like),10.0,C Large evap cooler,0.803,0.0
+Hot-dry (Phoenix-like),12.0,A Fan,0.0,1.0
+Hot-dry (Phoenix-like),12.0,B Evap cooler,0.145,0.0
+Hot-dry (Phoenix-like),12.0,C Large evap cooler,0.855,0.0
+Hot-humid (Houston-like),2.0,A Fan,0.962,0.004
+Hot-humid (Houston-like),2.0,B Evap cooler,0.038,0.0
+Hot-humid (Houston-like),2.0,C Large evap cooler,0.0,0.0
+Hot-humid (Houston-like),4.0,A Fan,0.952,0.004
+Hot-humid (Houston-like),4.0,B Evap cooler,0.042,0.0
+Hot-humid (Houston-like),4.0,C Large evap cooler,0.006,0.0
+Hot-humid (Houston-like),6.0,A Fan,0.944,0.004
+Hot-humid (Houston-like),6.0,B Evap cooler,0.037,0.0
+Hot-humid (Houston-like),6.0,C Large evap cooler,0.019,0.0
+Hot-humid (Houston-like),8.0,A Fan,0.929,0.004
+Hot-humid (Houston-like),8.0,B Evap cooler,0.023,0.0
+Hot-humid (Houston-like),8.0,C Large evap cooler,0.047,0.0
+Hot-humid (Houston-like),10.0,A Fan,0.919,0.004
+Hot-humid (Houston-like),10.0,B Evap cooler,0.018,0.0
+Hot-humid (Houston-like),10.0,C Large evap cooler,0.063,0.0
+Hot-humid (Houston-like),12.0,A Fan,0.91,0.004
+Hot-humid (Houston-like),12.0,B Evap cooler,0.014,0.0
+Hot-humid (Houston-like),12.0,C Large evap cooler,0.076,0.0

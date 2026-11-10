@@ -21,11 +21,31 @@ Hot-humid (Houston-like)       B Evap cooler                            People w
 Hot-humid (Houston-like)       B Evap cooler                   Evap jet speed (× base)     24.67       18.19        30.25
 Hot-humid (Houston-like) C Large evap cooler                  Outside wind speed (m/s)     19.27       22.29        13.90
 
-Monte Carlo summary
-                 climate              device  P_rank1  eta_p05  eta_median  eta_p95  P_eta_negative
-  Hot-dry (Phoenix-like)               A Fan    0.000 -345.546     -28.802   -4.273           1.000
-  Hot-dry (Phoenix-like)       B Evap cooler    0.392    6.293      37.319  359.573           0.000
-  Hot-dry (Phoenix-like) C Large evap cooler    0.608    7.136      42.822  322.590           0.000
-Hot-humid (Houston-like)               A Fan    0.932    8.503      49.049  243.094           0.003
-Hot-humid (Houston-like)       B Evap cooler    0.032    5.025      22.838  104.735           0.000
-Hot-humid (Houston-like) C Large evap cooler    0.036    4.737      21.754   91.288           0.000
+Design-day mean crowd: 3.1-6.2 people waiting
+
+Monte Carlo: share of draws in which each device is most efficient, by crowd size
+device                                   A Fan  B Evap cooler  C Large evap cooler
+climate                  people_waiting                                           
+Hot-dry (Phoenix-like)   2.0             0.000          0.818                0.182
+                         4.0             0.000          0.615                0.385
+                         6.0             0.000          0.410                0.590
+                         8.0             0.000          0.291                0.709
+                         10.0            0.000          0.197                0.803
+                         12.0            0.000          0.145                0.855
+Hot-humid (Houston-like) 2.0             0.962          0.038                0.000
+                         4.0             0.952          0.042                0.006
+                         6.0             0.944          0.037                0.019
+                         8.0             0.929          0.023                0.047
+                         10.0            0.919          0.018                0.063
+                         12.0            0.910          0.014                0.076
+
+Fan eta negative (share of draws):
+people_waiting             2.0    4.0    6.0    8.0    10.0   12.0
+climate                                                           
+Hot-dry (Phoenix-like)    1.000  1.000  1.000  1.000  1.000  1.000
+Hot-humid (Houston-like)  0.004  0.004  0.004  0.004  0.004  0.004
+
+Crowd size from which C is more efficient than B
+                 climate  n_star_p05  n_star_median  n_star_p95  share_C_ahead_at_every_crowd  share_C_never_ahead_up_to_16
+  Hot-dry (Phoenix-like)         1.0           5.25         inf                          0.12                         0.085
+Hot-humid (Houston-like)         4.5           8.50         inf                          0.00                         0.173
